@@ -1,0 +1,27 @@
+[cache]
+max_memory_mb = 512
+slow_frames_per_partition = 256
+dynamic_frames_per_partition = 256
+history_hours = 144
+target_horizon_hours = 144
+minimum_complete_horizon_hours = 144
+
+[acquisition]
+gfs_step_hours = 3
+cycle_lookback_count = 4
+request_timeout_seconds = 120
+
+[clock]
+default_speed = 360.0
+
+# Required by A's config parser. Shared scenario jobs always use Contracts as
+# the authoritative source for bounds and endpoints.
+[corridors.offshore_murmansk_to_offshore_dikson]
+bbox = [30.0, 67.5, 85.0, 75.0]
+start = [34.00, 69.55]
+destination = [80.00, 73.80]
+
+[corridors.tromso_to_isfjorden_outer]
+bbox = [10.0, 68.5, 22.0, 79.5]
+start = [18.00, 70.50]
+destination = [13.00, 78.15]

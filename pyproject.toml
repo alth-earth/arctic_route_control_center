@@ -1,0 +1,52 @@
+[project]
+name = "arctic-route-control-center"
+version = "0.1.0"
+description = "Local web control plane and desktop launcher for the Arctic Route system"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "arctic-route-contracts>=0.3,<0.4",
+    "arctic-route-data[acquisition,contracts]>=0.4.2,<0.5",
+    "arctic-route-risk>=0.2,<0.3",
+    "arctic-route-planning>=0.4,<0.5",
+    "arctic-route-orchestrator>=0.1,<0.2",
+    "arctic-route-display>=0.1,<0.2",
+]
+
+[project.scripts]
+arctic-route-control-center = "arctic_route_control_center.cli:main"
+
+[tool.uv.sources]
+arctic-route-contracts = { path = "../arctic_route_contracts", editable = true }
+arctic-route-data = { path = "../work_package_a", editable = true }
+arctic-route-risk = { path = "../work_package_b", editable = true }
+arctic-route-planning = { path = "../work_package_c", editable = true }
+arctic-route-orchestrator = { path = "../arctic_route_orchestrator", editable = true }
+arctic-route-display = { path = "../work_package_d", editable = true }
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.16,<7",
+    "pytest>=8.3,<10",
+    "ruff>=0.11,<1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/arctic_route_control_center"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+extend-exclude = ["build", "dist", "release", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["RUF001"]

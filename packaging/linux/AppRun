@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+APPDIR="${APPDIR:-$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)}"
+export ARCTIC_ROUTE_PRODUCTION_PACKAGE=1
+RUNTIME_ROOT="$APPDIR/usr/lib/arctic-route-control-center"
+if [ -d "$RUNTIME_ROOT/_internal" ]; then
+  export LD_LIBRARY_PATH="$RUNTIME_ROOT/_internal${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+DEFINITION_PATH=$(find "$RUNTIME_ROOT" -type d -path '*eccodes*definitions' -print -quit 2>/dev/null || true)
+if [ -n "$DEFINITION_PATH" ]; then
+  export ECCODES_DEFINITION_PATH="$DEFINITION_PATH"
+fi
+exec "$APPDIR/usr/lib/arctic-route-control-center/arctic-route-control-center" "$@"

@@ -1,0 +1,16 @@
+{
+  "schema_version": "arctic-route-control-center.config.v1",
+  "host": "127.0.0.1",
+  "port": 8130,
+  "open_browser": true,
+  "portable_mode": false,
+  "credentials": {
+    "copernicus_env_file": "",
+    "cdsapi_rc_file": ""
+  },
+  "limits": {
+    "max_parallel_jobs": 1,
+    "max_json_body_bytes": 1048576,
+    "max_artifact_json_bytes": 100663296
+  }
+}

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Arctic Route Control Center
+Comment=Local Arctic Route web control plane and Replay Viewer
+Exec=arctic-route-control-center
+Icon=arctic-route-control-center
+Terminal=true
+Categories=Science;

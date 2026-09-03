@@ -1,0 +1,9 @@
+name: arctic-route-control-center-native
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - eccodes>=2.40,<3
+  - libnetcdf
+  - hdf5
+  - uv

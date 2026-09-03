@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Arctic Route Control Center</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">LOCAL CONTROL PLANE · RESEARCH ENGINEERING</p>
+      <h1>Arctic Route Control Center</h1>
+    </div>
+    <div class="top-actions">
+      <span id="health" class="badge waiting">正在连接后端</span>
+      <a class="button primary" href="/viewer/" target="_blank" rel="noreferrer">打开 Replay Viewer ↗</a>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav aria-label="主要功能">
+      <button class="nav-item active" data-page="overview">总览</button>
+      <button class="nav-item" data-page="contracts">船舶与场景</button>
+      <button class="nav-item" data-page="acquisition">A 数据下载</button>
+      <button class="nav-item" data-page="pipeline">制品构建</button>
+      <button class="nav-item" data-page="artifacts">制品库</button>
+      <button class="nav-item" data-page="jobs">任务与日志</button>
+      <button class="nav-item" data-page="settings">设置</button>
+    </nav>
+
+    <main>
+      <section id="page-overview" class="page active">
+        <div class="page-heading">
+          <div><p class="kicker">SYSTEM</p><h2>运行总览</h2></div>
+          <button class="button" data-refresh>刷新</button>
+        </div>
+        <div id="module-grid" class="card-grid"></div>
+        <article class="panel notice">
+          <h3>证据边界</h3>
+          <p>本应用面向工程研究和可重复演示，不代表实船标定、导航认证或适航结论。D 只展示已发布制品；缺失和未知数据不会被补零伪装为安全。</p>
+        </article>
+        <article class="panel"><h3>运行目录</h3><dl id="path-list" class="kv"></dl></article>
+      </section>
+
+      <section id="page-contracts" class="page">
+        <div class="page-heading"><div><p class="kicker">CONTRACTS</p><h2>船舶、场景与走廊</h2></div></div>
+        <p class="lede">内容直接读取共享 Contracts 包。当前页面只读；修改正式配置需另存新版本并通过合同测试，不能覆盖已发布身份。</p>
+        <div class="form-grid three">
+          <label>对象类型<select id="contract-kind"><option value="vessels">船舶</option><option value="scenarios">场景</option><option value="corridors">走廊</option></select></label>
+          <label>配置标识<select id="contract-id"></select></label>
+          <div class="align-end"><button id="show-contract" class="button primary">查看配置</button></div>
+        </div>
+        <pre id="contract-detail" class="code-block">请选择配置。</pre>
+      </section>
+
+      <section id="page-acquisition" class="page">
+        <div class="page-heading"><div><p class="kicker">WORK PACKAGE A</p><h2>数据下载与筛选</h2></div></div>
+        <p class="lede">A 负责采集、预处理、manifest、缓存和 DatasetBundle。已有完整数据会由 A 的 manifest/cache 复用；网络任务默认串行。</p>
+        <form id="acquire-form" class="panel form-stack">
+          <div class="form-grid two">
+            <label>共享场景<select name="scenario_id" data-scenarios required></select></label>
+            <label>冻结模板锚点（UTC）<input name="simulation_start" placeholder="2026-01-12T00:00:00Z"></label>
+            <label>候选航线距离（海里，可选）<input name="candidate_route_distance_nm" type="number" min="1" max="10000" step="0.1"></label>
+            <p class="hint">具体场景的开始、结束和模式由 Contracts 唯一决定，不可覆盖；仅 frozen_forecast template 必须填写锚点。</p>
+          </div>
+          <fieldset><legend>数据源</legend><div id="source-options" class="check-grid"></div></fieldset>
+          <fieldset><legend><span id="type-count">数据类别</span></legend><div id="type-options" class="check-grid data-types"></div></fieldset>
+          <div class="action-row"><button class="button primary" type="submit">启动下载任务</button><span class="hint">Copernicus 需先在“设置”中填写外部凭据文件路径。</span></div>
+        </form>
+
+        <form id="carra-form" class="panel form-stack">
+          <h3>CARRA 独立历史采集窗口</h3>
+          <p class="hint">仅采集 A 数据并写入 manifest，不创建 Contracts 场景，也不自动获得 B/C/D 正式运行资格。CARRA 是 East domain 再分析，不是未来预测。</p>
+          <div class="form-grid two">
+            <label>已登记走廊<select name="corridor_id" data-corridors required></select></label>
+            <span></span>
+            <label>开始时间（UTC，3 小时边界）<input name="start" required placeholder="2026-01-12T00:00:00Z"></label>
+            <label>结束时间（UTC，最长 216 小时）<input name="end" required placeholder="2026-01-18T00:00:00Z"></label>
+          </div>
+          <fieldset><legend>CARRA 数据类别</legend><div id="carra-type-options" class="check-grid data-types"></div></fieldset>
+          <div class="action-row"><button class="button primary" type="submit">启动 CARRA 下载任务</button><span class="hint">需先在“设置”中填写外部 .cdsapirc 路径。</span></div>
+        </form>
+      </section>
+
+      <section id="page-pipeline" class="page">
+        <div class="page-heading"><div><p class="kicker">A → B → C → ORCHESTRATOR → D</p><h2>分阶段构建制品</h2></div></div>
+        <article class="panel warning"><h3>为什么分阶段</h3><p>当前统一发布器负责“已完成 A/B/C 输入 → Viewer 包”的身份校验与发布，它不是从原始下载数据开始的一键全链生成器。这里把每一阶段的输入、输出和失败原因显式展示。</p></article>
+
+        <form id="bundle-form" class="panel form-stack">
+          <h3>阶段 1 · 从 A manifest 生成 DatasetBundle + RunContext</h3>
+          <div class="form-grid two">
+            <label>共享场景<select name="scenario_id" data-scenarios required></select></label>
+            <label>模拟时刻（UTC）<input name="at" required placeholder="2026-02-15T00:00:00Z"></label>
+            <label>模式<select name="mode"><option value="causal">严格因果</option><option value="retrospective_best_estimate">事后最佳估计</option></select></label>
+            <label>知识截止（仅事后模式）<input name="knowledge_as_of" placeholder="2026-02-22T00:00:00Z"></label>
+          </div>
+          <fieldset><legend>所需数据类别</legend><div id="bundle-types" class="check-grid data-types"></div></fieldset>
+          <button class="button primary" type="submit">构建 A 制品</button>
+        </form>
+
+        <form id="orchestrator-form" class="panel form-stack">
+          <h3>阶段 2 · 正式 A→B→C 初始规划与重规划</h3>
+          <p class="hint">下列文件路径必须相对于本应用 data_root，防止任意文件访问。</p>
+          <div class="form-grid two">
+            <label>共享场景<select name="scenario_id" data-scenarios required></select></label>
+            <label>B 正式配置<select name="b_config_name"><option value="final_delivery_comprehensive_risk_v1">final_delivery_comprehensive_risk_v1</option></select></label>
+            <label>DatasetBundle 相对路径<input name="dataset_bundle" required placeholder="run/jobs/job-.../output/dataset-bundle.json"></label>
+            <label>RunContext 相对路径<input name="run_context" required placeholder="run/jobs/job-.../output/run-context.json"></label>
+            <label>规划进程数<input name="planning_workers" type="number" min="1" max="16" value="3"></label>
+            <label>单阶段超时（秒）<input name="stage_timeout_seconds" type="number" min="30" max="86400" value="3600"></label>
+          </div>
+          <button class="button primary" type="submit">运行 Orchestrator</button>
+        </form>
+
+        <form id="publish-form" class="panel form-stack">
+          <h3>阶段 3 · 统一发布 Viewer 包</h3>
+          <p class="hint">必填输入必须来自同一场景、DatasetBundle、RiskWindow 和候选集身份；任何错配都会失败关闭。发布结果先进入 inbox，校验通过后由制品库提升为 ready。</p>
+          <div class="form-grid two">
+            <label>包名<input name="package_name" required placeholder="winter-20260215-viewer-package-v2"></label>
+            <label>共享场景<select name="scenario_id" data-scenarios required></select></label>
+            <label>DatasetBundle<input name="dataset_bundle" required></label>
+            <label>RunContext<input name="run_context" required></label>
+            <label>RiskWindow commit<input name="risk_window_commit" required></label>
+            <label>四层 plan set<input name="plan_set" required></label>
+            <label>Risk store 目录<input name="risk_store_root" required></label>
+            <label>Route candidates（可选）<input name="route_candidates"></label>
+            <label>Route integrity（可选）<input name="route_integrity"></label>
+            <label>RiskFrame index（可选）<input name="risk_frame_index"></label>
+            <label>Land mask（可选）<input name="land_mask"></label>
+            <label>Risk explanation manifest（可选）<input name="risk_explanation_manifest"></label>
+            <label>Motion sets（逗号分隔，可选）<input name="route_motion_sets"></label>
+            <label>Motion candidate sets（逗号分隔，可选）<input name="route_motion_candidate_sets"></label>
+            <label>动态 replay manifest（可选）<input name="winter_replay_manifest"></label>
+            <label>动态 replay snapshots 目录（可选）<input name="winter_replay_snapshots_dir"></label>
+          </div>
+          <button class="button primary" type="submit">发布到 inbox</button>
+        </form>
+      </section>
+
+      <section id="page-artifacts" class="page">
+        <div class="page-heading"><div><p class="kicker">IMMUTABLE ARTIFACTS</p><h2>制品库</h2></div><button class="button" data-refresh>重新扫描</button></div>
+        <p class="lede">将待检查 Viewer 包目录放到 artifacts/inbox。只有 Schema、摘要、PUBLISHED 状态、12条候选路线和 preflight 全部通过，才能提升到 ready。</p>
+        <div id="artifact-list" class="list-stack"></div>
+      </section>
+
+      <section id="page-jobs" class="page">
+        <div class="page-heading"><div><p class="kicker">JOBS</p><h2>任务与日志</h2></div><button class="button" data-refresh>刷新</button></div>
+        <div id="job-list" class="list-stack"></div>
+        <pre id="job-log" class="code-block log">选择一个任务查看日志。</pre>
+      </section>
+
+      <section id="page-settings" class="page">
+        <div class="page-heading"><div><p class="kicker">CONFIGURATION</p><h2>本地设置</h2></div></div>
+        <form id="settings-form" class="panel form-stack">
+          <label>Copernicus Marine 凭据 env 文件绝对路径<input name="copernicus_env_file" placeholder="/external/path/.env.copernicus"></label>
+          <p class="hint">用于海冰、海流、水位和波浪等 Copernicus Marine 数据。</p>
+          <label>CDS/CARRA 凭据 .cdsapirc 文件绝对路径<input name="cdsapi_rc_file" placeholder="/external/path/.cdsapirc"></label>
+          <p class="hint">用于风场、温度和能见度 CARRA 再分析。只保存路径，不读取或回显凭据内容；凭据必须放在程序目录和仓库之外，Linux/macOS 权限须为 0600。</p>
+          <button class="button primary" type="submit">保存设置</button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

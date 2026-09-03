@@ -9,8 +9,8 @@ Linux x86_64 成品位于：
 release/Arctic_Route_Control_Center-x86_64.AppImage
 ```
 
-当前验收版本大小为 `184109560` bytes，SHA-256 为
-`5fd7c14e2b429739b8b22d693cdd91e3ac540e8f641cf09e1de01369321edbd0`；也可使用同目录
+当前验收版本大小为 `184113656` bytes，SHA-256 为
+`cc9fd06f100e777cc43d7e0aac69b6de2662530eeba3946a6d23a7ad49e4acbf`；也可使用同目录
 的 `.sha256` 文件校验。完整验收记录见 `docs/RELEASE_VERIFICATION.zh-CN.md`。
 
 启动后命令台持续作为后端运行，并自动打开浏览器。无 FUSE 的 WSL 可执行：

@@ -1,13 +1,13 @@
 # Linux x86_64 发行验收记录
 
-验证时间：2026-09-03 20:49 +08:00
+验证时间：2026-09-03 20:54 +08:00
 
 ## 成品
 
 - 路径：`release/Arctic_Route_Control_Center-x86_64.AppImage`
 - 架构：x86-64 AppImage / ELF 64-bit
-- 大小：`184109560` bytes
-- SHA-256：`5fd7c14e2b429739b8b22d693cdd91e3ac540e8f641cf09e1de01369321edbd0`
+- 大小：`184113656` bytes
+- SHA-256：`cc9fd06f100e777cc43d7e0aac69b6de2662530eeba3946a6d23a7ad49e4acbf`
 - 校验文件：`release/Arctic_Route_Control_Center-x86_64.AppImage.sha256`
 
 ## 自动验收

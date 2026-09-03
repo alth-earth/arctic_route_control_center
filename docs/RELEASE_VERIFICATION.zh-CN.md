@@ -1,6 +1,6 @@
 # Linux x86_64 发行验收记录
 
-验证时间：2026-09-03 20:54 +08:00
+验证时间：2026-09-03 20:59 +08:00
 
 ## 成品
 
@@ -13,7 +13,7 @@
 ## 自动验收
 
 - 控制中心：28 tests PASS，Ruff PASS。
-- Work Package A：隔离数据根下 214 tests PASS、2 个需要真实既有 manifest 的测试 SKIP，Ruff PASS；公开 `acquire-carra` CLI 可用。
+- Work Package A：完整 `make check` 216 tests PASS、Ruff PASS、锁文件检查 PASS；公开 `acquire-carra` CLI 可用。真实 causal replay 检查遵循 fail-closed 语义：当前本机 manifest 的旧历史窗口不能宣称 full feasibility，因此不会把 `ready_ticks=0` 误报为代码失败。
 - Work Package D：124 tests PASS，Ruff PASS。
 - Orchestrator Viewer/exporter 定向回归：35 tests PASS，Ruff PASS。
 - 冻结程序：包 metadata、ecCodes 2.48.0、A 冻结 worker、CARRA 动态依赖、Orchestrator、Viewer exporter、HTTP API 和路径穿越拒绝均 PASS。

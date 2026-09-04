@@ -1,21 +1,21 @@
 # Linux x86_64 发行验收记录
 
-验证时间：2026-09-03 20:59 +08:00
+验证时间：2026-09-04 22:23 +08:00
 
 ## 成品
 
 - 路径：`release/Arctic_Route_Control_Center-x86_64.AppImage`
 - 架构：x86-64 AppImage / ELF 64-bit
-- 大小：`184113656` bytes
-- SHA-256：`cc9fd06f100e777cc43d7e0aac69b6de2662530eeba3946a6d23a7ad49e4acbf`
+- 大小：`184134136` bytes
+- SHA-256：`9fca146f0e8f57219724562d07488999d78862ddf34b10b7002160584ef7934d`
 - 校验文件：`release/Arctic_Route_Control_Center-x86_64.AppImage.sha256`
 
 ## 自动验收
 
 - 控制中心：28 tests PASS，Ruff PASS。
 - Work Package A：完整 `make check` 216 tests PASS、Ruff PASS、锁文件检查 PASS；公开 `acquire-carra` CLI 可用。真实 causal replay 检查遵循 fail-closed 语义：当前本机 manifest 的旧历史窗口不能宣称 full feasibility，因此不会把 `ready_ticks=0` 误报为代码失败。
-- Work Package D：124 tests PASS，Ruff PASS。
-- Orchestrator Viewer/exporter 定向回归：35 tests PASS，Ruff PASS。
+- Work Package D：125 tests PASS，Ruff PASS。
+- Orchestrator 全量：191 tests PASS（退出码 0；host `cfgrib` 的 ecCodes warning 已记录），Viewer/exporter 定向回归也通过。
 - 冻结程序：包 metadata、ecCodes 2.48.0、A 冻结 worker、CARRA 动态依赖、Orchestrator、Viewer exporter、HTTP API 和路径穿越拒绝均 PASS。
 - 最终 AppImage 解包后扫描 27047 个文件，凭据、原始数据、缓存、RC1/RC2、demo-engineering、实验依赖、`direct_url.json`、`uv_cache.json` 和构建机绝对路径违规数为 0。
 - `.sha256` 文件复核 PASS。
@@ -34,13 +34,14 @@
 
 ## 浏览器验收
 
-直接启动最终 AppImage 后验证：
+直接启动最终 AppImage 后验证（当前外部默认 Winter 制品为 v4）：
 
 - 设置页可同时保存两类外部凭据路径，互不覆盖。
 - Viewer 点击运行后，路线层和三个目标显隐控件仍可操作。
 - 运行中把展示层从 `full_voyage` 切为 `rolling_0_24h`、隐藏最快路线并高亮低风险卡片后，运行 candidate ID、运行路线来源、同一仿真时刻和船位保持不变。
 - 所有“设为运行路线/仅展示比较”按钮仍禁用；运行路线仍为原 `full_voyage/recommended`。
-- 截图：`output/playwright/appimage-settings-dual-credentials.png`、`output/playwright/appimage-viewer-runtime-display-controls.png`。
+- v4 动态回放重新扫描、R2–R6 adoption、运行锁定和控制项回归通过；截图及绑定证据：
+  `work_package_d/output/playwright/winter-rebuilt-20260215-current-standard-v4/`。
 
 ## 边界
 

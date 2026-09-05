@@ -141,10 +141,17 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {"ok": True, "job": self.app.jobs.get(job_id)})
                 return
             if parsed.path == "/viewer/packages.json":
+                # Embedded packages are the audited defaults, but the normal
+                # writable ready store remains a live input for newly
+                # received packages.  Each source is retained in the index;
+                # the Viewer uses a source-specific URL when names repeat.
                 self._json(200, self._package_index())
                 return
             if parsed.path.startswith("/viewer/packages/"):
                 self._serve_ready_artifact(parsed.path)
+                return
+            if parsed.path.startswith("/viewer/ready-packages/"):
+                self._serve_ready_artifact(parsed.path, ready_only=True)
                 return
             if parsed.path == "/viewer" or parsed.path.startswith("/viewer/"):
                 relative = parsed.path.removeprefix("/viewer").lstrip("/") or "index.html"
@@ -191,19 +198,33 @@ class Handler(BaseHTTPRequestHandler):
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             self._error(400, str(exc))
 
-    def _package_index(self) -> dict[str, Any]:
+    def _package_index(self, *, embedded_only: bool = False) -> dict[str, Any]:
         return package_index(
             self.app.paths,
             max_json_bytes=int(self.app.settings["limits"]["max_artifact_json_bytes"]),
+            embedded_only=embedded_only,
         )
 
-    def _serve_ready_artifact(self, request_path: str) -> None:
-        relative = unquote(request_path.removeprefix("/viewer/packages/")).strip("/")
+    def _serve_ready_artifact(self, request_path: str, *, ready_only: bool = False) -> None:
+        prefix = "/viewer/ready-packages/" if ready_only else "/viewer/packages/"
+        relative = unquote(request_path.removeprefix(prefix)).strip("/")
         parts = relative.split("/", 1)
         if len(parts) != 2:
             raise ValueError("artifact path is incomplete")
         package_name, inner = parts
-        package_root = safe_child(self.app.paths.artifacts_ready, package_name)
+        if ready_only:
+            # This explicit namespace selects the writable ready store even
+            # when an embedded package has the same directory name.
+            package_root = safe_child(self.app.paths.artifacts_ready, package_name)
+        else:
+            embedded_packages = self.app.paths.viewer_static / "packages"
+            embedded_root = safe_child(embedded_packages, package_name)
+            if embedded_root.is_dir():
+                package_root = embedded_root
+            else:
+                # Keep the established writable data-root/artifacts/ready path
+                # as the fallback for legacy/direct package URLs.
+                package_root = safe_child(self.app.paths.artifacts_ready, package_name)
         if not package_root.is_dir():
             raise ValueError("artifact package is not published")
         self._serve_file(package_root, inner)

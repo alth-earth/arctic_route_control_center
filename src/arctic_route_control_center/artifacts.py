@@ -133,7 +133,22 @@ def inspect_viewer_package(
     return result
 
 
-def package_index(paths: AppPaths, *, max_json_bytes: int) -> dict[str, Any]:
+def _package_dirs(root: Path) -> list[Path]:
+    if not root.is_dir():
+        return []
+    return [
+        child
+        for child in sorted(root.iterdir())
+        if child.is_dir() and _SAFE_PACKAGE.fullmatch(child.name)
+    ]
+
+
+def package_index(
+    paths: AppPaths,
+    *,
+    max_json_bytes: int,
+    embedded_only: bool = False,
+) -> dict[str, Any]:
     packages: list[dict[str, Any]] = []
     default = inspect_viewer_package(
         paths.viewer_static,
@@ -145,14 +160,22 @@ def package_index(paths: AppPaths, *, max_json_bytes: int) -> dict[str, Any]:
             "package_dir": "viewer-root",
             "display_name": f"{default.get('display_name', '当前制品')}（打包默认）",
             "bundle_path": "bundle.json",
+            "location": "embedded",
         }
     )
     packages.append(default)
-    for child in sorted(paths.artifacts_ready.iterdir()):
-        if child.is_dir() and _SAFE_PACKAGE.fullmatch(child.name):
-            packages.append(inspect_viewer_package(child, max_json_bytes=max_json_bytes))
-    for child in sorted(paths.artifacts_inbox.iterdir()):
-        if child.is_dir() and _SAFE_PACKAGE.fullmatch(child.name):
+    embedded_root = paths.viewer_static / "packages"
+    for child in _package_dirs(embedded_root):
+        item = inspect_viewer_package(child, max_json_bytes=max_json_bytes)
+        item["location"] = "embedded"
+        packages.append(item)
+    if not embedded_only:
+        for child in _package_dirs(paths.artifacts_ready):
+            item = inspect_viewer_package(child, max_json_bytes=max_json_bytes)
+            item["location"] = "ready"
+            item["bundle_path"] = f"ready-packages/{child.name}/bundle.json"
+            packages.append(item)
+        for child in _package_dirs(paths.artifacts_inbox):
             item = inspect_viewer_package(child, max_json_bytes=max_json_bytes)
             item["location"] = "inbox"
             item["bundle_path"] = ""

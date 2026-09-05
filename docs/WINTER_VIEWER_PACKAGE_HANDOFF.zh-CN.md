@@ -2,8 +2,9 @@
 
 ## 当前默认：Winter v4（2026-09-04 22:17 +08:00）
 
-当前应导入并运行不可变制品 `winter-rebuilt-20260215-viewer-package-v4`。它是外部运行时
-数据，不嵌入 AppImage，也不包含 HTML/CSS/JS、原始 GRIB/NC、凭据或缓存。
+当前应导入并运行不可变制品 `winter-rebuilt-20260215-viewer-package-v4`。Linux AppImage 和
+Windows onedir 会各自嵌入一份经校验的 v4，同时保留外部运行时目录作为持续接收新制品的来源；v4
+目录本身不包含 HTML/CSS/JS、原始 GRIB/NC、凭据或缓存。
 
 Linux 默认数据根为：
 
@@ -11,7 +12,7 @@ Linux 默认数据根为：
 ${XDG_DATA_HOME:-$HOME/.local/share}/arctic-route-control-center/
 ```
 
-因此 v4 的 ready 目录是：
+因此 v4 的外部 ready 目录仍是：
 
 ```text
 <data-root>/arctic-route-control-center/artifacts/ready/
@@ -48,10 +49,10 @@ Canvas 绘制命令；圆角和 trim 是展示策略，不是写死的 Winter �
 会暂停并解除锁定。动态回放标签为 `retrospective_post_hoc_dynamic_projection`，不代表 causal、
 实时预测、导航级或实船资格。
 
-Viewer 地址：
+Viewer 地址（外部 ready 副本与内嵌同名时使用 `package_location=ready` 区分）：
 
 ```text
-http://127.0.0.1:8130/viewer/?package=winter-rebuilt-20260215-viewer-package-v4
+http://127.0.0.1:8130/viewer/?package=winter-rebuilt-20260215-viewer-package-v4&package_location=ready
 ```
 
 截图与最终二进制证据位于：
@@ -60,7 +61,7 @@ http://127.0.0.1:8130/viewer/?package=winter-rebuilt-20260215-viewer-package-v4
 ## 历史 v2（仅审计，不作为当前默认）
 
 以下内容适用于历史制品 `winter-rebuilt-20260215-viewer-package-v2`，仅用于审计追溯。
-本制品是外部运行时数据，不会嵌入 AppImage，也不包含 HTML/CSS/JS、原始 GRIB/NC、凭据或缓存。
+本制品不会嵌入当前 Linux/Windows 发行物，也不包含 HTML/CSS/JS、原始 GRIB/NC、凭据或缓存。
 
 ## 制品位置与校验
 
@@ -128,4 +129,4 @@ Viewer 应显示 12 条路线、145 个风险帧和 Risk Explanation。点击运
 work_package_d/output/playwright/winter-rebuilt-20260215-current-standard/
 ```
 
-AppImage 本身未重建；当前验证复用了已有 Linux x64 AppImage。实际部署时不要把凭据、原始数据或临时缓存复制到制品目录。
+发行物会在构建时嵌入初始动态 Viewer 与 v4；外部 `artifacts/ready` 仍是运行时接收和读取新制品的目录。实际部署时不要把凭据、原始数据或临时缓存复制到程序或制品目录。

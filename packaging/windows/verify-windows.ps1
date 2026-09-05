@@ -14,6 +14,12 @@ if ($env:OS -ne "Windows_NT" -or -not [Environment]::Is64BitOperatingSystem) {
 $ArtifactPath = (Resolve-Path $ArtifactPath).Path
 $Exe = Join-Path $ArtifactPath "arctic-route-control-center.exe"
 if (-not (Test-Path $Exe)) { throw "找不到 onedir EXE：$Exe" }
+$EmbeddedPackagesRoot = Join-Path $ArtifactPath "viewer\packages"
+$EmbeddedPackages = @(Get-ChildItem -LiteralPath $EmbeddedPackagesRoot -Directory -Force -ErrorAction SilentlyContinue)
+if ($EmbeddedPackages.Count -ne 1) {
+    throw "Windows Viewer 必须内嵌且仅内嵌一个 ready 制品（当前 $($EmbeddedPackages.Count) 个）。"
+}
+$EmbeddedPackage = $EmbeddedPackages[0]
 
 # Keep this scan self-contained: final verification is intentionally runnable
 # on a clean Windows machine without Python.  It mirrors scripts/scan_release.py
@@ -118,6 +124,15 @@ try {
         throw "Viewer exporter 内部入口验收失败：$exportOutput"
     }
 
+    # Exercise the same writable ready directory used in production.  Copying
+    # the embedded v4 package into the clean data root intentionally creates a
+    # same-name duplicate; the Viewer must retain both source entries and use
+    # a source-specific URL rather than silently deduplicating or shadowing it.
+    $readyRoot = Join-Path $temp "artifacts\ready"
+    $readyPackage = Join-Path $readyRoot $EmbeddedPackage.Name
+    New-Item -ItemType Directory -Path $readyRoot -Force | Out-Null
+    Copy-Item -LiteralPath $EmbeddedPackage.FullName -Destination $readyPackage -Recurse -Force
+
     $port = 18730 + (Get-Random -Minimum 0 -Maximum 1000)
     $stdout = Join-Path $temp "server.stdout.log"
     $stderr = Join-Path $temp "server.stderr.log"
@@ -138,6 +153,26 @@ try {
     foreach ($endpoint in @("/api/catalog", "/api/settings", "/api/artifacts")) {
         $response = Invoke-RestMethod ($base + $endpoint) -TimeoutSec 5
         if ($response.ok -ne $true) { throw "接口验收失败：$endpoint" }
+    }
+    $viewerIndex = Invoke-RestMethod "$base/viewer/packages.json" -TimeoutSec 10
+    $viewerPackages = @($viewerIndex.packages)
+    if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -ne 3) {
+        throw "Viewer 制品索引未保留 root + 内嵌 ready + 外部 ready 三条记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
+    }
+    $embeddedEntry = @($viewerPackages | Where-Object {
+        $_.location -eq "embedded" -and $_.package_dir -ne "viewer-root"
+    })
+    $readyEntry = @($viewerPackages | Where-Object {
+        $_.location -eq "ready" -and $_.package_dir -eq $EmbeddedPackage.Name
+    })
+    if ($embeddedEntry.Count -ne 1 -or $readyEntry.Count -ne 1) {
+        throw "Viewer 未同时暴露同名内嵌/ready 制品：$($viewerPackages | ConvertTo-Json -Depth 4)"
+    }
+    $encodedPackageName = [Uri]::EscapeDataString($EmbeddedPackage.Name)
+    $embeddedChecksums = Invoke-RestMethod "$base/viewer/packages/$encodedPackageName/checksums.json" -TimeoutSec 10
+    $readyChecksums = Invoke-RestMethod "$base/viewer/ready-packages/$encodedPackageName/checksums.json" -TimeoutSec 10
+    if (-not $embeddedChecksums.files -or -not $readyChecksums.files) {
+        throw "同名内嵌/ready 制品的来源专用路径未返回 checksums。"
     }
     $jobRequest = @{
         operation = "a_bundle"
@@ -175,7 +210,7 @@ try {
         }
     }
     if ($pathTraversalSucceeded) { throw "路径穿越请求意外成功。" }
-    Write-Host "PASS: EXE self-test、冻结任务/编排器子进程、loopback 服务、接口、路径拒绝、ecCodes DLL/definitions 均通过。"
+    Write-Host "PASS: EXE self-test、冻结任务/编排器子进程、loopback 服务、API、root+内嵌/ready 同名制品、路径拒绝、ecCodes DLL/definitions 均通过。"
 } finally {
     $env:PATH = $originalPath
     if ($proc -and -not $proc.HasExited) {

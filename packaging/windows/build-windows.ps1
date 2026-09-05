@@ -2,6 +2,7 @@
 param(
     [string]$WorkspaceRoot = "",
     [string]$PythonVersion = "3.13",
+    [string]$ReadyPackage = "",
     [switch]$Clean,
     [switch]$SkipTests
 )
@@ -56,6 +57,7 @@ $WorkRoot = Join-Path $BuildRoot "pyinstaller-work"
 $ExeDir = Join-Path $DistRoot "arctic-route-control-center"
 $NativeRoot = Join-Path $ProjectRoot "build\windows-native"
 $NativeEnvironment = Join-Path $ProjectRoot "packaging\windows\environment.yml"
+$EmbeddedReadyPackageName = "winter-rebuilt-20260215-viewer-package-v4"
 
 if ($Clean) {
     # Keep the separately audited native Mamba prefix: recreating it is not
@@ -65,6 +67,24 @@ if ($Clean) {
     }
 }
 New-Item -ItemType Directory -Path $BuildRoot -Force | Out-Null
+
+if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
+    $ReadyPackage = $env:ARCTIC_ROUTE_READY_PACKAGE
+}
+if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
+    $localAppData = [Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)
+    if ([string]::IsNullOrWhiteSpace($localAppData)) {
+        $localAppData = $env:LOCALAPPDATA
+    }
+    if ([string]::IsNullOrWhiteSpace($localAppData)) {
+        throw "无法确定 Windows 本地数据目录；请显式传入 -ReadyPackage 或设置 ARCTIC_ROUTE_READY_PACKAGE。"
+    }
+    $ReadyPackage = Join-Path $localAppData ("ArcticRouteControlCenter\artifacts\ready\" + $EmbeddedReadyPackageName)
+}
+if (-not (Test-Path -LiteralPath $ReadyPackage -PathType Container)) {
+    throw "缺少已审计的 ready Viewer 制品：$ReadyPackage；请将 v4 放入 data_root\artifacts\ready 或显式传入 -ReadyPackage。"
+}
+$ReadyPackage = (Resolve-Path -LiteralPath $ReadyPackage).Path
 
 $EcCodesPrefix = $env:ARCTIC_ROUTE_ECCODES_PREFIX
 if ([string]::IsNullOrWhiteSpace($EcCodesPrefix)) {
@@ -121,7 +141,8 @@ Invoke-Checked "uv" @("pip", "install", "--python", $BuildPython, $ProjectRoot,
 if (Test-Path $Assets) { Remove-Item -LiteralPath $Assets -Recurse -Force }
 Invoke-Checked $BuildPython @(
     (Join-Path $ProjectRoot "scripts\prepare_runtime_assets.py"),
-    "--workspace-root", $WorkspaceRoot, "--output", $Assets
+    "--workspace-root", $WorkspaceRoot, "--output", $Assets,
+    "--ready-package", $ReadyPackage
 )
 Invoke-Checked $BuildPython @(
     (Join-Path $ProjectRoot "scripts\scan_release.py"),

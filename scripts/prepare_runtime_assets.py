@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 from datetime import UTC, datetime
@@ -63,6 +64,45 @@ VIEWER_STATIC_ALLOWLIST = (
 
 VIEWER_FILE_ALLOWLIST = VIEWER_STATIC_ALLOWLIST + VIEWER_CHECKSUM_ALLOWLIST
 
+# Linux AppImage and Windows onedir intentionally carry exactly two Viewer
+# packages: the original dynamic replay from D as the default root package,
+# plus the checksum-verified v4 package from the user's ready store.  Keep the
+# ready input explicit and fail closed if a different package is supplied by
+# accident (for example v2).
+EMBEDDED_READY_PACKAGE_NAME = "winter-rebuilt-20260215-viewer-package-v4"
+EMBEDDED_READY_PACKAGE_BUNDLE_SHA256 = (
+    "f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a"
+)
+EMBEDDED_READY_PACKAGE_CHECKSUMS_SHA256 = (
+    "92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33"
+)
+EMBEDDED_READY_PACKAGE_ASSEMBLY_ID = (
+    "winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad"
+)
+
+
+def _default_embedded_ready_package() -> Path:
+    if os.name == "nt":
+        base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+        return (
+            base
+            / "ArcticRouteControlCenter"
+            / "artifacts"
+            / "ready"
+            / EMBEDDED_READY_PACKAGE_NAME
+        )
+    base = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
+    return (
+        base
+        / "arctic-route-control-center"
+        / "artifacts"
+        / "ready"
+        / EMBEDDED_READY_PACKAGE_NAME
+    )
+
+
+DEFAULT_EMBEDDED_READY_PACKAGE = _default_embedded_ready_package()
+
 # Keep this copy boundary independent from the source tree layout.  A new
 # contract file must be explicitly reviewed here before it can enter a
 # frozen package.
@@ -115,6 +155,73 @@ def copy_file(source: Path, target: Path) -> None:
     shutil.copy2(source, target)
 
 
+def copy_embedded_ready_package(source: Path, output: Path) -> dict[str, object]:
+    """Copy one immutable ready package without changing any of its bytes."""
+
+    if source.name != EMBEDDED_READY_PACKAGE_NAME:
+        raise ValueError(
+            "the embedded ready package must be "
+            f"{EMBEDDED_READY_PACKAGE_NAME}, got {source.name}"
+        )
+    if not source.is_dir():
+        raise FileNotFoundError(f"ready Viewer package is missing: {source}")
+    bundle_path = source / "bundle.json"
+    checksums_path = source / "checksums.json"
+    if sha256(bundle_path) != EMBEDDED_READY_PACKAGE_BUNDLE_SHA256:
+        raise ValueError("ready v4 bundle.json SHA256 does not match the audited artifact")
+    if sha256(checksums_path) != EMBEDDED_READY_PACKAGE_CHECKSUMS_SHA256:
+        raise ValueError("ready v4 checksums.json SHA256 does not match the audited artifact")
+    try:
+        bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+        checksums = json.loads(checksums_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"ready v4 metadata is invalid: {exc}") from exc
+    presentation = bundle.get("combined_presentation")
+    if not isinstance(presentation, dict) or presentation.get("status") != "PUBLISHED":
+        raise ValueError("ready v4 combined presentation is not PUBLISHED")
+    if presentation.get("assembly_id") != EMBEDDED_READY_PACKAGE_ASSEMBLY_ID:
+        raise ValueError("ready v4 assembly identity does not match the audited artifact")
+    files = checksums.get("files")
+    if not isinstance(files, dict) or not files:
+        raise ValueError("ready v4 checksums file map is malformed")
+    if any(
+        not isinstance(relative, str)
+        or Path(relative).name != relative
+        or Path(relative).is_absolute()
+        or not isinstance(expected, str)
+        or len(expected) != 64
+        for relative, expected in files.items()
+    ):
+        raise ValueError("ready v4 checksum entry is malformed")
+    expected_names = set(files) | {"checksums.json"}
+    actual_names = {
+        path.relative_to(source).as_posix()
+        for path in source.rglob("*")
+        if path.is_file()
+    }
+    if actual_names != expected_names:
+        raise ValueError(
+            "ready v4 package file set changed: "
+            f"unexpected={sorted(actual_names - expected_names)}, "
+            f"missing={sorted(expected_names - actual_names)}"
+        )
+    for relative, expected in files.items():
+        if sha256(source / relative) != expected:
+            raise ValueError(f"ready v4 checksum mismatch: {relative}")
+    target = output / "viewer" / "packages" / EMBEDDED_READY_PACKAGE_NAME
+    copy_file(checksums_path, target / "checksums.json")
+    for relative in sorted(files):
+        copy_file(source / relative, target / relative)
+    return {
+        "package_dir": EMBEDDED_READY_PACKAGE_NAME,
+        "source": "artifacts/ready/" + EMBEDDED_READY_PACKAGE_NAME,
+        "bundle_sha256": EMBEDDED_READY_PACKAGE_BUNDLE_SHA256,
+        "checksums_sha256": EMBEDDED_READY_PACKAGE_CHECKSUMS_SHA256,
+        "assembly_id": EMBEDDED_READY_PACKAGE_ASSEMBLY_ID,
+        "files": sorted(expected_names),
+    }
+
+
 def git_head(path: Path) -> str:
     result = subprocess.run(
         ["git", "-C", str(path), "rev-parse", "HEAD"],
@@ -152,6 +259,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--workspace-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--ready-package",
+        type=Path,
+        default=Path(os.environ.get("ARCTIC_ROUTE_READY_PACKAGE", DEFAULT_EMBEDDED_READY_PACKAGE)),
+        help="audited ready-store package to embed alongside the original dynamic package",
+    )
     args = parser.parse_args()
     root = args.workspace_root.resolve()
     output = args.output.resolve()
@@ -184,6 +297,9 @@ def main() -> int:
             raise ValueError(f"current Viewer checksum mismatch: {relative}")
     for relative in VIEWER_FILE_ALLOWLIST:
         copy_file(viewer_source / relative, output / "viewer" / relative)
+    embedded_ready = copy_embedded_ready_package(
+        args.ready_package.expanduser().resolve(), output
+    )
 
     contracts = root / "arctic_route_contracts" / "configs"
     for scenario_id in RELEASE_SCENARIO_ALLOWLIST:
@@ -260,6 +376,7 @@ def main() -> int:
         "viewer_source": "work_package_d/viewer (current checksum-verified package)",
         "viewer_files": list(VIEWER_FILE_ALLOWLIST),
         "viewer_checksum_allowlist": list(VIEWER_CHECKSUM_ALLOWLIST),
+        "viewer_embedded_packages": [embedded_ready],
         "contract_scenario_allowlist": list(RELEASE_SCENARIO_ALLOWLIST),
         "contract_corridor_allowlist": list(RELEASE_CORRIDOR_ALLOWLIST),
         "contract_vessel_allowlist": list(RELEASE_VESSEL_ALLOWLIST),

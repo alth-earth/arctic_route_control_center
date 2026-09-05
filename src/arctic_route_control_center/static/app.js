@@ -35,6 +35,23 @@ function showPage(name) {
   $$(".nav-item").forEach((node) => node.classList.toggle("active", node.dataset.page === name));
 }
 
+function bindHelpDialog() {
+  const dialog = $("#help-dialog");
+  const opener = $("#help-button");
+  const closer = $("#help-close");
+  const close = () => {
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+  };
+  opener.onclick = () => {
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  };
+  closer.onclick = close;
+  dialog.addEventListener("cancel", (event) => { event.preventDefault(); close(); });
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
+}
+
 async function loadCore() {
   const [system, catalog, settings] = await Promise.all([
     api("/api/system"), api("/api/catalog"), api("/api/settings"),
@@ -227,6 +244,7 @@ async function refresh() {
 async function init() {
   $$(".nav-item").forEach((node) => node.onclick = () => showPage(node.dataset.page));
   $$('[data-refresh]').forEach((node) => node.onclick = refresh);
+  bindHelpDialog();
   $("#contract-kind").onchange = renderContractIds;
   $("#show-contract").onclick = () => {
     const kind = $("#contract-kind").value; const id = $("#contract-id").value;

@@ -15,6 +15,7 @@
     </div>
     <div class="top-actions">
       <span id="health" class="badge waiting">正在连接后端</span>
+      <button id="help-button" class="button icon-button" type="button" aria-haspopup="dialog" aria-controls="help-dialog" aria-label="打开使用说明" title="使用说明">?</button>
       <a class="button primary" href="/viewer/" target="_blank" rel="noreferrer">打开 Replay Viewer ↗</a>
     </div>
   </header>
@@ -163,6 +164,98 @@
       </section>
     </main>
   </div>
+  <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
+    <div class="help-dialog-header">
+      <div>
+        <p class="kicker">HELP · LOCAL CONTROL PLANE</p>
+        <h2 id="help-title">使用说明与运行目录</h2>
+      </div>
+      <button id="help-close" class="button icon-button" type="button" aria-label="关闭使用说明" title="关闭">×</button>
+    </div>
+    <div class="help-dialog-body">
+      <section class="help-section">
+        <h3>快速开始</h3>
+        <ol>
+          <li>启动 Linux AppImage 或 Windows EXE。程序会保留后端命令台并打开本机浏览器；默认地址为 <code>http://127.0.0.1:8130/</code>。</li>
+          <li>先在“船舶与场景”检查只读 Contracts，再到“设置”分别填写 Copernicus Marine 的 <code>.env.copernicus</code> 和 CDS/CARRA 的 <code>.cdsapirc</code> 外部绝对路径。</li>
+          <li>在“A 数据下载”准备数据；在“制品构建”依次生成 A Bundle/RunContext、运行 Orchestrator、发布 Viewer 包。新包先进入 <code>artifacts/inbox</code>。</li>
+          <li>在“制品库”确认校验通过并提升到 <code>artifacts/ready</code>，然后点击顶部“打开 Replay Viewer”。外部 ready 制品可在运行时接收，不需要重新打包；同名制品也会按来源分别显示。</li>
+          <li>停止服务请按 <code>Ctrl+C</code> 或关闭命令台；浏览器页面本身不是后端进程。</li>
+        </ol>
+      </section>
+
+      <section class="help-section">
+        <h3>平台与启动参数</h3>
+        <div class="help-grid two">
+          <article class="help-card">
+            <h4>Linux / AppImage</h4>
+            <p>默认运行数据：</p>
+            <pre><code>${XDG_DATA_HOME:-~/.local/share}/arctic-route-control-center/</code></pre>
+            <p>无 FUSE 的环境可使用：</p>
+            <pre><code>./release/Arctic_Route_Control_Center-x86_64.AppImage \
+  --appimage-extract-and-run</code></pre>
+            <p class="hint">正式凭据文件建议置于程序、仓库和数据目录之外，并设置为当前用户可读写（例如 <code>chmod 600</code>）。</p>
+          </article>
+          <article class="help-card">
+            <h4>Windows / EXE</h4>
+            <p>默认运行数据：</p>
+            <pre><code>%LOCALAPPDATA%\ArcticRouteControlCenter\</code></pre>
+            <p>EXE 是 onedir 发行物，必须保留整个 <code>arctic-route-control-center</code> 目录；双击 EXE 会保留命令台并打开本机浏览器。</p>
+            <p class="hint">Windows 凭据文件应限制为当前用户可读，并置于 EXE、仓库和数据目录之外。</p>
+          </article>
+        </div>
+        <p class="hint">两平台都可以用 <code>--data-root &lt;目录&gt;</code> 或 <code>ARCTIC_ROUTE_DATA_ROOT</code> 覆盖默认数据根，也可以用 <code>--host</code>、<code>--port</code> 调整本地监听参数；默认只监听回环地址。</p>
+      </section>
+
+      <section class="help-section">
+        <h3>运行目录结构</h3>
+        <pre class="tree-block"><code>arctic-route-control-center/
+├── config/
+│   └── settings.json              # 两个外部凭据文件的路径
+├── data/
+│   └── work-package-a/            # A 下载数据、manifest、缓存数据
+├── artifacts/
+│   ├── inbox/                     # 待审核制品
+│   ├── ready/                     # 审核通过、可供 Viewer 使用的制品
+│   └── invalid/                   # 校验失败制品
+├── run/
+│   ├── control-center.json        # 当前后端 PID、端口（如有）
+│   └── jobs/&lt;job-id&gt;/             # 任务输出和摘要
+├── logs/                          # 后端和任务日志
+└── cache/                         # 下载缓存</code></pre>
+        <p class="hint">Linux 默认根目录为 <code>${XDG_DATA_HOME:-~/.local/share}/arctic-route-control-center</code>；Windows 默认根目录为 <code>%LOCALAPPDATA%\ArcticRouteControlCenter</code>。界面“运行总览”中的实际路径由后端返回，是排查覆盖参数后的准确信息。</p>
+      </section>
+
+      <section class="help-section">
+        <h3>环境变量与相关路径</h3>
+        <div class="table-wrap">
+          <table class="help-table">
+            <thead><tr><th>名称</th><th>用途</th><th>平台 / 时机</th></tr></thead>
+            <tbody>
+              <tr><td><code>ARCTIC_ROUTE_DATA_ROOT</code></td><td>覆盖运行数据根目录；与 <code>--data-root</code> 二选一时以命令行参数为准。</td><td>Linux、Windows；运行时</td></tr>
+              <tr><td><code>XDG_DATA_HOME</code></td><td>Linux 默认数据根的父目录；未设置时使用 <code>~/.local/share</code>。</td><td>Linux；运行时</td></tr>
+              <tr><td><code>LOCALAPPDATA</code></td><td>Windows 默认数据根的父目录；未设置时使用当前用户的 <code>AppData\Local</code>。</td><td>Windows；运行时</td></tr>
+              <tr><td><code>ARCTIC_ROUTE_ROOT</code></td><td>开发/集成时定位七个兄弟仓库的工作区根；发行版通常不需要设置。</td><td>开发与构建</td></tr>
+              <tr><td><code>ARCTIC_ROUTE_ECCODES_PREFIX</code></td><td>指定 ecCodes 原生库和 definitions 的前缀；仅在 A 数据或构建环境需要时设置。</td><td>Linux、Windows；高级配置</td></tr>
+              <tr><td><code>ARCTIC_ROUTE_READY_PACKAGE</code></td><td>指定构建时嵌入的、已审计 ready Viewer 制品目录；不改变运行时外部 ready 接收路径。</td><td>Linux、Windows；构建时</td></tr>
+              <tr><td><code>ECCODES_DEFINITION_PATH</code> / <code>LD_LIBRARY_PATH</code></td><td>ecCodes definitions 与原生库搜索路径；AppImage/EXE 启动器通常会自动配置。</td><td>Linux；高级配置</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">不要把凭据内容写入环境变量、仓库、AppImage/EXE 或 Viewer 制品。设置页只保存两个外部文件路径：Marine 任务使用 <code>.env.copernicus</code>，CARRA 任务使用 <code>.cdsapirc</code>，二者不可混用。</p>
+      </section>
+
+      <section class="help-section">
+        <h3>常用接口与排查</h3>
+        <ul>
+          <li>健康检查：<code>/api/health</code>；目录与版本：<code>/api/catalog</code>；设置：<code>/api/settings</code>；制品扫描：<code>/api/artifacts</code>。</li>
+          <li>Viewer 入口：<code>/viewer/</code>。制品必须通过 Schema、身份、checksum、PUBLISHED、路线数量和 formal motion 等校验，失败会保持不可展示。</li>
+          <li>任务失败先看“任务与日志”和 <code>run/jobs/&lt;job-id&gt;</code>；不要手工修改制品 JSON、复制凭据或删除 <code>inbox</code>、<code>ready</code>、<code>invalid</code> 来绕过校验。</li>
+          <li>这是本地工程研究与可重复回放控制面，不代表实船标定、导航认证或适航结论；D Viewer 只展示已发布制品。</li>
+        </ul>
+      </section>
+    </div>
+  </dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>

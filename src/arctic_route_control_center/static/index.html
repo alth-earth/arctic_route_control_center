@@ -204,7 +204,7 @@
             <p class="hint">Windows 凭据文件应限制为当前用户可读，并置于 EXE、仓库和数据目录之外。</p>
           </article>
         </div>
-        <p class="hint">两平台都可以用 <code>--data-root &lt;目录&gt;</code> 或 <code>ARCTIC_ROUTE_DATA_ROOT</code> 覆盖默认数据根，也可以用 <code>--host</code>、<code>--port</code> 调整本地监听参数；默认只监听回环地址。</p>
+        <p class="hint">两平台都可以用 <code>--data-root &lt;目录&gt;</code> 或 <code>ARCTIC_ROUTE_DATA_ROOT</code> 覆盖默认数据根，也可以用 <code>--host</code>、<code>--port</code> 调整本地监听参数；<code>--host</code> 仅接受 <code>127.0.0.1</code>、<code>localhost</code> 或 <code>::1</code>，服务只监听回环地址。</p>
       </section>
 
       <section class="help-section">
@@ -235,10 +235,11 @@
               <tr><td><code>ARCTIC_ROUTE_DATA_ROOT</code></td><td>覆盖运行数据根目录；与 <code>--data-root</code> 二选一时以命令行参数为准。</td><td>Linux、Windows；运行时</td></tr>
               <tr><td><code>XDG_DATA_HOME</code></td><td>Linux 默认数据根的父目录；未设置时使用 <code>~/.local/share</code>。</td><td>Linux；运行时</td></tr>
               <tr><td><code>LOCALAPPDATA</code></td><td>Windows 默认数据根的父目录；未设置时使用当前用户的 <code>AppData\Local</code>。</td><td>Windows；运行时</td></tr>
-              <tr><td><code>ARCTIC_ROUTE_ROOT</code></td><td>开发/集成时定位七个兄弟仓库的工作区根；发行版通常不需要设置。</td><td>开发与构建</td></tr>
+              <tr><td><code>ARCTIC_ROUTE_ROOT</code></td><td>开发/集成时定位六个兄弟仓库和本控制中心的工作区根；发行版通常不需要设置。</td><td>开发与构建</td></tr>
               <tr><td><code>ARCTIC_ROUTE_ECCODES_PREFIX</code></td><td>指定 ecCodes 原生库和 definitions 的前缀；仅在 A 数据或构建环境需要时设置。</td><td>Linux、Windows；高级配置</td></tr>
               <tr><td><code>ARCTIC_ROUTE_READY_PACKAGE</code></td><td>指定构建时嵌入的、已审计 ready Viewer 制品目录；不改变运行时外部 ready 接收路径。</td><td>Linux、Windows；构建时</td></tr>
-              <tr><td><code>ECCODES_DEFINITION_PATH</code> / <code>LD_LIBRARY_PATH</code></td><td>ecCodes definitions 与原生库搜索路径；AppImage/EXE 启动器通常会自动配置。</td><td>Linux；高级配置</td></tr>
+              <tr><td><code>ECCODES_DEFINITION_PATH</code></td><td>ecCodes definitions 搜索路径；AppImage 启动器通常会自动配置。</td><td>Linux；高级配置</td></tr>
+              <tr><td><code>LD_LIBRARY_PATH</code></td><td>Linux 原生库搜索路径；AppImage 启动器通常会自动配置，通常不需要手动覆盖。</td><td>Linux；高级配置</td></tr>
             </tbody>
           </table>
         </div>

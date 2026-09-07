@@ -118,14 +118,27 @@ jobs:
           Write-Host "=== eccodes dlls ==="
           Get-ChildItem -LiteralPath "$prefix\Library\bin" -Filter "*eccodes*.dll" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
 
+      - name: Fetch v4 ready Viewer package
+        shell: pwsh
+        run: |
+          $ready = "$env:RUNNER_TEMP\ready-package"
+          if (-not (Test-Path "$ready\bundle.json")) {
+            $zip = "$env:RUNNER_TEMP\winter-v4.zip"
+            Invoke-WebRequest -Uri "https://github.com/alth-earth/arctic_route_control_center/releases/download/viewer-winter-v4/winter-v4.zip" -OutFile $zip
+            Expand-Archive -LiteralPath $zip -DestinationPath $ready
+          }
+          Write-Host "ready 目录：$ready"
+          Get-ChildItem -LiteralPath $ready | Select-Object -First 4 -ExpandProperty Name
+
       - name: Build Windows onedir EXE
         shell: pwsh
         env:
           ARCTIC_ROUTE_ECCODES_PREFIX: ${{ runner.temp }}\arctic-native
         run: |
           $ws = (Resolve-Path ws).Path
+          $ready = "$env:RUNNER_TEMP\ready-package"
           Set-Location ws\arctic_route_control_center
-          .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean
+          .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean -ReadyPackage $ready
 
       - name: Upload handoff artifact
         if: success()

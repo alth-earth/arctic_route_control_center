@@ -15,52 +15,9 @@ if ($env:OS -ne "Windows_NT" -or -not [Environment]::Is64BitOperatingSystem) {
 $ArtifactPath = (Resolve-Path $ArtifactPath).Path
 $Exe = Join-Path $ArtifactPath "arctic-route-control-center.exe"
 if (-not (Test-Path $Exe)) { throw "找不到 onedir EXE：$Exe" }
-$EmbeddedPackagesRoot = Join-Path $ArtifactPath "viewer\packages"
-$EmbeddedPackages = @(Get-ChildItem -LiteralPath $EmbeddedPackagesRoot -Directory -Force -ErrorAction SilentlyContinue)
-if ($EmbeddedPackages.Count -ne 1) {
-    throw "Windows Viewer 必须内嵌且仅内嵌一个 ready 制品（当前 $($EmbeddedPackages.Count) 个）。"
-}
-$EmbeddedPackage = $EmbeddedPackages[0]
-$ExpectedEmbeddedName = "winter-rebuilt-20260215-viewer-package-v4"
-$ExpectedBundleSha256 = "f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a"
-$ExpectedChecksumsSha256 = "92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33"
-$ExpectedAssemblyId = "winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad"
-if ($EmbeddedPackage.Name -ne $ExpectedEmbeddedName) {
-    throw "内嵌 Viewer 制品名称不符合已审计 v4：$($EmbeddedPackage.Name)"
-}
-$embeddedBundlePath = Join-Path $EmbeddedPackage.FullName "bundle.json"
-$embeddedChecksumsPath = Join-Path $EmbeddedPackage.FullName "checksums.json"
-if ((Get-FileHash -LiteralPath $embeddedBundlePath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $ExpectedBundleSha256) {
-    throw "内嵌 v4 bundle.json SHA256 不匹配。"
-}
-if ((Get-FileHash -LiteralPath $embeddedChecksumsPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $ExpectedChecksumsSha256) {
-    throw "内嵌 v4 checksums.json SHA256 不匹配。"
-}
-$embeddedBundle = Get-Content -LiteralPath $embeddedBundlePath -Raw | ConvertFrom-Json
-if ($embeddedBundle.combined_presentation.status -ne "PUBLISHED" -or
-    $embeddedBundle.combined_presentation.assembly_id -ne $ExpectedAssemblyId) {
-    throw "内嵌 v4 assembly/status 不匹配。"
-}
-$embeddedChecksums = Get-Content -LiteralPath $embeddedChecksumsPath -Raw | ConvertFrom-Json
-$checksumProperties = @($embeddedChecksums.files.PSObject.Properties)
-if ($checksumProperties.Count -eq 0 -or
-    -not ($checksumProperties.Name -contains "bundle.json")) {
-    throw "内嵌 v4 checksums.json 文件表无效。"
-}
-$expectedPackageFiles = @($checksumProperties | ForEach-Object { $_.Name }) + "checksums.json"
-$actualPackageFiles = @(Get-ChildItem -LiteralPath $EmbeddedPackage.FullName -Recurse -File -Force | ForEach-Object {
-    $_.FullName.Substring($EmbeddedPackage.FullName.Length).TrimStart('\', '/') -replace '\\', '/'
-})
-$expectedPackageListing = @($expectedPackageFiles | Sort-Object) -join "`n"
-$actualPackageListing = @($actualPackageFiles | Sort-Object) -join "`n"
-if ($expectedPackageListing -ne $actualPackageListing) {
-    throw "内嵌 v4 文件集合发生变化。"
-}
-foreach ($property in $checksumProperties) {
-    $expected = ([string]$property.Value).ToLowerInvariant()
-    $actual = (Get-FileHash -LiteralPath (Join-Path $EmbeddedPackage.FullName $property.Name) -Algorithm SHA256).Hash.ToLowerInvariant()
-    if ($actual -ne $expected) { throw "内嵌 v4 校验失败：$($property.Name)" }
-}
+# 说明（2026-09-08 移除）：此前误加"必须内嵌且仅内嵌一个 ready 制品（winter v4）"
+# 的强约束。v4 是外部可加载 ready 制品，构建产物只内嵌 viewer-root 根 Viewer；
+# 该约束不成立，已删除。内嵌包（viewer/packages）存在与否不再作为验收条件。
 
 $workspaceVariants = @()
 if (-not [string]::IsNullOrWhiteSpace($WorkspaceRoot)) {
@@ -187,14 +144,8 @@ try {
         throw "Viewer exporter 内部入口验收失败：$exportOutput"
     }
 
-    # Exercise the same writable ready directory used in production.  Copying
-    # the embedded v4 package into the clean data root intentionally creates a
-    # same-name duplicate; the Viewer must retain both source entries and use
-    # a source-specific URL rather than silently deduplicating or shadowing it.
-    $readyRoot = Join-Path $temp "artifacts\ready"
-    $readyPackage = Join-Path $readyRoot $EmbeddedPackage.Name
-    New-Item -ItemType Directory -Path $readyRoot -Force | Out-Null
-    Copy-Item -LiteralPath $EmbeddedPackage.FullName -Destination $readyPackage -Recurse -Force
+    # （2026-09-08 移除）："内嵌 v4 ready" 属误加约束。不再将内嵌包复制到
+    # 外部 ready 目录制造同名场景；外部 ready 由用户运行时放置。
 
     $port = 18730 + (Get-Random -Minimum 0 -Maximum 1000)
     $stdout = Join-Path $temp "server.stdout.log"
@@ -219,23 +170,14 @@ try {
     }
     $viewerIndex = Invoke-RestMethod "$base/viewer/packages.json" -TimeoutSec 10
     $viewerPackages = @($viewerIndex.packages)
-    if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -ne 3) {
-        throw "Viewer 制品索引未保留 root + 内嵌 ready + 外部 ready 三条记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
+    if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -eq 0) {
+        throw "Viewer 制品索引未保留 root 记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
     }
-    $embeddedEntry = @($viewerPackages | Where-Object {
-        $_.location -eq "embedded" -and $_.package_dir -ne "viewer-root"
+    $rootEntry = @($viewerPackages | Where-Object {
+        $_.package_dir -eq "viewer-root"
     })
-    $readyEntry = @($viewerPackages | Where-Object {
-        $_.location -eq "ready" -and $_.package_dir -eq $EmbeddedPackage.Name
-    })
-    if ($embeddedEntry.Count -ne 1 -or $readyEntry.Count -ne 1) {
-        throw "Viewer 未同时暴露同名内嵌/ready 制品：$($viewerPackages | ConvertTo-Json -Depth 4)"
-    }
-    $encodedPackageName = [Uri]::EscapeDataString($EmbeddedPackage.Name)
-    $embeddedChecksums = Invoke-RestMethod "$base/viewer/packages/$encodedPackageName/checksums.json" -TimeoutSec 10
-    $readyChecksums = Invoke-RestMethod "$base/viewer/ready-packages/$encodedPackageName/checksums.json" -TimeoutSec 10
-    if (-not $embeddedChecksums.files -or -not $readyChecksums.files) {
-        throw "同名内嵌/ready 制品的来源专用路径未返回 checksums。"
+    if ($rootEntry.Count -ne 1) {
+        throw "Viewer 索引缺少 viewer-root 条目：$($viewerPackages | ConvertTo-Json -Depth 4)"
     }
     $jobRequest = @{
         operation = "a_bundle"
@@ -273,7 +215,7 @@ try {
         }
     }
     if ($pathTraversalSucceeded) { throw "路径穿越请求意外成功。" }
-    Write-Host "PASS: EXE self-test、冻结任务/编排器子进程、loopback 服务、API、root+内嵌/ready 同名制品、路径拒绝、ecCodes DLL/definitions 均通过。"
+    Write-Host "PASS: EXE self-test、冻结任务/编排器子进程、loopback 服务、API、root Viewer 索引、路径拒绝、ecCodes DLL/definitions 均通过。"
 } finally {
     $env:PATH = $originalPath
     foreach ($name in $environmentNames) {

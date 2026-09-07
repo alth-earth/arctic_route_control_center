@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -50,6 +51,9 @@ def test_two_credential_paths_round_trip_independently(tmp_path: Path) -> None:
     assert settings["credentials"]["cdsapi_rc_file"].endswith(".cdsapirc")
 
 
+@pytest.mark.skipif(
+    os.name != "posix", reason="POSIX permission bits do not map to Windows ACLs"
+)
 def test_credential_file_must_be_absolute_readable_and_private(tmp_path: Path) -> None:
     credential = tmp_path / ".cdsapirc"
     credential.write_text("not-a-real-secret", encoding="utf-8")

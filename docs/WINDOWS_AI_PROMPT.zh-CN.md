@@ -16,11 +16,18 @@
 - 确认 $env:OS == Windows_NT、操作系统和 Python 都是 x64，Python 版本为 3.13；如果在 WSL、Linux、32 位 Python，立即停止。不要尝试交叉编译 Windows EXE。
 - 确认 uv、git 和 mamba 在 PATH；阅读 arctic_route_control_center\docs\BUILD_WINDOWS.zh-CN.md 和 README.md。
 - 确认六个仓库存在且不把任何用户未提交修改清理掉。
+- 逐一预检两个构建时 Viewer 制品输入，不能因为名称相同或目录中存在其他包就自动替代：
+  1. 初始动态 `viewer-root`：正常应存在于远端 `main` 跟踪的 `packaging\viewer-root`，并包含 `bundle.json`、`checksums.json` 及 checksum 清单中的全部文件。
+  2. 经审计 v4：`winter-rebuilt-20260215-viewer-package-v4` 不在 Git 远端，必须由用户/制品提供者另行提供完整制品目录或压缩包及其本机路径。
+  若任一输入缺失、不完整或 checksum/assembly 校验失败，立即停止并明确询问用户提供“缺失制品的完整目录或压缩包”和“其本机路径”；不要搜索并猜用其他 `ready` 包，不要从截图重建，不要降级到 v2。若用户给的是压缩包，只能解压到仓库外的临时/交接目录，保持内部文件字节不变，然后把解压后的制品目录传给构建脚本。
 - 先检查双凭据边界：`.env.copernicus` 只供 Copernicus Marine；`.cdsapirc` 只供 CARRA 的风场、温度、能见度再分析。两个文件必须在仓库、构建目录、EXE 目录和 ZIP 之外，不能读取、打印、复制或上传其内容；设置页应分别保存两个外部绝对路径。
 
-只执行这个入口（脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取构建时 v4；路径不同则显式传入 `-ReadyPackage`，不要复制或改名制品目录；初始动态 Viewer 数据来自随仓库跟踪的 `packaging\viewer-root`）：
+只执行这个入口（脚本默认使用随仓库跟踪的 `packaging\viewer-root`，并从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取构建时 v4；路径不同则分别显式传入 `-ViewerRootPackage` / `-ReadyPackage`，不要复制或改名制品目录）：
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
   .\packaging\windows\build-windows.ps1 -Clean
+
+团队成员把两个制品放在任意仓库外目录时，使用实际路径，不得照抄示例盘符或用户名：
+  .\packaging\windows\build-windows.ps1 -Clean -ViewerRootPackage <初始动态 viewer-root 目录> -ReadyPackage <v4 制品目录>
 
 如果当前是 cmd.exe，可以使用等价包装：
   .\packaging\windows\build-windows.bat -Clean

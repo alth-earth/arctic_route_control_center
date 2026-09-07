@@ -2,6 +2,7 @@
 param(
     [string]$WorkspaceRoot = "",
     [string]$PythonVersion = "3.13",
+    [string]$ViewerRootPackage = "",
     [string]$ReadyPackage = "",
     [switch]$Clean,
     [switch]$SkipTests
@@ -96,6 +97,17 @@ if ($Clean) {
 }
 New-Item -ItemType Directory -Path $BuildRoot -Force | Out-Null
 
+if ([string]::IsNullOrWhiteSpace($ViewerRootPackage)) {
+    $ViewerRootPackage = $env:ARCTIC_ROUTE_VIEWER_ROOT
+}
+if ([string]::IsNullOrWhiteSpace($ViewerRootPackage)) {
+    $ViewerRootPackage = Join-Path $ProjectRoot "packaging\viewer-root"
+}
+if (-not (Test-Path -LiteralPath $ViewerRootPackage -PathType Container)) {
+    throw "缺少初始动态 Viewer 制品目录：$ViewerRootPackage；请向制品提供者索取完整 viewer-root 制品目录（至少包含 bundle.json、checksums.json 及清单列出的文件），再用 -ViewerRootPackage <目录> 或 ARCTIC_ROUTE_VIEWER_ROOT 指定。不要猜测路径或改用其他制品。"
+}
+$ViewerRootPackage = (Resolve-Path -LiteralPath $ViewerRootPackage).Path
+
 if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
     $ReadyPackage = $env:ARCTIC_ROUTE_READY_PACKAGE
 }
@@ -110,7 +122,7 @@ if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
     $ReadyPackage = Join-Path $localAppData ("ArcticRouteControlCenter\artifacts\ready\" + $EmbeddedReadyPackageName)
 }
 if (-not (Test-Path -LiteralPath $ReadyPackage -PathType Container)) {
-    throw "缺少已审计的 ready Viewer 制品：$ReadyPackage；请将 v4 放入 data_root\artifacts\ready 或显式传入 -ReadyPackage。"
+    throw "缺少已审计的 v4 Viewer 制品目录：$ReadyPackage；该制品不随 Git 仓库提供。请向制品提供者索取完整 winter-rebuilt-20260215-viewer-package-v4 目录（至少包含 bundle.json、checksums.json 及清单列出的文件），再用 -ReadyPackage <目录> 或 ARCTIC_ROUTE_READY_PACKAGE 指定。不要猜测路径、改名或换用其他版本。"
 }
 $ReadyPackage = (Resolve-Path -LiteralPath $ReadyPackage).Path
 
@@ -170,7 +182,7 @@ if (Test-Path $Assets) { Remove-Item -LiteralPath $Assets -Recurse -Force }
 Invoke-Checked $BuildPython @(
     (Join-Path $ProjectRoot "scripts\prepare_runtime_assets.py"),
     "--workspace-root", $WorkspaceRoot, "--output", $Assets,
-    "--ready-package", $ReadyPackage
+    "--viewer-root", $ViewerRootPackage, "--ready-package", $ReadyPackage
 )
 Invoke-Checked $BuildPython @(
     (Join-Path $ProjectRoot "scripts\scan_release.py"),

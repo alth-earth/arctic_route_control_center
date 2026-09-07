@@ -23,6 +23,8 @@ packaging\windows\build-windows.bat -Clean
 
 Viewer 发行语义与 Linux AppImage 保持一致：冻结目录内包含初始动态 `viewer-root` 和一个经审计的 `winter-rebuilt-20260215-viewer-package-v4`。运行时的可写制品目录仍在外部 `data_root\artifacts\inbox` / `data_root\artifacts\ready`，不会被复制进 EXE/ZIP。若外部 `ready` 中也有同名 v4，Viewer 列表会保留 3 条记录（初始制品、内嵌 v4、外部 ready/v4）；同名记录允许重复，并通过来源专用路径分别打开。
 
+远端 `main` 跟踪初始动态 `packaging\viewer-root`，但不跟踪经审计 v4。Windows 构建者需要另行取得完整 `winter-rebuilt-20260215-viewer-package-v4` 目录；若仓库快照不完整，也可另行取得完整 `viewer-root` 目录。脚本会分别校验两者，不会从其他 `ready` 包猜测或替换。收到压缩包时应解压到仓库外目录并保持内部文件字节不变，然后传入目录路径。
+
 ## 构建机要求
 
 - Windows 10/11 x64；原生 PowerShell 5.1 或 PowerShell 7。
@@ -40,7 +42,7 @@ Viewer 发行语义与 Linux AppImage 保持一致：冻结目录内包含初始
 1. 拒绝 WSL/非 Windows/非 x64 环境，并检查六个正式仓库存在 Git 元数据。
 2. 若未显式设置 `ARCTIC_ROUTE_ECCODES_PREFIX`，按 `packaging\windows\environment.yml` 自动创建或补全 `build\windows-native` 原生 Mamba 前缀；该前缀与可清理的 PyInstaller 工作目录分离。
 3. 建立 `build\windows-x64\venv`，使用 `uv sync --locked` 同步当前整合项目、六个本地包、PyInstaller、pytest、ruff；不会隐式改写 `uv.lock`。
-4. 调用 `scripts\prepare_runtime_assets.py`：从 D 分支复制静态 Viewer allowlist，从随 Control Center 跟踪的 `packaging\viewer-root` 快照复制初始动态制品数据，并用 `ARCTIC_ROUTE_READY_PACKAGE` 指定已审计的 v4 ready 目录，将其字节不变地嵌入 `viewer\packages\`；历史、实验和凭据不进入冻结目录。
+4. 调用 `scripts\prepare_runtime_assets.py`：从 D 分支复制静态 Viewer allowlist，从 `-ViewerRootPackage` / `ARCTIC_ROUTE_VIEWER_ROOT`（默认随 Control Center 跟踪的 `packaging\viewer-root`）复制初始动态制品数据，并用 `-ReadyPackage` / `ARCTIC_ROUTE_READY_PACKAGE` 指定已审计的 v4 ready 目录，将其字节不变地嵌入 `viewer\packages\`；历史、实验和凭据不进入冻结目录。
 5. 调用发布扫描器检查资源树；扫描禁止凭据/`.env*`/`.cdsapirc`、原始数据、RC1/RC2、demo-engineering、`direct_url.json`、`uv_cache.json`、Torch/safetensors、实验依赖和构建机绝对路径。资源树和最终冻结 onedir 都必须得到 `PASS`；不存在可绕过 Viewer provenance 或其他绝对路径检查的例外参数。
 6. 默认运行控制中心测试，然后以 `packaging\arctic_route_control_center.spec` 执行 PyInstaller onedir；spec 会显式收集 CARRA 的动态 `cdsapi`/ECMWF Datastores 依赖，并移除 `direct_url.json`/`uv_cache.json`。
 7. 调用 `verify-windows.ps1` 做 clean-PATH `--self-test`、CARRA `--packaging-self-test`、冻结子进程入口、loopback HTTP、catalog/settings/artifacts、root+内嵌/外部 ready 同名制品索引与来源路径、路径穿越拒绝和同等禁止内容扫描；通过后再生成整个 onedir 的交接 ZIP 及 SHA256，同时写出 `.sha256` 校验文件。
@@ -64,7 +66,7 @@ $env:ARCTIC_ROUTE_ECCODES_PREFIX = (Resolve-Path .\build\windows-native).Path
 
 ## 运行目录与双凭据 / CARRA
 
-默认可写目录：`%LOCALAPPDATA%\ArcticRouteControlCenter`，包含 `config`、`data`、`artifacts\inbox`、`artifacts\ready`、`artifacts\invalid`、`run`、`logs`、`cache`。可用启动参数 `--data-root <外部数据目录>` 覆盖。构建脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取内嵌 v4；可用 `-ReadyPackage <目录>` 或 `ARCTIC_ROUTE_READY_PACKAGE` 覆盖构建输入。运行时新制品仍按原路径接收、校验和提升。
+默认可写目录：`%LOCALAPPDATA%\ArcticRouteControlCenter`，包含 `config`、`data`、`artifacts\inbox`、`artifacts\ready`、`artifacts\invalid`、`run`、`logs`、`cache`。可用启动参数 `--data-root <外部数据目录>` 覆盖。构建脚本默认从仓库内 `packaging\viewer-root` 读取初始动态制品，从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取内嵌 v4；可分别用 `-ViewerRootPackage <目录>` / `ARCTIC_ROUTE_VIEWER_ROOT` 和 `-ReadyPackage <目录>` / `ARCTIC_ROUTE_READY_PACKAGE` 覆盖构建输入。所有路径都由构建者按实际机器提供，脚本不写死盘符、用户名或团队工作区。运行时新制品仍按原路径接收、校验和提升。
 
 控制中心有两类彼此独立的外部凭据路径，均只保存路径、不保存或回显内容：
 

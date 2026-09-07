@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ws
-          git clone --depth 1 -b "$CC_REF" \
+          git -c core.autocrlf=false clone --depth 1 -b "$CC_REF" \
             https://github.com/alth-earth/arctic_route_control_center.git \
             ws/arctic_route_control_center
 
@@ -44,7 +44,7 @@ jobs:
           set -euo pipefail
           for r in arctic_route_contracts arctic_route_orchestrator \
                    work_package_a work_package_b work_package_c work_package_d; do
-            git clone --depth 1 -b "$DEPS_REF" \
+            git -c core.autocrlf=false clone --depth 1 -b "$DEPS_REF" \
               "https://github.com/alth-earth/$r.git" "ws/$r"
           done
 

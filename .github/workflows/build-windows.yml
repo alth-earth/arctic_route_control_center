@@ -61,23 +61,43 @@ jobs:
           micromamba create -y -p $prefix -c conda-forge `
             python=3.13 'eccodes>=2.40,<3' libnetcdf hdf5
 
+      - name: Provide ecCodes definitions
+        shell: pwsh
+        run: |
+          $prefix = "$env:RUNNER_TEMP\arctic-native"
+          $target = "$prefix\Library\share\eccodes\definitions"
+          if (Test-Path $target) {
+            Write-Host "definitions 已由 win-64 eccodes 包直接提供"
+          } else {
+            Write-Host "win-64 eccodes 包不含 definitions，改从 linux-64 包提取（definitions 为平台无关文本）"
+            $src = "$env:RUNNER_TEMP\eccodes-defs"
+            micromamba create -y -p $src --platform linux-64 --no-deps -c conda-forge "eccodes=2.48.0"
+            Write-Host "linux-64 前缀顶层："
+            Get-ChildItem -LiteralPath $src -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+            if (Test-Path "$src\share\eccodes\definitions") {
+              New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+              Copy-Item -Recurse -Force "$src\share\eccodes\definitions" $target
+              Write-Host "definitions 已复制到 $target"
+            } else {
+              Write-Host "!! linux-64 前缀也未找到 definitions"
+            }
+          }
+          Write-Host "=== final check ==="
+          if (Test-Path $target) {
+            Write-Host "definitions 文件数：$(@(Get-ChildItem -Recurse -LiteralPath $target -Filter *.def).Count)"
+          } else {
+            Write-Host "MISSING: $target"
+          }
+
       - name: Inspect ecCodes prefix layout
         continue-on-error: true
         shell: pwsh
         run: |
           $prefix = "$env:RUNNER_TEMP\arctic-native"
-          Write-Host "=== top level ==="
-          Get-ChildItem -LiteralPath $prefix -Force | Select-Object -ExpandProperty Name
-          Write-Host "=== Library (if any) ==="
+          Write-Host "=== Library ==="
           Get-ChildItem -LiteralPath "$prefix\Library" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
-          Write-Host "=== definitions dirs ==="
-          Get-ChildItem -LiteralPath $prefix -Recurse -Directory -Filter definitions -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
-          Write-Host "=== sample .def files ==="
-          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "*.def" -ErrorAction SilentlyContinue | Select-Object -First 5 -ExpandProperty FullName
           Write-Host "=== eccodes dlls ==="
-          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "*eccodes*.dll" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
-          Write-Host "=== eccodes python module ==="
-          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "eccodes*" -ErrorAction SilentlyContinue | Select-Object -First 10 -ExpandProperty FullName
+          Get-ChildItem -LiteralPath "$prefix\Library\bin" -Filter "*eccodes*.dll" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
 
       - name: Build Windows onedir EXE
         shell: pwsh

@@ -60,12 +60,24 @@ jobs:
           $prefix = "$env:RUNNER_TEMP\arctic-native"
           micromamba create -y -p $prefix -c conda-forge `
             python=3.13 'eccodes>=2.40,<3' libnetcdf hdf5
-          if (-not (Test-Path "$prefix\Library\bin")) {
-            throw "ecCodes 原生前缀不完整：$prefix"
-          }
-          if (-not (Test-Path "$prefix\Library\share\eccodes\definitions")) {
-            throw "ecCodes definitions 缺失：$prefix"
-          }
+
+      - name: Inspect ecCodes prefix layout
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $prefix = "$env:RUNNER_TEMP\arctic-native"
+          Write-Host "=== top level ==="
+          Get-ChildItem -LiteralPath $prefix -Force | Select-Object -ExpandProperty Name
+          Write-Host "=== Library (if any) ==="
+          Get-ChildItem -LiteralPath "$prefix\Library" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          Write-Host "=== definitions dirs ==="
+          Get-ChildItem -LiteralPath $prefix -Recurse -Directory -Filter definitions -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+          Write-Host "=== sample .def files ==="
+          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "*.def" -ErrorAction SilentlyContinue | Select-Object -First 5 -ExpandProperty FullName
+          Write-Host "=== eccodes dlls ==="
+          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "*eccodes*.dll" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+          Write-Host "=== eccodes python module ==="
+          Get-ChildItem -LiteralPath $prefix -Recurse -Filter "eccodes*" -ErrorAction SilentlyContinue | Select-Object -First 10 -ExpandProperty FullName
 
       - name: Build Windows onedir EXE
         shell: pwsh

@@ -67,7 +67,17 @@ foreach ($item in (Get-ChildItem -LiteralPath $ArtifactPath -Recurse -Force)) {
     if (-not $item.PSIsContainer -and ($textExtensions -contains $item.Extension.ToLowerInvariant() -or $item.Name -eq 'METADATA')) {
         try {
             $content = [IO.File]::ReadAllText($item.FullName)
-            if ($content -match $secretAssignment) {
+            # Mirror scripts/scan_release.py: opaque third-party package data under
+            # _internal (boto3, botocore, ...) may legitimately carry AWS/JSON-Schema
+            # field names such as AccessKeyId.  Credential-shaped content scanning
+            # therefore applies to project-managed release files only.
+            $internalIndex = [Array]::IndexOf($parts, '_internal')
+            $isProjectManaged = $true
+            if ($internalIndex -ge 0 -and ($internalIndex + 1) -lt $parts.Count) {
+                $managedRoot = $parts[$internalIndex + 1]
+                $isProjectManaged = ($managedRoot -in @('configs', 'orchestrator_scripts', 'static', 'viewer')) -or $managedRoot.StartsWith('arctic_route_')
+            }
+            if ($isProjectManaged -and $content -match $secretAssignment) {
                 $bad += "$relative (credential-shaped value)"
             }
             if ($content -match $absolutePath) {

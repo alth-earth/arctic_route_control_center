@@ -140,6 +140,28 @@ jobs:
           Set-Location ws\arctic_route_control_center
           .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean -ReadyPackage $ready
 
+      - name: Debug viewer packaging layout
+        if: always() && !cancelled()
+        shell: pwsh
+        run: |
+          $ws = (Resolve-Path ws).Path
+          $cc = Join-Path $ws "arctic_route_control_center"
+          $assets = Join-Path $cc "build\windows-x64\runtime-assets"
+          $dist = Join-Path $cc "dist\arctic-route-control-center"
+          Write-Host "=== assets\viewer 顶层 ==="
+          Get-ChildItem -LiteralPath "$assets\viewer" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          Write-Host "=== assets\viewer\packages ==="
+          Get-ChildItem -LiteralPath "$assets\viewer\packages" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          Write-Host "=== assets\viewer\packages\winter-... (递归统计) ==="
+          $p = Join-Path $assets "viewer\packages\winter-rebuilt-20260215-viewer-package-v4"
+          if (Test-Path $p) { Write-Host "exists, files=$(@(Get-ChildItem -LiteralPath $p -Recurse -File -ErrorAction SilentlyContinue).Count)" } else { Write-Host "MISSING $p" }
+          Write-Host "=== dist\viewer 顶层 ==="
+          Get-ChildItem -LiteralPath "$dist\viewer" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          Write-Host "=== dist\viewer\packages ==="
+          Get-ChildItem -LiteralPath "$dist\viewer\packages" -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
+          Write-Host "=== dist 下是否含 bundle.json ==="
+          Get-ChildItem -LiteralPath $dist -Recurse -Filter bundle.json -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+
       - name: Upload handoff artifact
         if: success()
         uses: actions/upload-artifact@v4

@@ -66,27 +66,33 @@ jobs:
         run: |
           $prefix = "$env:RUNNER_TEMP\arctic-native"
           $target = "$prefix\Library\share\eccodes\definitions"
-          if (Test-Path $target) {
-            Write-Host "definitions 已由 win-64 eccodes 包直接提供"
-          } else {
-            Write-Host "win-64 eccodes 包不含 definitions，改从 linux-64 包提取（definitions 为平台无关文本）"
-            $src = "$env:RUNNER_TEMP\eccodes-defs"
-            micromamba create -y -p $src --platform linux-64 --no-deps -c conda-forge "eccodes=2.48.0"
-            Write-Host "linux-64 前缀顶层："
-            Get-ChildItem -LiteralPath $src -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
-            if (Test-Path "$src\share\eccodes\definitions") {
-              New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
-              Copy-Item -Recurse -Force "$src\share\eccodes\definitions" $target
-              Write-Host "definitions 已复制到 $target"
-            } else {
-              Write-Host "!! linux-64 前缀也未找到 definitions"
-            }
+          $src = "$env:RUNNER_TEMP\eccodes-defs"
+
+          if (-not (Test-Path $target)) {
+            Write-Host "[A] 用 micromamba 拉取 linux-64 包（definitions 为平台无关文本）"
+            $env:CONDA_OVERRIDE_LINUX = "5.15"
+            $env:CONDA_OVERRIDE_GLIBC = "2.35"
+            micromamba create -y -p $src --platform linux-64 -c conda-forge "eccodes=2.48.0" 2>&1 | Out-Host
+            Write-Host "方案A退出码：$LASTEXITCODE"
           }
-          Write-Host "=== final check ==="
+
+          if (-not (Test-Path "$src\share\eccodes\definitions")) {
+            Write-Host "[B] 直接下载 .conda 并用 python zstandard 解包"
+            $pkg = "$env:RUNNER_TEMP\eccodes.conda"
+            Invoke-WebRequest -Uri "https://conda.anaconda.org/conda-forge/linux-64/eccodes-2.48.0-h5b33cc0_0.conda" -OutFile $pkg
+            & "$prefix\python.exe" -m pip install --quiet zstandard
+            & "$prefix\python.exe" -c 'import zipfile,io,tarfile,sys,zstandard; zf=zipfile.ZipFile(sys.argv[1]); n=[x for x in zf.namelist() if x.startswith("pkg-") and x.endswith(".tar.zst")][0]; d=zstandard.ZstdDecompressor().stream_reader(io.BytesIO(zf.read(n))).read(); tf=tarfile.open(fileobj=io.BytesIO(d)); ms=[m for m in tf.getmembers() if "share/eccodes/definitions" in m.name]; tf.extractall(sys.argv[2], members=ms); print("extracted", len(ms))' $pkg $src
+          }
+
+          if (Test-Path "$src\share\eccodes\definitions") {
+            New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+            Copy-Item -Recurse -Force "$src\share\eccodes\definitions" $target
+          }
+
           if (Test-Path $target) {
             Write-Host "definitions 文件数：$(@(Get-ChildItem -Recurse -LiteralPath $target -Filter *.def).Count)"
           } else {
-            Write-Host "MISSING: $target"
+            throw "definitions 仍然缺失：$target"
           }
 
       - name: Inspect ecCodes prefix layout

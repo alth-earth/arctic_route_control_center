@@ -1,0 +1,90 @@
+name: build-windows-exe
+
+on:
+  workflow_dispatch:
+    inputs:
+      control_center_ref:
+        description: 'arctic_route_control_center ref'
+        required: true
+        default: 'main'
+      deps_ref:
+        description: 'Ref for the six production packages'
+        required: true
+        default: 'research-validation-system'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-windows-exe
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Clone control center
+        shell: bash
+        env:
+          CC_REF: ${{ inputs.control_center_ref }}
+        run: |
+          set -euo pipefail
+          mkdir -p ws
+          git clone --depth 1 -b "$CC_REF" \
+            https://github.com/alth-earth/arctic_route_control_center.git \
+            ws/arctic_route_control_center
+
+      - name: Clone six production packages
+        shell: bash
+        env:
+          DEPS_REF: ${{ inputs.deps_ref }}
+        run: |
+          set -euo pipefail
+          for r in arctic_route_contracts arctic_route_orchestrator \
+                   work_package_a work_package_b work_package_c work_package_d; do
+            git clone --depth 1 -b "$DEPS_REF" \
+              "https://github.com/alth-earth/$r.git" "ws/$r"
+          done
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Setup micromamba
+        uses: mamba-org/setup-micromamba@v2
+
+      - name: Create native ecCodes prefix
+        shell: pwsh
+        run: |
+          $prefix = "$env:RUNNER_TEMP\arctic-native"
+          micromamba create -y -p $prefix -c conda-forge `
+            python=3.13 'eccodes>=2.40,<3' libnetcdf hdf5
+          if (-not (Test-Path "$prefix\Library\bin")) {
+            throw "ecCodes 原生前缀不完整：$prefix"
+          }
+          if (-not (Test-Path "$prefix\Library\share\eccodes\definitions")) {
+            throw "ecCodes definitions 缺失：$prefix"
+          }
+
+      - name: Build Windows onedir EXE
+        shell: pwsh
+        env:
+          ARCTIC_ROUTE_ECCODES_PREFIX: ${{ runner.temp }}\arctic-native
+        run: |
+          $ws = (Resolve-Path ws).Path
+          Set-Location ws\arctic_route_control_center
+          .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean
+
+      - name: Upload handoff artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Arctic_Route_Control_Center-Windows-x86_64
+          compression-level: 0
+          if-no-files-found: error
+          path: |
+            ws/arctic_route_control_center/dist/arctic-route-control-center
+            ws/arctic_route_control_center/release/Arctic_Route_Control_Center-Windows-x86_64.zip
+            ws/arctic_route_control_center/release/Arctic_Route_Control_Center-Windows-x86_64.zip.sha256
+            ws/arctic_route_control_center/release/arctic-route-control-center.exe.sha256

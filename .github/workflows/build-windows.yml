@@ -64,6 +64,8 @@ jobs:
       - name: Provide ecCodes definitions
         shell: pwsh
         run: |
+          # GH Windows pwsh: native 非零退出会污染步骤退出码，这里显式关闭并自行校验
+          $PSNativeCommandUseErrorActionPreference = $false
           $prefix = "$env:RUNNER_TEMP\arctic-native"
           $target = "$prefix\Library\share\eccodes\definitions"
           $src = "$env:RUNNER_TEMP\eccodes-defs"
@@ -103,6 +105,8 @@ jobs:
             if (Test-Path (Join-Path $target $f)) { Write-Host "OK   $f" } else { $missing += $f; Write-Host "MISS $f" }
           }
           if ($missing.Count -gt 0) { throw "关键 definitions 缺失：$($missing -join ', ')" }
+          $global:LASTEXITCODE = 0
+          exit 0
 
       - name: Inspect ecCodes prefix layout
         continue-on-error: true

@@ -86,11 +86,18 @@ jobs:
 
           if (Test-Path "$src\share\eccodes\definitions") {
             New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
-            Copy-Item -Recurse -Force "$src\share\eccodes\definitions" $target
+            # linux 包内含符号链接，Copy-Item 会 "Access denied"；robocopy 可容错跳过
+            robocopy "$src\share\eccodes\definitions" $target /E /R:1 /W:1 /NFL /NDL /NJH /NJS /NP | Out-Null
+            $rc = $LASTEXITCODE
+            Write-Host "robocopy 退出码：$rc"
+            if ($rc -ge 8) { throw "robocopy 复制失败（$rc）" }
           }
 
           if (Test-Path $target) {
-            Write-Host "definitions 文件数：$(@(Get-ChildItem -Recurse -LiteralPath $target -Filter *.def).Count)"
+            Write-Host "definitions 文件数：$(@(Get-ChildItem -Recurse -LiteralPath $target -Filter *.def -ErrorAction SilentlyContinue).Count)"
+            foreach ($f in @("boot.def", "grib1\boot.def", "grib2\boot.def")) {
+              if (Test-Path (Join-Path $target $f)) { Write-Host "OK  $f" } else { Write-Host "MISS $f" }
+            }
           } else {
             throw "definitions 仍然缺失：$target"
           }

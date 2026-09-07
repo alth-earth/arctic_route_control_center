@@ -31,7 +31,7 @@ def test_legacy_settings_adds_empty_cdsapi_path(tmp_path: Path) -> None:
 
 def test_two_credential_paths_round_trip_independently(tmp_path: Path) -> None:
     external_root = tmp_path.parents[2] / f"{tmp_path.name}-external"
-    external_root.mkdir()
+    external_root.mkdir(exist_ok=True)
     copernicus = external_root / ".env.copernicus"
     cdsapi = external_root / ".cdsapirc"
     for path in (copernicus, cdsapi):

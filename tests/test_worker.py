@@ -11,7 +11,7 @@ def test_carra_worker_uses_only_configured_cdsapi_path(
     tmp_path: Path, monkeypatch
 ) -> None:
     external_root = tmp_path.parents[2] / f"{tmp_path.name}-external"
-    external_root.mkdir()
+    external_root.mkdir(exist_ok=True)
     copernicus = external_root / ".env.copernicus"
     cdsapi = external_root / ".cdsapirc"
     for path in (copernicus, cdsapi):

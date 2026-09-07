@@ -28,7 +28,8 @@ if (-not [string]::IsNullOrWhiteSpace($WorkspaceRoot)) {
 # Keep this scan self-contained: final verification is intentionally runnable
 # on a clean Windows machine without Python.  It mirrors scripts/scan_release.py
 # for path names, credential-shaped values, raw data, and absolute build paths.
-$forbidden = '(?i)(?:^|/)(?:credentials?(?:\.[^/]*)?|\.env(?:\.[^/]*)?|\.cdsapirc|direct_url\.json|uv_cache\.json|torch(?:-[^/]*)?|safetensors(?:-[^/]*)?|rc[12](?:[_.-][^/]*)?|demo[-_]engineering|raw(?:[_-].*)?|original(?:[_-].*)?|downloads?|archives?)(?:/|$)|\.(?:bz2|csv|gz|grib1?|grib2?|grb1?|grb2?|h5|hdf5|jp2|nc4?|netcdf|parquet|tar|tif|tiff|zarr)$'
+$forbiddenPath = '(?i)(?:^|/)(?:credentials?(?:\.[^/]*)?|\.env(?:\.[^/]*)?|\.cdsapirc|direct_url\.json|uv_cache\.json|torch(?:-[^/]*)?|safetensors(?:-[^/]*)?|rc[12](?:[_.-][^/]*)?|demo[-_]engineering|raw(?:[_-].*)?|original(?:[_-].*)?|downloads?|archives?)(?:/|$)'
+$forbiddenDataSuffix = '(?i)\.(?:bz2|csv|gz|grib1?|grib2?|grb1?|grb2?|h5|hdf5|jp2|nc4?|netcdf|parquet|tar|tif|tiff|zarr)$'
 $absolutePath = '(?i)(?<![A-Za-z0-9_/:])/(?:root|home|mnt|tmp|workspace|workspaces|Users|opt|srv|var|run|build|builds|agent|runner|project|repo|repos|checkout|checkouts|code|src|work)/[^\s"<>]+|(?<![A-Za-z0-9_])[A-Za-z]:[\\/][^\s"<>\\/]+[\\/][^\s"<>]+|(?<![A-Za-z0-9_])\\\\(?:Users|home|root|workspaces?|builds?|agents?|runners?|projects?|repos?|checkouts?|code|src|work)\\[^\s"<>]+|file:///[^\s"<>]+'
 $secretAssignment = '(?im)(?<![A-Za-z0-9_])["'']?(?:COPERNICUSMARINE_(?:SERVICE_)?(?:USERNAME|PASSWORD)|CDSAPI_(?:KEY|URL)|(?:API|ACCESS|SECRET)[_-]?KEY|PASSWORD)["'']?\s*[:=]\s*["'']?\S+'
 $textExtensions = @('.bat', '.cfg', '.css', '.desktop', '.html', '.ini', '.js', '.json', '.md', '.ps1', '.py', '.pyi', '.sh', '.svg', '.toml', '.txt', '.xml', '.yaml', '.yml')
@@ -36,10 +37,20 @@ $experimentalMarkers = @('experimental', 'calibration_shadow', 'formal_grid_expe
 $bad = @()
 foreach ($item in (Get-ChildItem -LiteralPath $ArtifactPath -Recurse -Force)) {
     $relative = $item.FullName.Substring($ArtifactPath.Length).TrimStart('\', '/') -replace '\\', '/'
-    if ($relative -match $forbidden) {
+    $parts = $relative.ToLowerInvariant().Split('/')
+    # Mirror scripts/scan_release.py::_is_project_managed_release_file: opaque
+    # third-party package data under _internal (botocore, boto3, ...) may carry
+    # raw-data payloads and AWS/JSON-Schema field names; those scans apply to
+    # project-managed release files only, while sensitive path names stay global.
+    $internalIndex = [Array]::IndexOf($parts, '_internal')
+    $isProjectManaged = $true
+    if ($internalIndex -ge 0 -and ($internalIndex + 1) -lt $parts.Count) {
+        $managedRoot = $parts[$internalIndex + 1]
+        $isProjectManaged = ($managedRoot -in @('configs', 'orchestrator_scripts', 'static', 'viewer')) -or $managedRoot.StartsWith('arctic_route_')
+    }
+    if ($relative -match $forbiddenPath -or ($isProjectManaged -and $relative -match $forbiddenDataSuffix)) {
         $bad += "$relative (forbidden release path)"
     }
-    $parts = $relative.ToLowerInvariant().Split('/')
     $hasProjectNamespace = $false
     foreach ($part in $parts) {
         if ($part.StartsWith('arctic_route_')) { $hasProjectNamespace = $true }
@@ -67,16 +78,6 @@ foreach ($item in (Get-ChildItem -LiteralPath $ArtifactPath -Recurse -Force)) {
     if (-not $item.PSIsContainer -and ($textExtensions -contains $item.Extension.ToLowerInvariant() -or $item.Name -eq 'METADATA')) {
         try {
             $content = [IO.File]::ReadAllText($item.FullName)
-            # Mirror scripts/scan_release.py: opaque third-party package data under
-            # _internal (boto3, botocore, ...) may legitimately carry AWS/JSON-Schema
-            # field names such as AccessKeyId.  Credential-shaped content scanning
-            # therefore applies to project-managed release files only.
-            $internalIndex = [Array]::IndexOf($parts, '_internal')
-            $isProjectManaged = $true
-            if ($internalIndex -ge 0 -and ($internalIndex + 1) -lt $parts.Count) {
-                $managedRoot = $parts[$internalIndex + 1]
-                $isProjectManaged = ($managedRoot -in @('configs', 'orchestrator_scripts', 'static', 'viewer')) -or $managedRoot.StartsWith('arctic_route_')
-            }
             if ($isProjectManaged -and $content -match $secretAssignment) {
                 $bad += "$relative (credential-shaped value)"
             }

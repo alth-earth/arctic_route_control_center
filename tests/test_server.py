@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import socket
 import threading
 import urllib.error
 import urllib.request
@@ -54,6 +55,21 @@ def test_loopback_server_endpoints_and_traversal_rejection(tmp_path: Path) -> No
         server.shutdown()
         server.server_close()
         thread.join(timeout=5)
+
+
+def test_explicit_ipv6_loopback_uses_ipv6_socket(tmp_path: Path) -> None:
+    paths = resolve_paths(tmp_path)
+    paths.ensure()
+    try:
+        server = serve(paths, "::1", 0)
+    except OSError as exc:
+        if exc.errno in {getattr(socket, "EAI_ADDRFAMILY", -9), -9}:
+            return
+        raise
+    try:
+        assert server.address_family == socket.AF_INET6
+    finally:
+        server.server_close()
 
 
 def test_viewer_index_keeps_embedded_defaults_and_live_ready_packages(tmp_path: Path) -> None:

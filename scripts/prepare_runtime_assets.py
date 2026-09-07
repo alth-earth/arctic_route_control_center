@@ -59,10 +59,26 @@ VIEWER_STATIC_ALLOWLIST = (
     "runtime_route_candidates.js",
     "route_visual_smoothing.js",
     "favicon.svg",
-    "checksums.json",
 )
 
-VIEWER_FILE_ALLOWLIST = VIEWER_STATIC_ALLOWLIST + VIEWER_CHECKSUM_ALLOWLIST
+# Generated replay data is intentionally kept separate from the D source
+# checkout.  D ignores these files, so a clean remote checkout uses the
+# tracked immutable root snapshot below while static code still comes from D.
+VIEWER_ROOT_DATA_ALLOWLIST = (*VIEWER_CHECKSUM_ALLOWLIST, "checksums.json")
+VIEWER_FILE_ALLOWLIST = VIEWER_STATIC_ALLOWLIST + VIEWER_ROOT_DATA_ALLOWLIST
+
+REQUIRED_REPOSITORIES = (
+    "arctic_route_contracts",
+    "arctic_route_orchestrator",
+    "work_package_a",
+    "work_package_b",
+    "work_package_c",
+    "work_package_d",
+)
+EXPECTED_BRANCHES = {
+    "arctic_route_control_center": "main",
+    "work_package_d": "research-validation-system",
+}
 
 # Linux AppImage and Windows onedir intentionally carry exactly two Viewer
 # packages: the original dynamic replay from D as the default root package,
@@ -130,6 +146,7 @@ CONTROL_CENTER_SOURCE_IDENTITY_INPUTS = (
     "scripts/scan_release.py",
     "scripts/sanitize_frozen_tree.py",
     "scripts/verify_runtime.py",
+    "packaging/viewer-root",
     "pyproject.toml",
     "uv.lock",
 )
@@ -222,14 +239,57 @@ def copy_embedded_ready_package(source: Path, output: Path) -> dict[str, object]
     }
 
 
-def git_head(path: Path) -> str:
+def git_output(path: Path, *arguments: str) -> str:
     result = subprocess.run(
-        ["git", "-C", str(path), "rev-parse", "HEAD"],
+        ["git", "-C", str(path), *arguments],
         check=True,
         capture_output=True,
         text=True,
     )
     return result.stdout.strip()
+
+
+def git_head(path: Path) -> str:
+    return git_output(path, "rev-parse", "HEAD")
+
+
+def git_branch(path: Path) -> str:
+    """Return a named branch; detached release inputs are not reproducible."""
+
+    return git_output(path, "symbolic-ref", "--quiet", "--short", "HEAD")
+
+
+def git_status(path: Path) -> str:
+    return git_output(path, "status", "--porcelain", "--untracked-files=all")
+
+
+def validate_source_repositories(root: Path, project_root: Path) -> dict[str, dict[str, object]]:
+    """Require the exact branch boundary and clean source worktrees."""
+
+    paths = {name: root / name for name in REQUIRED_REPOSITORIES}
+    paths["arctic_route_control_center"] = project_root
+    provenance: dict[str, dict[str, object]] = {}
+    for name, path in paths.items():
+        if not path.is_dir():
+            raise FileNotFoundError(f"required source repository is missing: {path}")
+        branch = git_branch(path)
+        expected = EXPECTED_BRANCHES.get(name)
+        if expected and branch != expected:
+            raise ValueError(
+                f"{name} must be checked out on {expected!r}; found {branch!r}"
+            )
+        dirty_files = git_status(path).splitlines()
+        if dirty_files:
+            raise ValueError(
+                f"{name} worktree is dirty; commit or stash release inputs before building: "
+                + ", ".join(dirty_files[:5])
+            )
+        provenance[name] = {
+            "branch": branch,
+            "dirty": False,
+            "commit": git_head(path),
+        }
+    return provenance
 
 
 def source_tree_identity(root: Path, inputs: tuple[str, ...]) -> dict[str, object]:
@@ -265,15 +325,29 @@ def main() -> int:
         default=Path(os.environ.get("ARCTIC_ROUTE_READY_PACKAGE", DEFAULT_EMBEDDED_READY_PACKAGE)),
         help="audited ready-store package to embed alongside the original dynamic package",
     )
+    parser.add_argument(
+        "--viewer-root",
+        type=Path,
+        default=Path(
+            os.environ.get(
+                "ARCTIC_ROUTE_VIEWER_ROOT",
+                Path(__file__).resolve().parents[1] / "packaging" / "viewer-root",
+            )
+        ),
+        help="immutable root Viewer data package (defaults to tracked packaging/viewer-root)",
+    )
     args = parser.parse_args()
     root = args.workspace_root.resolve()
     output = args.output.resolve()
+    project_root = Path(__file__).resolve().parents[1]
+    source_provenance = validate_source_repositories(root, project_root)
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)
 
     viewer_source = root / "work_package_d" / "viewer"
-    checksums = json.loads((viewer_source / "checksums.json").read_text(encoding="utf-8"))
+    viewer_root = args.viewer_root.expanduser().resolve()
+    checksums = json.loads((viewer_root / "checksums.json").read_text(encoding="utf-8"))
     files = checksums.get("files")
     if not isinstance(files, dict) or "bundle.json" not in files:
         raise ValueError("current Viewer checksums.json is malformed")
@@ -285,6 +359,17 @@ def main() -> int:
             "current Viewer checksum allowlist drift: "
             f"unexpected={unexpected}, missing={missing}"
         )
+    root_names = {
+        path.relative_to(viewer_root).as_posix()
+        for path in viewer_root.rglob("*")
+        if path.is_file()
+    }
+    if root_names != set(VIEWER_ROOT_DATA_ALLOWLIST):
+        raise ValueError(
+            "tracked root Viewer file set changed: "
+            f"unexpected={sorted(root_names - set(VIEWER_ROOT_DATA_ALLOWLIST))}, "
+            f"missing={sorted(set(VIEWER_ROOT_DATA_ALLOWLIST) - root_names)}"
+        )
     for relative in VIEWER_CHECKSUM_ALLOWLIST:
         expected = files[relative]
         if not isinstance(expected, str) or len(expected) != 64:
@@ -292,14 +377,19 @@ def main() -> int:
         relative_path = Path(relative)
         if relative_path.name != relative or relative_path.is_absolute():
             raise ValueError(f"Viewer resource path is not a flat allowlisted file: {relative}")
-        source = viewer_source / relative
+        source = viewer_root / relative
         if sha256(source) != expected:
-            raise ValueError(f"current Viewer checksum mismatch: {relative}")
-    for relative in VIEWER_FILE_ALLOWLIST:
+            raise ValueError(f"root Viewer checksum mismatch: {relative}")
+    for relative in VIEWER_STATIC_ALLOWLIST:
         copy_file(viewer_source / relative, output / "viewer" / relative)
+    for relative in VIEWER_ROOT_DATA_ALLOWLIST:
+        copy_file(viewer_root / relative, output / "viewer" / relative)
     embedded_ready = copy_embedded_ready_package(
         args.ready_package.expanduser().resolve(), output
     )
+    viewer_static_hashes = {
+        relative: sha256(viewer_source / relative) for relative in VIEWER_STATIC_ALLOWLIST
+    }
 
     contracts = root / "arctic_route_contracts" / "configs"
     for scenario_id in RELEASE_SCENARIO_ALLOWLIST:
@@ -361,21 +451,28 @@ def main() -> int:
         "work_package_a": ("src", "pyproject.toml"),
         "work_package_b": ("src", "pyproject.toml"),
         "work_package_c": ("src", "pyproject.toml"),
-        "work_package_d": ("src", "pyproject.toml"),
+        "work_package_d": ("src", "viewer", "pyproject.toml"),
     }
     source_roots = {name: root / name for name in repos}
-    source_roots["arctic_route_control_center"] = Path(__file__).resolve().parents[1]
+    source_roots["arctic_route_control_center"] = project_root
     manifest = {
         "schema_version": "arctic-route-control-center.runtime-assets.v1",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "source_commits": {name: git_head(root / name) for name in repos},
+        "source_commits": {
+            name: details["commit"] for name, details in source_provenance.items()
+        },
+        "source_provenance": source_provenance,
         "source_tree_identities": {
             name: source_tree_identity(source_roots[name], inputs)
             for name, inputs in source_inputs.items()
         },
-        "viewer_source": "work_package_d/viewer (current checksum-verified package)",
+        "viewer_source": (
+            "work_package_d/viewer static allowlist + tracked packaging/viewer-root data"
+        ),
         "viewer_files": list(VIEWER_FILE_ALLOWLIST),
+        "viewer_static_files": viewer_static_hashes,
         "viewer_checksum_allowlist": list(VIEWER_CHECKSUM_ALLOWLIST),
+        "viewer_root_data_source": "arctic_route_control_center/packaging/viewer-root",
         "viewer_embedded_packages": [embedded_ready],
         "contract_scenario_allowlist": list(RELEASE_SCENARIO_ALLOWLIST),
         "contract_corridor_allowlist": list(RELEASE_CORRIDOR_ALLOWLIST),

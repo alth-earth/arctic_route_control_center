@@ -1,0 +1,21 @@
+{
+  "bbox": {
+    "max_lat": 79.57291666666664,
+    "max_lon": 22.072916666666643,
+    "min_lat": 68.47291666666668,
+    "min_lon": 9.972916666666677
+  },
+  "height": 1024,
+  "projection": "EPSG:4326",
+  "provenance": {
+    "doi": "https://doi.org/10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa",
+    "product_id": "GEBCO_2026",
+    "resolution_degrees": {
+      "latitude": 0.04999999999998295,
+      "longitude": 0.04999999999998295
+    }
+  },
+  "source": "land_sea_mask_tromso_to_isfjorden_outer_valid_20260423T000000Z_issued_20260423T000000Z_gebco-2026-d5a7e2fe3915-7baad866_3640a87b2f5a2d15.nc",
+  "version": "gebco-2026-d5a7e2fe3915-7baad866",
+  "width": 1024
+}

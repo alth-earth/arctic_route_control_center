@@ -1,0 +1,296 @@
+{
+  "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+  "corridor_id": "tromso_to_isfjorden_outer",
+  "generated_at": "2026-09-02T03:15:12.280961Z",
+  "generation_id": 0,
+  "input_revision": 8,
+  "layer_set_id": "layer-set-sha256-f1753a22e1b2d1855ba685077078c50da791a60ebab11dab8e3461319de51a01",
+  "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+  "motion_profile_digest": "9255f21047988037acf98750c1d4b6031dbd5609b4fe985236ee91e58405038a",
+  "motion_profile_id": "nordic_odyssey_formula_reference_v1",
+  "motion_set_id": "route-motion-set-sha256-6079f2b554fb6e239c38144e46303fcde58f4f99b65870f9e513941377825bde",
+  "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+  "producer_digest": "ef543142255ca249922c3c517cdcc12615a51e3c51b10121bece921c8fe4d357",
+  "records": [
+    {
+      "curve_digest": "aadd266565f5d6d9dc94bf099615b687c842092bfc98b7bb2bd0aea585fdaccd",
+      "fallback_reason": "no_eligible_corner",
+      "interpolation": "linear_time_between_producer_motion_samples",
+      "mode": "RAW_PASSTHROUGH",
+      "motion_digest": "87815327842bf14135ec86169e8154f0b8ec26d964b74fb5ce757f1f18518da2",
+      "motion_samples": [
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "lat": 77.3,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "lat": 77.66666666666667,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "lat": 78.03333333333333,
+          "lon": 12.4,
+          "speed_knots": 9.43084716796875
+        }
+      ],
+      "plan_id": "route-v3-sha256-c5f01cff0836993634b92726c84f733c51275b8cd2f0750cc6c23448eed6e86c",
+      "planning_layer": "full_voyage",
+      "qualification": {
+        "corridor_checked": false,
+        "corridor_proof_scope": "NOT_PROVED",
+        "coverage_complete": false,
+        "curvature_checked": false,
+        "details_digest": "7810b4f8e72ee5dccdb8df9fbca37f2954bb4dffbc389cca1b3241c8bd6f8619",
+        "eta_anchors_preserved": true,
+        "evidence_kind": "FORMULA_DERIVED_ENGINEERING_REFERENCE",
+        "hard_mask_rechecked": false,
+        "manoeuvring_checked": false,
+        "real_vessel_calibrated": false,
+        "result": "RAW_FALLBACK",
+        "risk_rechecked": false,
+        "speed_checked": false
+      },
+      "raw_route_digest": "5a4f514ac386cd98d935c9195c047b57bafb1583e5c40e777027446c02c071f0",
+      "waypoint_anchors": [
+        {
+          "arc_length_m": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "motion_sample_index": 0,
+          "waypoint_index": 0
+        },
+        {
+          "arc_length_m": 40771.5294189633,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "motion_sample_index": 1,
+          "waypoint_index": 1
+        },
+        {
+          "arc_length_m": 81543.05883792377,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "motion_sample_index": 2,
+          "waypoint_index": 2
+        }
+      ]
+    },
+    {
+      "curve_digest": "aadd266565f5d6d9dc94bf099615b687c842092bfc98b7bb2bd0aea585fdaccd",
+      "fallback_reason": "no_eligible_corner",
+      "interpolation": "linear_time_between_producer_motion_samples",
+      "mode": "RAW_PASSTHROUGH",
+      "motion_digest": "87815327842bf14135ec86169e8154f0b8ec26d964b74fb5ce757f1f18518da2",
+      "motion_samples": [
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "lat": 77.3,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "lat": 77.66666666666667,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "lat": 78.03333333333333,
+          "lon": 12.4,
+          "speed_knots": 9.43084716796875
+        }
+      ],
+      "plan_id": "route-v3-sha256-39d1fe95b40e1acff58441489cafcdb7f07dde752d7178ecef91b10e11ee3035",
+      "planning_layer": "main_corridor_24_72h",
+      "qualification": {
+        "corridor_checked": false,
+        "corridor_proof_scope": "NOT_PROVED",
+        "coverage_complete": false,
+        "curvature_checked": false,
+        "details_digest": "7810b4f8e72ee5dccdb8df9fbca37f2954bb4dffbc389cca1b3241c8bd6f8619",
+        "eta_anchors_preserved": true,
+        "evidence_kind": "FORMULA_DERIVED_ENGINEERING_REFERENCE",
+        "hard_mask_rechecked": false,
+        "manoeuvring_checked": false,
+        "real_vessel_calibrated": false,
+        "result": "RAW_FALLBACK",
+        "risk_rechecked": false,
+        "speed_checked": false
+      },
+      "raw_route_digest": "5a4f514ac386cd98d935c9195c047b57bafb1583e5c40e777027446c02c071f0",
+      "waypoint_anchors": [
+        {
+          "arc_length_m": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "motion_sample_index": 0,
+          "waypoint_index": 0
+        },
+        {
+          "arc_length_m": 40771.5294189633,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "motion_sample_index": 1,
+          "waypoint_index": 1
+        },
+        {
+          "arc_length_m": 81543.05883792377,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "motion_sample_index": 2,
+          "waypoint_index": 2
+        }
+      ]
+    },
+    {
+      "curve_digest": "aadd266565f5d6d9dc94bf099615b687c842092bfc98b7bb2bd0aea585fdaccd",
+      "fallback_reason": "no_eligible_corner",
+      "interpolation": "linear_time_between_producer_motion_samples",
+      "mode": "RAW_PASSTHROUGH",
+      "motion_digest": "87815327842bf14135ec86169e8154f0b8ec26d964b74fb5ce757f1f18518da2",
+      "motion_samples": [
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "lat": 77.3,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "lat": 77.66666666666667,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "lat": 78.03333333333333,
+          "lon": 12.4,
+          "speed_knots": 9.43084716796875
+        }
+      ],
+      "plan_id": "route-v3-sha256-64fbd7c511eedebaf17f911eb9f4de07b61e88224312e8a5215e460eca9f8573",
+      "planning_layer": "rolling_0_24h",
+      "qualification": {
+        "corridor_checked": false,
+        "corridor_proof_scope": "NOT_PROVED",
+        "coverage_complete": false,
+        "curvature_checked": false,
+        "details_digest": "7810b4f8e72ee5dccdb8df9fbca37f2954bb4dffbc389cca1b3241c8bd6f8619",
+        "eta_anchors_preserved": true,
+        "evidence_kind": "FORMULA_DERIVED_ENGINEERING_REFERENCE",
+        "hard_mask_rechecked": false,
+        "manoeuvring_checked": false,
+        "real_vessel_calibrated": false,
+        "result": "RAW_FALLBACK",
+        "risk_rechecked": false,
+        "speed_checked": false
+      },
+      "raw_route_digest": "5a4f514ac386cd98d935c9195c047b57bafb1583e5c40e777027446c02c071f0",
+      "waypoint_anchors": [
+        {
+          "arc_length_m": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "motion_sample_index": 0,
+          "waypoint_index": 0
+        },
+        {
+          "arc_length_m": 40771.5294189633,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "motion_sample_index": 1,
+          "waypoint_index": 1
+        },
+        {
+          "arc_length_m": 81543.05883792377,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "motion_sample_index": 2,
+          "waypoint_index": 2
+        }
+      ]
+    },
+    {
+      "curve_digest": "aadd266565f5d6d9dc94bf099615b687c842092bfc98b7bb2bd0aea585fdaccd",
+      "fallback_reason": "no_eligible_corner",
+      "interpolation": "linear_time_between_producer_motion_samples",
+      "mode": "RAW_PASSTHROUGH",
+      "motion_digest": "87815327842bf14135ec86169e8154f0b8ec26d964b74fb5ce757f1f18518da2",
+      "motion_samples": [
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "lat": 77.3,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "lat": 77.66666666666667,
+          "lon": 12.4,
+          "speed_knots": 9.421192407608032
+        },
+        {
+          "course_degrees": 0.0,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "lat": 78.03333333333333,
+          "lon": 12.4,
+          "speed_knots": 9.43084716796875
+        }
+      ],
+      "plan_id": "route-v3-sha256-37e28bfe1af5b3bb2e2edaeccea39cc80e4864109e84de669016d39f2030812c",
+      "planning_layer": "executable_0_6h",
+      "qualification": {
+        "corridor_checked": false,
+        "corridor_proof_scope": "NOT_PROVED",
+        "coverage_complete": false,
+        "curvature_checked": false,
+        "details_digest": "7810b4f8e72ee5dccdb8df9fbca37f2954bb4dffbc389cca1b3241c8bd6f8619",
+        "eta_anchors_preserved": true,
+        "evidence_kind": "FORMULA_DERIVED_ENGINEERING_REFERENCE",
+        "hard_mask_rechecked": false,
+        "manoeuvring_checked": false,
+        "real_vessel_calibrated": false,
+        "result": "RAW_FALLBACK",
+        "risk_rechecked": false,
+        "speed_checked": false
+      },
+      "raw_route_digest": "5a4f514ac386cd98d935c9195c047b57bafb1583e5c40e777027446c02c071f0",
+      "waypoint_anchors": [
+        {
+          "arc_length_m": 0.0,
+          "eta": "2026-02-17T00:00:00Z",
+          "motion_sample_index": 0,
+          "waypoint_index": 0
+        },
+        {
+          "arc_length_m": 40771.5294189633,
+          "eta": "2026-02-17T02:20:12.259243Z",
+          "motion_sample_index": 1,
+          "waypoint_index": 1
+        },
+        {
+          "arc_length_m": 81543.05883792377,
+          "eta": "2026-02-17T04:40:15.906497Z",
+          "motion_sample_index": 2,
+          "waypoint_index": 2
+        }
+      ]
+    }
+  ],
+  "risk_window_digest": "5e801cc02a450b748f07ebbd37a37f15ed9f217bf810cf224d594630c557882a",
+  "risk_window_id": "risk-window-sha256-5e801cc02a450b748f07ebbd37a37f15ed9f217bf810cf224d594630c557882a",
+  "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+  "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+  "schema_version": "cd.route-motion-set.v1",
+  "vessel_profile_digest": "d7fb6ce90db06aaf667644b5eb5cd6a03d1641287fcbaec58a5ab001f3527a9d",
+  "vessel_profile_id": "nordic_odyssey_reference_v1",
+  "vessel_profile_version": "1.0.0"
+}

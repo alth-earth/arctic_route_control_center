@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 STATIC_ROOT = (
     Path(__file__).resolve().parents[1]
     / "src"
@@ -43,3 +42,10 @@ def test_help_entry_is_wired_and_scrollable() -> None:
     assert "dialog.showModal()" in javascript
     assert ".help-dialog" in stylesheet
     assert ".help-dialog-body" in stylesheet
+
+
+def test_artifact_viewer_links_preserve_same_name_source() -> None:
+    javascript = (STATIC_ROOT / "app.js").read_text(encoding="utf-8")
+
+    assert "package_location" in javascript
+    assert "new URLSearchParams({ package: item.package_dir })" in javascript

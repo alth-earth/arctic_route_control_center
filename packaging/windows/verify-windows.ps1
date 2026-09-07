@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$ArtifactPath,
+    [string]$WorkspaceRoot = "",
     [switch]$KeepTemp
 )
 
@@ -20,6 +21,52 @@ if ($EmbeddedPackages.Count -ne 1) {
     throw "Windows Viewer 必须内嵌且仅内嵌一个 ready 制品（当前 $($EmbeddedPackages.Count) 个）。"
 }
 $EmbeddedPackage = $EmbeddedPackages[0]
+$ExpectedEmbeddedName = "winter-rebuilt-20260215-viewer-package-v4"
+$ExpectedBundleSha256 = "f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a"
+$ExpectedChecksumsSha256 = "92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33"
+$ExpectedAssemblyId = "winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad"
+if ($EmbeddedPackage.Name -ne $ExpectedEmbeddedName) {
+    throw "内嵌 Viewer 制品名称不符合已审计 v4：$($EmbeddedPackage.Name)"
+}
+$embeddedBundlePath = Join-Path $EmbeddedPackage.FullName "bundle.json"
+$embeddedChecksumsPath = Join-Path $EmbeddedPackage.FullName "checksums.json"
+if ((Get-FileHash -LiteralPath $embeddedBundlePath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $ExpectedBundleSha256) {
+    throw "内嵌 v4 bundle.json SHA256 不匹配。"
+}
+if ((Get-FileHash -LiteralPath $embeddedChecksumsPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $ExpectedChecksumsSha256) {
+    throw "内嵌 v4 checksums.json SHA256 不匹配。"
+}
+$embeddedBundle = Get-Content -LiteralPath $embeddedBundlePath -Raw | ConvertFrom-Json
+if ($embeddedBundle.combined_presentation.status -ne "PUBLISHED" -or
+    $embeddedBundle.combined_presentation.assembly_id -ne $ExpectedAssemblyId) {
+    throw "内嵌 v4 assembly/status 不匹配。"
+}
+$embeddedChecksums = Get-Content -LiteralPath $embeddedChecksumsPath -Raw | ConvertFrom-Json
+$checksumProperties = @($embeddedChecksums.files.PSObject.Properties)
+if ($checksumProperties.Count -eq 0 -or
+    -not ($checksumProperties.Name -contains "bundle.json")) {
+    throw "内嵌 v4 checksums.json 文件表无效。"
+}
+$expectedPackageFiles = @($checksumProperties | ForEach-Object { $_.Name }) + "checksums.json"
+$actualPackageFiles = @(Get-ChildItem -LiteralPath $EmbeddedPackage.FullName -Recurse -File -Force | ForEach-Object {
+    $_.FullName.Substring($EmbeddedPackage.FullName.Length).TrimStart('\', '/') -replace '\\', '/'
+})
+$expectedPackageListing = @($expectedPackageFiles | Sort-Object) -join "`n"
+$actualPackageListing = @($actualPackageFiles | Sort-Object) -join "`n"
+if ($expectedPackageListing -ne $actualPackageListing) {
+    throw "内嵌 v4 文件集合发生变化。"
+}
+foreach ($property in $checksumProperties) {
+    $expected = ([string]$property.Value).ToLowerInvariant()
+    $actual = (Get-FileHash -LiteralPath (Join-Path $EmbeddedPackage.FullName $property.Name) -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($actual -ne $expected) { throw "内嵌 v4 校验失败：$($property.Name)" }
+}
+
+$workspaceVariants = @()
+if (-not [string]::IsNullOrWhiteSpace($WorkspaceRoot)) {
+    $resolvedWorkspace = (Resolve-Path -LiteralPath $WorkspaceRoot).Path
+    $workspaceVariants = @($resolvedWorkspace, ($resolvedWorkspace -replace '\\', '/'))
+}
 
 # Keep this scan self-contained: final verification is intentionally runnable
 # on a clean Windows machine without Python.  It mirrors scripts/scan_release.py
@@ -69,6 +116,12 @@ foreach ($item in (Get-ChildItem -LiteralPath $ArtifactPath -Recurse -Force)) {
             if ($content -match $absolutePath) {
                 $bad += "$relative (build-machine absolute path)"
             }
+            foreach ($workspaceVariant in $workspaceVariants) {
+                if ($content.IndexOf($workspaceVariant, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+                    $bad += "$relative (workspace absolute path)"
+                    break
+                }
+            }
         } catch {
             $bad += "$relative (could not read text payload for release scan)"
         }
@@ -94,6 +147,16 @@ $temp = Join-Path ([IO.Path]::GetTempPath()) ("arctic-route-cc-" + [Guid]::NewGu
 New-Item -ItemType Directory -Path $temp -Force | Out-Null
 $proc = $null
 $originalPath = $env:PATH
+$environmentNames = @(
+    "ARCTIC_ROUTE_ROOT", "ARCTIC_ROUTE_PRODUCTION_PACKAGE", "ARCTIC_ROUTE_ECCODES_PREFIX",
+    "ECCODES_DEFINITION_PATH", "ARCTIC_ROUTE_DATA_ROOT", "ARCTIC_ROUTE_READY_PACKAGE",
+    "ARCTIC_ROUTE_VIEWER_ROOT", "ARCTIC_ROUTE_BUILD_ASSETS", "PYTHONPATH", "LD_LIBRARY_PATH"
+)
+$originalEnvironment = @{}
+foreach ($name in $environmentNames) {
+    $originalEnvironment[$name] = [Environment]::GetEnvironmentVariable($name, "Process")
+    [Environment]::SetEnvironmentVariable($name, $null, "Process")
+}
 try {
     # Do not allow Python, Mamba or ecCodes from the build machine to satisfy
     # missing frozen DLLs.  Windows system directories remain available.
@@ -213,6 +276,9 @@ try {
     Write-Host "PASS: EXE self-test、冻结任务/编排器子进程、loopback 服务、API、root+内嵌/ready 同名制品、路径拒绝、ecCodes DLL/definitions 均通过。"
 } finally {
     $env:PATH = $originalPath
+    foreach ($name in $environmentNames) {
+        [Environment]::SetEnvironmentVariable($name, $originalEnvironment[$name], "Process")
+    }
     if ($proc -and -not $proc.HasExited) {
         Stop-Process -Id $proc.Id -Force
         $proc.WaitForExit()

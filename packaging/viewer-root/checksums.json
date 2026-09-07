@@ -1,0 +1,30 @@
+{
+  "files": {
+    "basemap_metadata.json": "9dfb7c31980663140641f54de3e438ad69f807b01df33c88409d6ed8706c5d3b",
+    "bundle.json": "f054360fcc8437fc3eafba03fdb34e5a8050580694824f9fcce69b795bb52b2a",
+    "four-layer-route-plan-set-v3.json": "3d6875645e3b13a474905f425d7da2e4ffea4efcb59e9cf361642cf45d6f80d0",
+    "gebco_basemap.png": "924e8eea16eb5d850c74fb1306d7af9c2d5047f23ae803472487ae69f75f6ada",
+    "publish-summary.json": "f8da20590c9d70ac70f8859829b688cdc0d08d480943b71486b8db1bed7bd0b1",
+    "replay-viewer-preflight.json": "5980d50e9a41bc5680f4b5997c74e9ccfd7b268ec8eac8686448f8738ad95c12",
+    "route-motion-candidate-set-r1.json": "8f9992eb2602bb0105942e9bd0f945811f4a5f715b59bce97d7645ffc3e28992",
+    "route-motion-candidate-set-r2.json": "a913368a6cf5ec2e29b22d8c8164ad501a099f55dbe3618f11c75f003c21e622",
+    "route-motion-candidate-set-r3.json": "69b547f6e7b14c8a32d33cf82b047616ed645be5dcd74180006ab6671a21535c",
+    "route-motion-candidate-set-r4.json": "e3880137d931ee1723f82f5ecffd730681e80dcf3832d1e0c2a35f7519af8019",
+    "route-motion-candidate-set-r5.json": "eca443e6aead3fe98c8362698610b9dc0eb3eb59ed9722420e3a83083508d6b2",
+    "route-motion-candidate-set-r6.json": "bbed86dc8040e270734247d9307e5bbf0827c60346d7d0e351e9992c08c50ad9",
+    "route-motion-candidate-set-r7.json": "7c284d1cd36894a8ccbd3334a175ffb41a90cab875a1291247a7d2d9f083a884",
+    "route-motion-candidate-set-r8.json": "2394392aa2440608eee5a3c1f107affcd3e441a54b30d602c3761bc554619483",
+    "route-motion-candidate-set-r9.json": "0206a50d62dbadf8dbe0911a0f3727da7d4ba6cc5d13934102173ed48d1f591d",
+    "route-motion-set-r1.json": "c218d94e4389290e271532674b548c883fe2665c91b997807240b8b35bafce99",
+    "route-motion-set-r2.json": "c0edda6463028122088f6f0e298c176a0bbe6d880e24efae6ad5511db7215ae7",
+    "route-motion-set-r3.json": "8279a2544a74df01c18a53c736c32b376213aefb2fa5e3a60ab6ed5141bf3873",
+    "route-motion-set-r4.json": "ec2f16623688224c0e15f44d2a1f416b618384d96e5b5b895648776459c64bb1",
+    "route-motion-set-r5.json": "f4bd6e15a373aaa1d775a64c257af5789ed2d402923752a42361148749db7039",
+    "route-motion-set-r6.json": "8b774fbc5e32b3225f564bdc5554e7d1b1f565bf036786fd8d8b1204665fc1be",
+    "route-motion-set-r7.json": "70a73c429ee603030a9e86470b1ed0e4288ad47429077691a030cf50ceb6b0fd",
+    "route-motion-set-r8.json": "b29e739e45f73390b59d466fad2f4c089207f0a374cbe07696581ecc9ba741f6",
+    "route-motion-set-r9.json": "efc21d0066a0b49f0abe5a5c50f899edf4aea001f61d98ef2802d499dbb9576e",
+    "winter-combined-viewer-manifest.json": "8ce2c8f5024d14ae7b5aa22339dfa2d17c297023c124c537f06cdd67e85b3a27"
+  },
+  "schema_version": "presentation.winter-combined-checksums.v1"
+}

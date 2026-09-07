@@ -1,0 +1,167 @@
+{
+  "assembly_digest": "58c59343731a19c49eb455fee1839fa13643cac6492af4e46c7352a5cbd32ff4",
+  "assembly_id": "winter-viewer-sha256-58c59343731a19c49eb455fee1839fa13643cac6492af4e46c7352a5cbd32ff4",
+  "basemap_sha256": "924e8eea16eb5d850c74fb1306d7af9c2d5047f23ae803472487ae69f75f6ada",
+  "bundle_path": "bundle.json",
+  "bundle_sha256": "f054360fcc8437fc3eafba03fdb34e5a8050580694824f9fcce69b795bb52b2a",
+  "formal_motion_required": true,
+  "identity": {
+    "candidate_set_id": "route-candidates-sha256-46baf02084d67ffe5b0b734b2ad1b27631b7970b6e25a28011cd917dd23a4ffd",
+    "corridor_id": "tromso_to_isfjorden_outer",
+    "dataset_bundle_digest": "a2146dd0adbaa7db77a6beb7c818e975888600fb31236901fd4af2092069fb71",
+    "dataset_bundle_id": "a-bundle-a2146dd0adbaa7db77a6beb7",
+    "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+    "risk_frame_count": 145,
+    "risk_window_digest": "b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "risk_window_end": "2026-02-21T00:00:00Z",
+    "risk_window_id": "risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "risk_window_start": "2026-02-15T00:00:00Z",
+    "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+    "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+    "selected_candidate_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+    "vessel_profile_id": "nordic_odyssey_reference_v1"
+  },
+  "preflight_sha256": "5980d50e9a41bc5680f4b5997c74e9ccfd7b268ec8eac8686448f8738ad95c12",
+  "risk_frames": 145,
+  "route_candidate_sets": 9,
+  "route_candidates": 12,
+  "route_motion_candidate_sets": 9,
+  "route_motion_sets": 9,
+  "runtime_route_candidate_sets": 9,
+  "schema_version": "presentation.winter-combined-manifest.v1",
+  "source_artifacts": {
+    "causal_replay_manifest": {
+      "path": "causal-replay-manifest.json",
+      "sha256": "212f3b6929f78fc06b239701b4a5bc96e29f90b9612a7b26c8a392ba7e0d2cde"
+    },
+    "dataset_bundle": {
+      "path": "dataset-bundle.json",
+      "sha256": "b1752873ec649d67c921c89b8c9a0d6a9e2a0007d6c266907df2548f258556a5"
+    },
+    "plan_set": {
+      "path": "plan-set-3f2b2ff24f6aa8737199d3f97517e89283fcec2e6cb4eb923f3ed68dae62817a.json",
+      "sha256": "93a590b8893b8f46849340783688efdfce5171131b4bea4b3fc86548abe20d7d"
+    },
+    "risk_frame_index": {
+      "path": "frame-index.json",
+      "sha256": "50b160df4b5e70ed295bda47ec3e8dab36b1f6c79a6199617d9271b4a4c77bcd"
+    },
+    "risk_window_commit": {
+      "path": "risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2.json",
+      "sha256": "3a711f4c5c1b150e9c881d97f184218846f0b9d07474a892ff65942e4e0c2d67"
+    },
+    "route_candidates": {
+      "path": "route-candidates.json",
+      "sha256": "3f6ba8a53264bdcb91ea1391739c65bb30ca9de0d2e8213e9b94261bb3654f4a"
+    },
+    "route_integrity": {
+      "path": "route-integrity.json",
+      "sha256": "80bc619b47f1e6a068862ea736bd8cb6eb8e9906ddd1e61aa444f2b9d0fde03b"
+    },
+    "route_motion_candidate_set_1": {
+      "path": "route-motion-candidate-set-r1.json",
+      "sha256": "8f9992eb2602bb0105942e9bd0f945811f4a5f715b59bce97d7645ffc3e28992"
+    },
+    "route_motion_candidate_set_2": {
+      "path": "route-motion-candidate-set-r2.json",
+      "sha256": "a913368a6cf5ec2e29b22d8c8164ad501a099f55dbe3618f11c75f003c21e622"
+    },
+    "route_motion_candidate_set_3": {
+      "path": "route-motion-candidate-set-r3.json",
+      "sha256": "69b547f6e7b14c8a32d33cf82b047616ed645be5dcd74180006ab6671a21535c"
+    },
+    "route_motion_candidate_set_4": {
+      "path": "route-motion-candidate-set-r4.json",
+      "sha256": "e3880137d931ee1723f82f5ecffd730681e80dcf3832d1e0c2a35f7519af8019"
+    },
+    "route_motion_candidate_set_5": {
+      "path": "route-motion-candidate-set-r5.json",
+      "sha256": "eca443e6aead3fe98c8362698610b9dc0eb3eb59ed9722420e3a83083508d6b2"
+    },
+    "route_motion_candidate_set_6": {
+      "path": "route-motion-candidate-set-r6.json",
+      "sha256": "bbed86dc8040e270734247d9307e5bbf0827c60346d7d0e351e9992c08c50ad9"
+    },
+    "route_motion_candidate_set_7": {
+      "path": "route-motion-candidate-set-r7.json",
+      "sha256": "7c284d1cd36894a8ccbd3334a175ffb41a90cab875a1291247a7d2d9f083a884"
+    },
+    "route_motion_candidate_set_8": {
+      "path": "route-motion-candidate-set-r8.json",
+      "sha256": "2394392aa2440608eee5a3c1f107affcd3e441a54b30d602c3761bc554619483"
+    },
+    "route_motion_candidate_set_9": {
+      "path": "route-motion-candidate-set-r9.json",
+      "sha256": "0206a50d62dbadf8dbe0911a0f3727da7d4ba6cc5d13934102173ed48d1f591d"
+    },
+    "route_motion_set_1": {
+      "path": "route-motion-set-r1.json",
+      "sha256": "c218d94e4389290e271532674b548c883fe2665c91b997807240b8b35bafce99"
+    },
+    "route_motion_set_2": {
+      "path": "route-motion-set-r2.json",
+      "sha256": "c0edda6463028122088f6f0e298c176a0bbe6d880e24efae6ad5511db7215ae7"
+    },
+    "route_motion_set_3": {
+      "path": "route-motion-set-r3.json",
+      "sha256": "8279a2544a74df01c18a53c736c32b376213aefb2fa5e3a60ab6ed5141bf3873"
+    },
+    "route_motion_set_4": {
+      "path": "route-motion-set-r4.json",
+      "sha256": "ec2f16623688224c0e15f44d2a1f416b618384d96e5b5b895648776459c64bb1"
+    },
+    "route_motion_set_5": {
+      "path": "route-motion-set-r5.json",
+      "sha256": "f4bd6e15a373aaa1d775a64c257af5789ed2d402923752a42361148749db7039"
+    },
+    "route_motion_set_6": {
+      "path": "route-motion-set-r6.json",
+      "sha256": "8b774fbc5e32b3225f564bdc5554e7d1b1f565bf036786fd8d8b1204665fc1be"
+    },
+    "route_motion_set_7": {
+      "path": "route-motion-set-r7.json",
+      "sha256": "70a73c429ee603030a9e86470b1ed0e4288ad47429077691a030cf50ceb6b0fd"
+    },
+    "route_motion_set_8": {
+      "path": "route-motion-set-r8.json",
+      "sha256": "b29e739e45f73390b59d466fad2f4c089207f0a374cbe07696581ecc9ba741f6"
+    },
+    "route_motion_set_9": {
+      "path": "route-motion-set-r9.json",
+      "sha256": "efc21d0066a0b49f0abe5a5c50f899edf4aea001f61d98ef2802d499dbb9576e"
+    },
+    "run_context": {
+      "path": "run-context.json",
+      "sha256": "bea471c714422508e10bbe47a04dca60bea8ec309444a84393d8bd7bc0140717"
+    }
+  },
+  "status": "PASS",
+  "timeline_samples": 8641,
+  "transport_files": {
+    "causal_replay_manifest": "causal-replay-manifest.json",
+    "plan_set": "four-layer-route-plan-set-v3.json",
+    "risk_explanation_manifest": null,
+    "route_motion_candidate_sets": [
+      "route-motion-candidate-set-r1.json",
+      "route-motion-candidate-set-r2.json",
+      "route-motion-candidate-set-r3.json",
+      "route-motion-candidate-set-r4.json",
+      "route-motion-candidate-set-r5.json",
+      "route-motion-candidate-set-r6.json",
+      "route-motion-candidate-set-r7.json",
+      "route-motion-candidate-set-r8.json",
+      "route-motion-candidate-set-r9.json"
+    ],
+    "route_motion_sets": [
+      "route-motion-set-r1.json",
+      "route-motion-set-r2.json",
+      "route-motion-set-r3.json",
+      "route-motion-set-r4.json",
+      "route-motion-set-r5.json",
+      "route-motion-set-r6.json",
+      "route-motion-set-r7.json",
+      "route-motion-set-r8.json",
+      "route-motion-set-r9.json"
+    ]
+  }
+}

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import mimetypes
 import os
+import socket
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -31,6 +32,12 @@ class ControlServer(ThreadingHTTPServer):
             paths,
             max_parallel_jobs=int(self.settings["limits"]["max_parallel_jobs"]),
         )
+
+
+class IPv6ControlServer(ControlServer):
+    """Threading server variant required when the explicit ::1 loopback is used."""
+
+    address_family = socket.AF_INET6
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -267,6 +274,7 @@ def write_runtime_state(paths: AppPaths, host: str, port: int) -> None:
 def serve(paths: AppPaths, host: str, port: int) -> ControlServer:
     if host not in {"127.0.0.1", "localhost", "::1"}:
         raise ValueError("the control center may only listen on loopback")
-    server = ControlServer((host, port), paths)
+    server_type = IPv6ControlServer if host == "::1" else ControlServer
+    server = server_type((host, port), paths)
     write_runtime_state(paths, str(server.server_address[0]), int(server.server_address[1]))
     return server

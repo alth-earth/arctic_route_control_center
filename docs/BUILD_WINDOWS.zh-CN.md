@@ -7,15 +7,16 @@ EXE 必须在原生 Windows x64 上构建。PyInstaller 不提供“在 WSL 编�
 构建入口是：
 
 ```powershell
-Set-Location C:\work\my_project\arctic_route_control_center
+# 在当前 arctic_route_control_center 仓库根目录执行；脚本会从其父目录
+# 自动推导兄弟仓库工作区，也可按需传入实际的 -WorkspaceRoot。
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\packaging\windows\build-windows.ps1 -WorkspaceRoot C:\work\my_project -Clean
+.\packaging\windows\build-windows.ps1 -Clean
 ```
 
 也可以在 `cmd.exe` 中使用等价的薄包装脚本（参数原样转交给 PowerShell）：
 
 ```bat
-packaging\windows\build-windows.bat -WorkspaceRoot C:\work\my_project -Clean
+packaging\windows\build-windows.bat -Clean
 ```
 
 产物目录：`dist\arctic-route-control-center\`，入口为 `arctic-route-control-center.exe`；可交接压缩包为 `release\Arctic_Route_Control_Center-Windows-x86_64.zip`。这是 `console=True` 的 onedir 应用：必须保留整个目录，不能只复制 EXE；双击会保留后端命令台，并自动打开本机浏览器，命令台关闭即停止后端。
@@ -25,9 +26,9 @@ Viewer 发行语义与 Linux AppImage 保持一致：冻结目录内包含初始
 ## 构建机要求
 
 - Windows 10/11 x64；原生 PowerShell 5.1 或 PowerShell 7。
-- Python 3.13 x64（脚本会用 `uv venv --python 3.13` 创建隔离环境）。
+- Python 3.13 x64（脚本通过 `uv sync --locked` 创建并同步隔离环境）。
 - `uv`、`git` 在 PATH 中；建议安装 Miniforge/Mambaforge 并让 `mamba` 在 PATH 中。
-- 六个正式仓库必须是同一个工作区的兄弟目录：`arctic_route_contracts`、`arctic_route_orchestrator`、`work_package_a`、`work_package_b`、`work_package_c`、`work_package_d`，以及本项目 `arctic_route_control_center`。
+- 六个正式仓库必须是同一个工作区的兄弟目录：`arctic_route_contracts`、`arctic_route_orchestrator`、`work_package_a`、`work_package_b`、`work_package_c`、`work_package_d`，以及本项目 `arctic_route_control_center`；Control Center 必须在 `main`，D 必须在 `research-validation-system`，所有发布输入工作区必须干净。
 - 构建期间可访问 Python 包源；正式构建应使用锁定版本和经过审核的网络出口。
 
 不要把 `credentials/`、`.env*`、`.cdsapirc`、原始海冰/气象数据、缓存、实验分支或历史 Viewer 包复制进工作区来“帮助”构建。数据和凭据在运行机外置目录配置。
@@ -38,13 +39,13 @@ Viewer 发行语义与 Linux AppImage 保持一致：冻结目录内包含初始
 
 1. 拒绝 WSL/非 Windows/非 x64 环境，并检查六个正式仓库存在 Git 元数据。
 2. 若未显式设置 `ARCTIC_ROUTE_ECCODES_PREFIX`，按 `packaging\windows\environment.yml` 自动创建或补全 `build\windows-native` 原生 Mamba 前缀；该前缀与可清理的 PyInstaller 工作目录分离。
-3. 建立 `build\windows-x64\venv`，安装当前整合项目、六个本地包、PyInstaller、pytest、ruff。
-4. 调用 `scripts\prepare_runtime_assets.py`：校验当前 D Viewer 的 `checksums.json` 后，只复制代码中显式 allowlist 的 Viewer、正式配置和必要编排脚本，并用 `-ReadyPackage` 或 `ARCTIC_ROUTE_READY_PACKAGE` 指定已审计的 v4 ready 目录，将其字节不变地嵌入 `viewer\packages\`；历史、实验和凭据不进入冻结目录。
+3. 建立 `build\windows-x64\venv`，使用 `uv sync --locked` 同步当前整合项目、六个本地包、PyInstaller、pytest、ruff；不会隐式改写 `uv.lock`。
+4. 调用 `scripts\prepare_runtime_assets.py`：从 D 分支复制静态 Viewer allowlist，从随 Control Center 跟踪的 `packaging\viewer-root` 快照复制初始动态制品数据，并用 `ARCTIC_ROUTE_READY_PACKAGE` 指定已审计的 v4 ready 目录，将其字节不变地嵌入 `viewer\packages\`；历史、实验和凭据不进入冻结目录。
 5. 调用发布扫描器检查资源树；扫描禁止凭据/`.env*`/`.cdsapirc`、原始数据、RC1/RC2、demo-engineering、`direct_url.json`、`uv_cache.json`、Torch/safetensors、实验依赖和构建机绝对路径。资源树和最终冻结 onedir 都必须得到 `PASS`；不存在可绕过 Viewer provenance 或其他绝对路径检查的例外参数。
 6. 默认运行控制中心测试，然后以 `packaging\arctic_route_control_center.spec` 执行 PyInstaller onedir；spec 会显式收集 CARRA 的动态 `cdsapi`/ECMWF Datastores 依赖，并移除 `direct_url.json`/`uv_cache.json`。
 7. 调用 `verify-windows.ps1` 做 clean-PATH `--self-test`、CARRA `--packaging-self-test`、冻结子进程入口、loopback HTTP、catalog/settings/artifacts、root+内嵌/外部 ready 同名制品索引与来源路径、路径穿越拒绝和同等禁止内容扫描；通过后再生成整个 onedir 的交接 ZIP 及 SHA256，同时写出 `.sha256` 校验文件。
 
-脚本会检查 `uv.lock` 与 `pyproject.toml` 一致；首次运行若缺少锁文件会先生成它。正式发布前必须审阅并提交生成后的 `uv.lock`，之后构建应在干净工作区中重复执行。
+脚本会检查 `uv.lock` 与 `pyproject.toml` 一致；锁文件缺失或六个依赖仓库处于 detached/dirty 状态会直接失败。正式构建必须在干净工作区重复执行。
 
 可用 `-SkipTests` 仅用于排查构建机问题；对外发布不能跳过测试。`-Clean` 只删除本项目的明确构建目录 `build\windows-x64` 和 `dist`，不会删除或移动外部 `artifacts\inbox`、`artifacts\ready` 或 `artifacts\invalid`。
 
@@ -63,7 +64,7 @@ $env:ARCTIC_ROUTE_ECCODES_PREFIX = (Resolve-Path .\build\windows-native).Path
 
 ## 运行目录与双凭据 / CARRA
 
-默认可写目录：`%LOCALAPPDATA%\ArcticRouteControlCenter`，包含 `config`、`data`、`artifacts\inbox`、`artifacts\ready`、`artifacts\invalid`、`run`、`logs`、`cache`。可用启动参数 `--data-root D:\ArcticRouteData` 覆盖。构建脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取内嵌 v4；可用 `-ReadyPackage <目录>` 或 `ARCTIC_ROUTE_READY_PACKAGE` 覆盖构建输入。运行时新制品仍按原路径接收、校验和提升。
+默认可写目录：`%LOCALAPPDATA%\ArcticRouteControlCenter`，包含 `config`、`data`、`artifacts\inbox`、`artifacts\ready`、`artifacts\invalid`、`run`、`logs`、`cache`。可用启动参数 `--data-root <外部数据目录>` 覆盖。构建脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取内嵌 v4；可用 `-ReadyPackage <目录>` 或 `ARCTIC_ROUTE_READY_PACKAGE` 覆盖构建输入。运行时新制品仍按原路径接收、校验和提升。
 
 控制中心有两类彼此独立的外部凭据路径，均只保存路径、不保存或回显内容：
 
@@ -79,8 +80,9 @@ $env:ARCTIC_ROUTE_ECCODES_PREFIX = (Resolve-Path .\build\windows-native).Path
 把整个 `dist\arctic-route-control-center` 复制到一台没有开发环境、没有仓库和没有 Python 的 Windows x64 机器，执行：
 
 ```powershell
-Set-Location C:\test\arctic-route-control-center
-.\arctic-route-control-center.exe --self-test --data-root $env:TEMP\arctic-route-cc-test
+$testRoot = Join-Path ([IO.Path]::GetTempPath()) "arctic-route-cc-test"
+Set-Location <复制后的 onedir 目录>
+.\arctic-route-control-center.exe --self-test --data-root $testRoot
 ```
 
 应看到 JSON 中 `ok: true`，且 Viewer 为 `ready`。随后运行 CARRA 动态依赖自检（不联网、不读取凭据内容）：

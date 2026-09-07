@@ -1,0 +1,29 @@
+{
+  "candidate_set_id": "route-candidates-sha256-46baf02084d67ffe5b0b734b2ad1b27631b7970b6e25a28011cd917dd23a4ffd",
+  "dynamic_replay": true,
+  "identity": {
+    "corridor_id": "tromso_to_isfjorden_outer",
+    "dataset_bundle_digest": "a2146dd0adbaa7db77a6beb7c818e975888600fb31236901fd4af2092069fb71",
+    "dataset_bundle_id": "a-bundle-a2146dd0adbaa7db77a6beb7",
+    "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+    "risk_window_digest": "b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "risk_window_id": "risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+    "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+    "selected_candidate_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53"
+  },
+  "output_dir": ".",
+  "route_motion_sets": [
+    "route-motion-set-sha256-34b477dcfd32205daa87bbbf404ce54c11038d0a475c830becff6ce5a55099da",
+    "route-motion-set-sha256-272c1ec03e58641c630491bcd5369938608045046d4a0cf6abfa1fde967b7d21",
+    "route-motion-set-sha256-834d3dfd972f02ee84b0040b2d7b85412c804b7f75092a09ba03ac08af49525c",
+    "route-motion-set-sha256-5c81504ebb991faa75b702cef4eee8664a780a35c76938bd0542c13e8f58889c",
+    "route-motion-set-sha256-d17f7f19f17d3e5f191d2374d0fc857e31ae9b557136225438a03be4e5364966",
+    "route-motion-set-sha256-8dac9cdefbdaf7090b5bc1d70e5d6670160280d7fff8df0db12ac19607124e45",
+    "route-motion-set-sha256-d87f127861c7837c6bc7418951f7c2de2f4be838681182c94aea32275b0c4987",
+    "route-motion-set-sha256-d8541d565972c60228c0a18985bfcc8a6cfed3f63b2ae333f22d000a4acca571",
+    "route-motion-set-sha256-6079f2b554fb6e239c38144e46303fcde58f4f99b65870f9e513941377825bde"
+  ],
+  "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+  "status": "PASS"
+}

@@ -38,13 +38,39 @@ for repository in arctic_route_contracts arctic_route_orchestrator work_package_
     exit 1
   }
 done
+declare -A source_repositories=(
+  [arctic_route_control_center]="$PROJECT_ROOT"
+  [arctic_route_contracts]="$WORKSPACE_ROOT/arctic_route_contracts"
+  [arctic_route_orchestrator]="$WORKSPACE_ROOT/arctic_route_orchestrator"
+  [work_package_a]="$WORKSPACE_ROOT/work_package_a"
+  [work_package_b]="$WORKSPACE_ROOT/work_package_b"
+  [work_package_c]="$WORKSPACE_ROOT/work_package_c"
+  [work_package_d]="$WORKSPACE_ROOT/work_package_d"
+)
+for repository in "${!source_repositories[@]}"; do
+  repo_path=${source_repositories[$repository]}
+  branch=$(git -C "$repo_path" symbolic-ref --quiet --short HEAD) || {
+    echo "detached Git worktree is not a release input: $repository" >&2
+    exit 1
+  }
+  if test "$repository" = arctic_route_control_center && test "$branch" != main; then
+    echo "Control Center must be on main (found $branch)" >&2
+    exit 1
+  fi
+  if test "$repository" = work_package_d && test "$branch" != research-validation-system; then
+    echo "work_package_d must be on research-validation-system (found $branch)" >&2
+    exit 1
+  fi
+  if test -n "$(git -C "$repo_path" status --porcelain --untracked-files=all)"; then
+    echo "dirty release worktree: $repository" >&2
+    exit 1
+  fi
+done
 
 mkdir -p "$BUILD_ROOT" "$RELEASE_ROOT"
-uv lock --directory "$PROJECT_ROOT"
 uv lock --check --directory "$PROJECT_ROOT"
-uv venv --clear --python 3.13 "$VENV_ROOT"
-uv pip install --python "$VENV_ROOT/bin/python" "$PROJECT_ROOT" \
-  'pyinstaller>=6.16,<7' 'pytest>=8.3,<10' 'ruff>=0.11,<1'
+export UV_PROJECT_ENVIRONMENT="$VENV_ROOT"
+uv sync --locked --python 3.13 --project "$PROJECT_ROOT" --group dev
 
 export ARCTIC_ROUTE_ROOT="$WORKSPACE_ROOT"
 export ARCTIC_ROUTE_PRODUCTION_PACKAGE=1
@@ -57,6 +83,9 @@ export ECCODES_DEFINITION_PATH="$ECCODES_PREFIX/share/eccodes/definitions"
 "$VENV_ROOT/bin/python" "$PROJECT_ROOT/scripts/scan_release.py" \
   --root "$ASSETS_ROOT" --workspace-root "$WORKSPACE_ROOT"
 if test "$SKIP_TESTS" -eq 0; then
+  "$VENV_ROOT/bin/python" -m ruff check \
+    "$PROJECT_ROOT/packaging" "$PROJECT_ROOT/scripts" \
+    "$PROJECT_ROOT/src" "$PROJECT_ROOT/tests"
   "$VENV_ROOT/bin/python" -m pytest -q "$PROJECT_ROOT/tests"
 fi
 
@@ -79,7 +108,10 @@ install -m 0644 "$PROJECT_ROOT/packaging/linux/arctic-route-control-center.svg" 
 install -m 0644 "$PROJECT_ROOT/packaging/linux/arctic-route-control-center.svg" \
   "$APPDIR_ROOT/usr/share/icons/hicolor/scalable/apps/arctic-route-control-center.svg"
 
-env -u ARCTIC_ROUTE_ECCODES_PREFIX -u ECCODES_DEFINITION_PATH -u LD_LIBRARY_PATH \
+env -u ARCTIC_ROUTE_ROOT -u ARCTIC_ROUTE_PRODUCTION_PACKAGE \
+  -u ARCTIC_ROUTE_ECCODES_PREFIX -u ECCODES_DEFINITION_PATH -u LD_LIBRARY_PATH \
+  -u ARCTIC_ROUTE_DATA_ROOT -u ARCTIC_ROUTE_READY_PACKAGE -u ARCTIC_ROUTE_VIEWER_ROOT \
+  -u ARCTIC_ROUTE_BUILD_ASSETS \
   "$PROJECT_ROOT/scripts/verify_runtime.py" \
   --executable "$APPDIR_ROOT/usr/lib/arctic-route-control-center/arctic-route-control-center" \
   --artifact-root "$APPDIR_ROOT" --workspace-root "$WORKSPACE_ROOT"
@@ -126,7 +158,9 @@ env -u LD_LIBRARY_PATH ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1 \
   "$APPIMAGETOOL_PATH" --runtime-file "$APPIMAGE_RUNTIME_PATH" "$APPDIR_ROOT" "$OUTPUT"
 chmod 0755 "$OUTPUT"
 (cd -- "$RELEASE_ROOT" && sha256sum "$(basename -- "$OUTPUT")" > "$(basename -- "$OUTPUT").sha256")
-env -u ARCTIC_ROUTE_ECCODES_PREFIX -u ECCODES_DEFINITION_PATH -u LD_LIBRARY_PATH \
+env -u ARCTIC_ROUTE_ROOT -u ARCTIC_ROUTE_PRODUCTION_PACKAGE \
+  -u ARCTIC_ROUTE_ECCODES_PREFIX -u ECCODES_DEFINITION_PATH -u LD_LIBRARY_PATH \
+  -u ARCTIC_ROUTE_READY_PACKAGE -u ARCTIC_ROUTE_VIEWER_ROOT -u ARCTIC_ROUTE_BUILD_ASSETS \
   ARCTIC_ROUTE_DATA_ROOT=$(mktemp -d) \
   "$OUTPUT" --appimage-extract-and-run --no-browser --self-test
 echo "PASS: $OUTPUT"

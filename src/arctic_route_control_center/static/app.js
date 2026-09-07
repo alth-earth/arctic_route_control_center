@@ -150,7 +150,15 @@ async function loadArtifacts() {
     const actions = element("div", undefined, "list-actions");
     if (item.package_dir === "viewer-root" || (item.status === "ready" && item.location !== "inbox")) {
       const link = element("a", "在 Viewer 打开", "button");
-      link.href = item.package_dir === "viewer-root" ? "/viewer/" : `/viewer/?package=${encodeURIComponent(item.package_dir)}`;
+      if (item.package_dir === "viewer-root") {
+        link.href = "/viewer/";
+      } else {
+        const params = new URLSearchParams({ package: item.package_dir });
+        if (item.location === "embedded" || item.location === "ready") {
+          params.set("package_location", item.location);
+        }
+        link.href = `/viewer/?${params.toString()}`;
+      }
       link.target = "_blank"; link.rel = "noreferrer"; actions.append(link);
     }
     if (item.location === "inbox" && item.status === "ready") {

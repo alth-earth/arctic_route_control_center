@@ -9,7 +9,7 @@
 需要：`uv`、Python 3.13（可由 uv 安装）、Git、curl，以及 appimagetool。也可先用 `packaging/linux/environment.yml` 创建 Mamba 构建环境。
 
 ```bash
-cd /root/my_project/arctic_route_control_center
+cd "$(git rev-parse --show-toplevel)"
 chmod +x packaging/linux/build-appimage.sh scripts/verify_runtime.py
 packaging/linux/build-appimage.sh --download-appimagetool
 ```

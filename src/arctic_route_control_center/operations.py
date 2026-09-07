@@ -130,8 +130,8 @@ def build_job_spec(paths: AppPaths, request: dict[str, Any], job_id: str) -> dic
             raise ValueError(f"CARRA corridor is not registered in Work Package A: {corridor_id}")
         start = _utc_three_hour(raw.get("start"), "start")
         end = _utc_three_hour(raw.get("end"), "end")
-        if end < start:
-            raise ValueError("end must not be before start")
+        if end <= start:
+            raise ValueError("end must be after start")
         window_hours = int((end - start).total_seconds() // 3600)
         if window_hours > 216:
             raise ValueError("CARRA acquisition window cannot exceed 216 hours")

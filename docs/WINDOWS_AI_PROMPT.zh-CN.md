@@ -6,8 +6,8 @@
 你是 Arctic Route Windows 发布工程师。请在原生 Windows 10/11 x64 PowerShell 中，为 C/S 本地 Web 控制中心构建可交付的 PyInstaller onedir EXE。
 
 目标：
-1. 工作目录是 C:\work\my_project；整合项目是 C:\work\my_project\arctic_route_control_center。
-2. 六个正式仓库是同级目录：arctic_route_contracts、arctic_route_orchestrator、work_package_a、work_package_b、work_package_c、work_package_d。
+1. 当前目录就是已检出的 `arctic_route_control_center` 仓库根目录；不要假设盘符、用户名或固定工作区路径。脚本默认从该仓库父目录推导兄弟仓库，也可传入实际的 `-WorkspaceRoot`。
+2. 六个正式仓库必须是该工作区的兄弟目录：arctic_route_contracts、arctic_route_orchestrator、work_package_a、work_package_b、work_package_c、work_package_d；Control Center 使用 `main`，D 使用 `research-validation-system`，所有发布输入工作区必须干净。
 3. 只打包正式生产链和当前 work_package_d\viewer 的显式 allowlist + checksum 校验通过资源，并嵌入两个 Viewer 制品：初始动态 `viewer-root` 与经审计的 `winter-rebuilt-20260215-viewer-package-v4`。不要加入 RC1、RC2、demo-engineering、历史备份、实验/研究构件、model-cpu/legacy CNN、torch/safetensors、原始数据、缓存、credentials、`.env*`、`.cdsapirc`、`direct_url.json` 或 `uv_cache.json`。
 4. 入口必须是 console=True：启动后保留命令台、loopback 启动后端，并自动打开浏览器；关闭命令台停止后端。
 5. 运行时数据必须在 %LOCALAPPDATA%\ArcticRouteControlCenter 或 --data-root 指定目录；凭据只能是两个外部文件路径，不能写入代码或产物：Copernicus Marine 的 `.env.copernicus`，以及 C3S/ECMWF CARRA 的 `.cdsapirc`。二者不可混用。独立 `a_carra_acquire` 只能使用已登记 East domain 走廊、UTC ISO-8601 的 3 小时边界窗口（最长 216 小时）和 `wind_field`/`temperature`/`visibility` 三类。
@@ -18,15 +18,14 @@
 - 确认六个仓库存在且不把任何用户未提交修改清理掉。
 - 先检查双凭据边界：`.env.copernicus` 只供 Copernicus Marine；`.cdsapirc` 只供 CARRA 的风场、温度、能见度再分析。两个文件必须在仓库、构建目录、EXE 目录和 ZIP 之外，不能读取、打印、复制或上传其内容；设置页应分别保存两个外部绝对路径。
 
-只执行这个入口（脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取构建时 v4；路径不同则显式传入 `-ReadyPackage`，不要复制或改名制品目录）：
-  Set-Location C:\work\my_project\arctic_route_control_center
+只执行这个入口（脚本默认从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取构建时 v4；路径不同则显式传入 `-ReadyPackage`，不要复制或改名制品目录；初始动态 Viewer 数据来自随仓库跟踪的 `packaging\viewer-root`）：
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-  .\packaging\windows\build-windows.ps1 -WorkspaceRoot C:\work\my_project -Clean
+  .\packaging\windows\build-windows.ps1 -Clean
 
 如果当前是 cmd.exe，可以使用等价包装：
-  .\packaging\windows\build-windows.bat -WorkspaceRoot C:\work\my_project -Clean
+  .\packaging\windows\build-windows.bat -Clean
 
-脚本已经负责：按 packaging\windows\environment.yml 创建/补全独立 Mamba ecCodes 原生前缀，创建 uv Python 3.13 环境，安装本地六包和 PyInstaller，校验并准备显式 allowlist runtime-assets（含初始动态 Viewer + v4 内嵌包），执行资源树和最终冻结目录发布扫描与测试，按 packaging\arctic_route_control_center.spec 构建 onedir（包含动态 `cdsapi`/ECMWF Datastores），运行 verify-windows.ps1，并写出 EXE/ZIP 的 SHA256 文件。运行时仍从外部 `data_root\artifacts\inbox` 接收并校验制品，提升后从 `data_root\artifacts\ready` 读取；同名内嵌/ready 制品允许同时显示，不互相覆盖。
+脚本已经负责：按 packaging\windows\environment.yml 创建/补全独立 Mamba ecCodes 原生前缀，使用 `uv sync --locked` 同步 Python 3.13 环境，校验并准备显式 allowlist runtime-assets（含初始动态 Viewer + v4 内嵌包），执行发布扫描、Ruff 和测试，按 packaging\arctic_route_control_center.spec 构建 onedir（包含动态 `cdsapi`/ECMWF Datastores），运行 verify-windows.ps1，并写出 EXE/ZIP 的 SHA256 文件。运行时仍从外部 `data_root\artifacts\inbox` 接收并校验制品，提升后从 `data_root\artifacts\ready` 读取；同名内嵌/ready 制品允许同时显示，不互相覆盖。
 
 验收要求：
 - build 脚本退出码为 0。
@@ -41,7 +40,7 @@
 - Viewer 当前两个内嵌制品可打开；外部 `ready` 制品也可按来源路径打开；inbox 中不合格包不会被服务为 Viewer，必须通过 UI promotion 校验。
 - 设置页能同时保存 `.env.copernicus` 和 `.cdsapirc` 两个互不覆盖的外部绝对路径；`a_carra_acquire` 拒绝非 UTC、非 3 小时边界、空窗口、超过 216 小时、非法类别和未登记/域外走廊，并且只发布 A manifest，不创建 Contracts 场景。
 - 检查 EXE 目录中 ecCodes Python 模块、原生 DLL、definitions/data 都存在或可由打包运行时正常加载。不能依赖开发机 PATH 上的 DLL。
-- 检查产物不含 credentials、`.env*`、`.cdsapirc`、`direct_url.json`、`uv_cache.json`、RC1/RC2、demo-engineering、torch、safetensors、实验依赖、凭据形态值或构建机绝对路径；PowerShell 扫描必须与 `scripts/scan_release.py` 等价。
+- 检查产物不含 credentials、`.env*`、`.cdsapirc`、`direct_url.json`、`uv_cache.json`、RC1/RC2、demo-engineering、torch、safetensors、实验依赖、凭据形态值或构建机绝对路径；Python 发布扫描器是构建期权威检查，PowerShell 扫描是无 Python 干净机的补充检查，并使用实际 `-WorkspaceRoot` 扫描自定义工作区路径。
 - 发布扫描必须是 `PASS`；命中任何 Viewer 或其他资源中的构建机绝对路径都必须 FAIL，不能使用 allow 参数、例外名单或手工改冻结 JSON 来掩盖问题。应由 Viewer exporter 重新生成相对资源引用并重算 assembly identity、manifest 与 checksum。
 - 使用 .\packaging\windows\verify-windows.ps1 -ArtifactPath .\dist\arctic-route-control-center 做最终验收；失败就保留日志并报告根因，不要关闭检查。
 

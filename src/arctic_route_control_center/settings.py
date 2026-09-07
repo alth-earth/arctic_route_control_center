@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import stat
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -74,7 +75,11 @@ def save_settings(config_dir: Path, value: dict[str, Any]) -> dict[str, Any]:
         configured = candidate["credentials"][key]
         if configured:
             candidate["credentials"][key] = str(
-                validate_credential_file(configured, label=label)
+                validate_credential_file(
+                    configured,
+                    label=label,
+                    forbidden_roots=credential_forbidden_roots(config_dir),
+                )
             )
     temporary = config_dir / f"settings.json.{os.getpid()}.part"
     temporary.write_text(
@@ -90,7 +95,29 @@ def save_settings(config_dir: Path, value: dict[str, Any]) -> dict[str, Any]:
     return load_settings(config_dir)
 
 
-def validate_credential_file(value: str, *, label: str) -> Path:
+def credential_forbidden_roots(config_dir: Path) -> tuple[Path, ...]:
+    """Return program/data roots where credentials must never be stored."""
+
+    roots: list[Path] = [config_dir.resolve().parent]
+    frozen = getattr(sys, "_MEIPASS", None)
+    if frozen:
+        roots.append(Path(frozen).resolve())
+    roots.append(Path(sys.executable).resolve().parent)
+    current = config_dir.resolve()
+    for parent in (current, *current.parents):
+        if (parent / "pyproject.toml").is_file() and (parent / "src").is_dir():
+            roots.append(parent)
+            break
+    unique: list[Path] = []
+    for root in roots:
+        if root not in unique:
+            unique.append(root)
+    return tuple(unique)
+
+
+def validate_credential_file(
+    value: str, *, label: str, forbidden_roots: tuple[Path, ...] = ()
+) -> Path:
     """Resolve an external credential path without reading or exposing its contents."""
 
     if not value:
@@ -99,6 +126,11 @@ def validate_credential_file(value: str, *, label: str) -> Path:
     if not candidate.is_absolute():
         raise ValueError(f"{label} credential file path must be absolute")
     candidate = candidate.resolve()
+    if any(candidate == root or candidate.is_relative_to(root) for root in forbidden_roots):
+        raise ValueError(
+            f"configured {label} credential file must be outside the program, "
+            "repository, and data roots"
+        )
     if not candidate.is_file() or not os.access(candidate, os.R_OK):
         raise ValueError(f"configured {label} credential file is not readable")
     if os.name == "posix" and stat.S_IMODE(candidate.stat().st_mode) & 0o077:

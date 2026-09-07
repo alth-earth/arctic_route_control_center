@@ -10,8 +10,10 @@ from arctic_route_control_center.worker import _a_carra_acquire
 def test_carra_worker_uses_only_configured_cdsapi_path(
     tmp_path: Path, monkeypatch
 ) -> None:
-    copernicus = tmp_path / ".env.copernicus"
-    cdsapi = tmp_path / ".cdsapirc"
+    external_root = tmp_path.parents[2] / f"{tmp_path.name}-external"
+    external_root.mkdir()
+    copernicus = external_root / ".env.copernicus"
+    cdsapi = external_root / ".cdsapirc"
     for path in (copernicus, cdsapi):
         path.write_text("secret-must-not-be-read-by-control-center", encoding="utf-8")
         path.chmod(0o600)

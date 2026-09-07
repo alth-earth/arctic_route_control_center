@@ -6,4 +6,4 @@ dependencies:
   - eccodes>=2.40,<3
   - libnetcdf
   - hdf5
-  - uv
+  - uv>=0.12,<0.13

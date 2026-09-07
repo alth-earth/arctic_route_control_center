@@ -18,6 +18,15 @@ function Invoke-Checked {
     }
 }
 
+function Get-GitOutput {
+    param([string]$Repository, [string[]]$Arguments)
+    $result = & git -C $Repository @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Git 命令失败：$Repository git $($Arguments -join ' ')"
+    }
+    return ($result -join "`n").Trim()
+}
+
 if ($env:OS -ne "Windows_NT" -or $env:WSL_DISTRO_NAME) {
     throw "此脚本必须在原生 Windows x64 PowerShell 中执行，不能在 WSL 中交叉构建。"
 }
@@ -42,6 +51,25 @@ foreach ($repo in $requiredRepos) {
     if (-not (Test-Path $repoPath)) { throw "缺少正式仓库：$repoPath" }
     & git -C $repoPath rev-parse --is-inside-work-tree *> $null
     if ($LASTEXITCODE -ne 0) { throw "缺少正式仓库或 Git 元数据：$repoPath" }
+}
+$sourceRepos = @{ arctic_route_control_center = $ProjectRoot }
+foreach ($repo in $requiredRepos) {
+    $sourceRepos[$repo] = (Resolve-Path (Join-Path $WorkspaceRoot $repo)).Path
+}
+$expectedBranches = @{
+    arctic_route_control_center = "main"
+    work_package_d = "research-validation-system"
+}
+foreach ($name in $sourceRepos.Keys) {
+    $repoPath = $sourceRepos[$name]
+    $branch = Get-GitOutput $repoPath @("symbolic-ref", "--quiet", "--short", "HEAD")
+    if ($expectedBranches.ContainsKey($name) -and $branch -ne $expectedBranches[$name]) {
+        throw "$name 必须位于分支 $($expectedBranches[$name])，当前为 $branch。"
+    }
+    $dirty = Get-GitOutput $repoPath @("status", "--porcelain", "--untracked-files=all")
+    if (-not [string]::IsNullOrWhiteSpace($dirty)) {
+        throw "$name 工作区不干净；请先提交或暂存发布输入：$($dirty.Split("`n")[0])"
+    }
 }
 
 if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
@@ -118,12 +146,15 @@ if (-not $EcCodesDll -or -not (Test-Path $EcCodesDefinitions)) {
 
 $LockFile = Join-Path $ProjectRoot "uv.lock"
 if (-not (Test-Path $LockFile)) {
-    Write-Host "uv.lock 不存在，先生成锁文件；请将审查后的 uv.lock 纳入发布提交。"
-    Invoke-Checked "uv" @("lock", "--directory", $ProjectRoot)
+    throw "uv.lock 不存在；发布构建拒绝隐式生成或修改锁文件。"
 }
 Invoke-Checked "uv" @("lock", "--check", "--directory", $ProjectRoot)
 
-Invoke-Checked "uv" @("venv", "--python", $PythonVersion, $Venv)
+$env:UV_PROJECT_ENVIRONMENT = $Venv
+Invoke-Checked "uv" @(
+    "sync", "--locked", "--python", $PythonVersion,
+    "--project", $ProjectRoot, "--group", "dev"
+)
 $BuildPython = Join-Path $Venv "Scripts\python.exe"
 if (-not (Test-Path $BuildPython)) { throw "Python 虚拟环境未生成：$BuildPython" }
 $arch = (& $BuildPython -c "import platform; print(platform.machine())").Trim()
@@ -135,9 +166,6 @@ $env:ARCTIC_ROUTE_ECCODES_PREFIX = $EcCodesPrefix
 $env:ECCODES_DEFINITION_PATH = $EcCodesDefinitions
 # The spec and verify-windows.ps1 jointly freeze and exercise the optional
 # CARRA cdsapi/ECMWF Datastores path; no runtime credential is needed here.
-Invoke-Checked "uv" @("pip", "install", "--python", $BuildPython, $ProjectRoot,
-    "pyinstaller>=6.16,<7", "pytest>=8.3,<10", "ruff>=0.11,<1")
-
 if (Test-Path $Assets) { Remove-Item -LiteralPath $Assets -Recurse -Force }
 Invoke-Checked $BuildPython @(
     (Join-Path $ProjectRoot "scripts\prepare_runtime_assets.py"),
@@ -150,7 +178,14 @@ Invoke-Checked $BuildPython @(
 )
 
 if (-not $SkipTests) {
-    Invoke-Checked $BuildPython @("-m", "pytest", "-q")
+    Invoke-Checked $BuildPython @(
+        "-m", "ruff", "check",
+        (Join-Path $ProjectRoot "packaging"),
+        (Join-Path $ProjectRoot "scripts"),
+        (Join-Path $ProjectRoot "src"),
+        (Join-Path $ProjectRoot "tests")
+    )
+    Invoke-Checked $BuildPython @("-m", "pytest", "-q", (Join-Path $ProjectRoot "tests"))
 }
 
 New-Item -ItemType Directory -Path $WorkRoot -Force | Out-Null
@@ -179,7 +214,8 @@ Invoke-Checked $BuildPython @(
     "--root", $ExeDir, "--workspace-root", $WorkspaceRoot
 )
 
-& (Join-Path $ProjectRoot "packaging\windows\verify-windows.ps1") -ArtifactPath $ExeDir
+& (Join-Path $ProjectRoot "packaging\windows\verify-windows.ps1") `
+    -ArtifactPath $ExeDir -WorkspaceRoot $WorkspaceRoot
 if ($LASTEXITCODE -ne 0) { throw "Windows 产物验收失败。" }
 $hash = (Get-FileHash -LiteralPath (Join-Path $ExeDir "arctic-route-control-center.exe") -Algorithm SHA256).Hash
 New-Item -ItemType Directory -Path $ReleaseRoot -Force | Out-Null

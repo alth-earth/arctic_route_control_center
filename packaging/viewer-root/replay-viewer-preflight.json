@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "dataset_run_binding": "PASS",
+    "formal_route_motion": "PASS",
+    "replay_timeline_boundary": "PASS",
+    "risk_window_binding": "PASS",
+    "route_candidate_binding": "PASS",
+    "route_integrity": "PASS"
+  },
+  "identity": {
+    "candidate_set_id": "route-candidates-sha256-46baf02084d67ffe5b0b734b2ad1b27631b7970b6e25a28011cd917dd23a4ffd",
+    "corridor_id": "tromso_to_isfjorden_outer",
+    "dataset_bundle_digest": "a2146dd0adbaa7db77a6beb7c818e975888600fb31236901fd4af2092069fb71",
+    "dataset_bundle_id": "a-bundle-a2146dd0adbaa7db77a6beb7",
+    "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+    "risk_frame_count": 145,
+    "risk_window_digest": "b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "risk_window_end": "2026-02-21T00:00:00Z",
+    "risk_window_id": "risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2",
+    "risk_window_start": "2026-02-15T00:00:00Z",
+    "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+    "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+    "selected_candidate_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+    "vessel_profile_id": "nordic_odyssey_reference_v1"
+  },
+  "l2": {
+    "overall": "PASS",
+    "route_count": 12
+  },
+  "overall": "PASS",
+  "schema_version": "presentation.winter-combined-preflight.v1"
+}

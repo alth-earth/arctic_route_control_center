@@ -11,7 +11,7 @@ from typing import Any
 
 from .operations import OPERATIONS
 from .resources import configuration_paths
-from .settings import load_settings, validate_credential_file
+from .settings import credential_forbidden_roots, load_settings, validate_credential_file
 
 
 def run_spec(path: str | Path) -> int:
@@ -70,7 +70,11 @@ def _a_acquire(spec: dict[str, Any]) -> dict[str, Any]:
     if "copernicus" in params["sources"]:
         if not credential_path:
             raise ValueError("Copernicus source selected but credential env-file path is not set")
-        credentials = validate_credential_file(credential_path, label="Copernicus")
+        credentials = validate_credential_file(
+            credential_path,
+            label="Copernicus",
+            forbidden_roots=credential_forbidden_roots(Path(spec["data_root"]) / "config"),
+        )
         args += ["--copernicus-env-file", str(credentials)]
     code = a_main(args)
     if code:
@@ -85,7 +89,9 @@ def _a_carra_acquire(spec: dict[str, Any]) -> dict[str, Any]:
     params = spec["parameters"]
     settings = load_settings(Path(spec["data_root"]) / "config")
     credentials = validate_credential_file(
-        settings["credentials"]["cdsapi_rc_file"], label="CDS/CARRA"
+        settings["credentials"]["cdsapi_rc_file"],
+        label="CDS/CARRA",
+        forbidden_roots=credential_forbidden_roots(Path(spec["data_root"]) / "config"),
     )
     args = [
         "acquire-carra",

@@ -154,4 +154,6 @@ def test_windows_clean_machine_scan_has_the_same_fail_closed_markers() -> None:
         assert marker.casefold() in verifier.casefold()
     for marker in ("raw", "grib", "netcdf", "demo[-_]engineering"):
         assert marker.casefold() in verifier.casefold()
+    assert "WorkspaceRoot".casefold() in verifier.casefold()
+    assert "ExpectedAssemblyId".casefold() in verifier.casefold()
     assert "--allow-known-viewer-provenance" not in verifier

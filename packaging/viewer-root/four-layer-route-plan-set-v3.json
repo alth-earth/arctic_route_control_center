@@ -1,0 +1,2053 @@
+{
+  "as_of_time": "2026-08-22T12:00:00Z",
+  "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+  "corridor_id": "tromso_to_isfjorden_outer",
+  "generated_at": "2026-09-02T03:04:46.079240Z",
+  "generation_id": 0,
+  "input_revision": 0,
+  "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+  "layers": [
+    {
+      "planning_layer": "full_voyage",
+      "plans": {
+        "fastest": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10707922405726096,
+            "compute_ms": 41031.41213500203,
+            "distance_km": 919.8209559376294,
+            "eta_hours": 53.365766116373095,
+            "expanded_nodes": 13774,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.7143648269625,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 59.57550388778705,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "fastest",
+          "plan_id": "route-v3-sha256-1001681392456bf7d55e48cc314cf4cca0a8f49373b29e9f08fdda2dd3ebcb28",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "full_voyage",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": null,
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            },
+            {
+              "eta": "2026-02-16T01:17:52.397464Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:46:20.055927Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:08:35.750628Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T08:31:29.386021Z",
+              "latitude": 75.1,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T10:54:30.200943Z",
+              "latitude": 75.46666666666667,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.751475214295917
+            },
+            {
+              "eta": "2026-02-16T13:58:57.117607Z",
+              "latitude": 75.83333333333333,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.743473325173061
+            },
+            {
+              "eta": "2026-02-16T17:02:05.103982Z",
+              "latitude": 76.2,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.730441738499536
+            },
+            {
+              "eta": "2026-02-16T19:25:36.724364Z",
+              "latitude": 76.56666666666666,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.734478252463871
+            },
+            {
+              "eta": "2026-02-16T22:22:37.849255Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.798462395535576
+            },
+            {
+              "eta": "2026-02-17T00:41:44.616047Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:01:56.875290Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.846680094136133
+            },
+            {
+              "eta": "2026-02-17T05:21:56.758020Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        },
+        "low_risk": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10299608098290536,
+            "compute_ms": 77346.06066299602,
+            "distance_km": 927.0241302230121,
+            "eta_hours": 53.65966839147561,
+            "expanded_nodes": 26775,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.526735551164269,
+            "max_risk": 0.15033866466533274,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 53.54149972322579,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "low_risk",
+          "plan_id": "route-v3-sha256-1d997e8b0c21949401f04c1d106a4ff38c3036a6f8a5748b4847e94911d0f983",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "full_voyage",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": null,
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T03:39:38.856789Z",
+              "latitude": 70.7,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T06:03:19.331455Z",
+              "latitude": 71.06666666666666,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T08:26:59.806121Z",
+              "latitude": 71.43333333333334,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T10:47:50.102056Z",
+              "latitude": 71.8,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.824864091475805
+            },
+            {
+              "eta": "2026-02-15T13:08:01.276253Z",
+              "latitude": 72.16666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.847305318382052
+            },
+            {
+              "eta": "2026-02-15T15:26:09.757346Z",
+              "latitude": 72.53333333333333,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.919059229559369
+            },
+            {
+              "eta": "2026-02-15T17:43:33.676970Z",
+              "latitude": 72.9,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.94564858476321
+            },
+            {
+              "eta": "2026-02-15T20:53:42.116102Z",
+              "latitude": 73.26666666666667,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.934880561298795
+            },
+            {
+              "eta": "2026-02-15T23:10:58.353492Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.950261568360859
+            },
+            {
+              "eta": "2026-02-16T01:31:06.311979Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:59:33.970442Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:21:49.665143Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T09:29:30.746184Z",
+              "latitude": 75.1,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T11:51:29.943979Z",
+              "latitude": 75.46666666666667,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.785841390159395
+            },
+            {
+              "eta": "2026-02-16T14:54:43.191694Z",
+              "latitude": 75.83333333333333,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.775260719325808
+            },
+            {
+              "eta": "2026-02-16T17:57:37.003290Z",
+              "latitude": 76.2,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.736552009979884
+            },
+            {
+              "eta": "2026-02-16T20:20:00.186236Z",
+              "latitude": 76.56666666666666,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.772405048211416
+            },
+            {
+              "eta": "2026-02-16T22:40:24.509435Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.839739461077585
+            },
+            {
+              "eta": "2026-02-17T00:59:31.276227Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:19:34.923481Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.851646931966147
+            },
+            {
+              "eta": "2026-02-17T05:39:34.806211Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        },
+        "recommended": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10565119019764452,
+            "compute_ms": 55529.91710600327,
+            "distance_km": 921.3795600787913,
+            "eta_hours": 53.40558083988698,
+            "expanded_nodes": 18346,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.642363178930579,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 63.108946791531665,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "recommended",
+          "plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "full_voyage",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": null,
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            },
+            {
+              "eta": "2026-02-16T01:17:52.397464Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:46:20.055927Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:08:35.750628Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T09:16:16.831669Z",
+              "latitude": 75.1,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T11:38:16.029464Z",
+              "latitude": 75.46666666666667,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.785841390159395
+            },
+            {
+              "eta": "2026-02-16T14:00:18.035398Z",
+              "latitude": 75.83333333333333,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.78426437775294
+            },
+            {
+              "eta": "2026-02-16T17:03:26.021773Z",
+              "latitude": 76.2,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.730441738499536
+            },
+            {
+              "eta": "2026-02-16T20:04:36.859060Z",
+              "latitude": 76.56666666666666,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.734478252463871
+            },
+            {
+              "eta": "2026-02-16T22:25:01.182259Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.839739461077585
+            },
+            {
+              "eta": "2026-02-17T00:44:07.949051Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:04:20.208294Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.846680094136133
+            },
+            {
+              "eta": "2026-02-17T05:24:20.091024Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        }
+      }
+    },
+    {
+      "planning_layer": "main_corridor_24_72h",
+      "plans": {
+        "fastest": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-16T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10707922405726096,
+            "compute_ms": 42027.46923999803,
+            "distance_km": 919.8209559376294,
+            "eta_hours": 53.365766116373095,
+            "expanded_nodes": 13774,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.7143648269625,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 59.57550388778705,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "fastest",
+          "plan_id": "route-v3-sha256-b7126df47459fed474504d2898c725f15138c7e3d1a32393df05113506d753e0",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "main_corridor_24_72h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            },
+            {
+              "eta": "2026-02-16T01:17:52.397464Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:46:20.055927Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:08:35.750628Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T08:31:29.386021Z",
+              "latitude": 75.1,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T10:54:30.200943Z",
+              "latitude": 75.46666666666667,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.751475214295917
+            },
+            {
+              "eta": "2026-02-16T13:58:57.117607Z",
+              "latitude": 75.83333333333333,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.743473325173061
+            },
+            {
+              "eta": "2026-02-16T17:02:05.103982Z",
+              "latitude": 76.2,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.730441738499536
+            },
+            {
+              "eta": "2026-02-16T19:25:36.724364Z",
+              "latitude": 76.56666666666666,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.734478252463871
+            },
+            {
+              "eta": "2026-02-16T22:22:37.849255Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.798462395535576
+            },
+            {
+              "eta": "2026-02-17T00:41:44.616047Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:01:56.875290Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.846680094136133
+            },
+            {
+              "eta": "2026-02-17T05:21:56.758020Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        },
+        "low_risk": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-16T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10299608098290536,
+            "compute_ms": 79745.82161499711,
+            "distance_km": 927.0241302230121,
+            "eta_hours": 53.65966839147561,
+            "expanded_nodes": 26775,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.526735551164269,
+            "max_risk": 0.15033866466533274,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 53.54149972322579,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "low_risk",
+          "plan_id": "route-v3-sha256-4ee3a50eece9940ad1b0b3d645a13c03315c07ed334a1f66053f6b2221ee0d05",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "main_corridor_24_72h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T03:39:38.856789Z",
+              "latitude": 70.7,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T06:03:19.331455Z",
+              "latitude": 71.06666666666666,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T08:26:59.806121Z",
+              "latitude": 71.43333333333334,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T10:47:50.102056Z",
+              "latitude": 71.8,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.824864091475805
+            },
+            {
+              "eta": "2026-02-15T13:08:01.276253Z",
+              "latitude": 72.16666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.847305318382052
+            },
+            {
+              "eta": "2026-02-15T15:26:09.757346Z",
+              "latitude": 72.53333333333333,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.919059229559369
+            },
+            {
+              "eta": "2026-02-15T17:43:33.676970Z",
+              "latitude": 72.9,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.94564858476321
+            },
+            {
+              "eta": "2026-02-15T20:53:42.116102Z",
+              "latitude": 73.26666666666667,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.934880561298795
+            },
+            {
+              "eta": "2026-02-15T23:10:58.353492Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.950261568360859
+            },
+            {
+              "eta": "2026-02-16T01:31:06.311979Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:59:33.970442Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:21:49.665143Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T09:29:30.746184Z",
+              "latitude": 75.1,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T11:51:29.943979Z",
+              "latitude": 75.46666666666667,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.785841390159395
+            },
+            {
+              "eta": "2026-02-16T14:54:43.191694Z",
+              "latitude": 75.83333333333333,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.775260719325808
+            },
+            {
+              "eta": "2026-02-16T17:57:37.003290Z",
+              "latitude": 76.2,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.736552009979884
+            },
+            {
+              "eta": "2026-02-16T20:20:00.186236Z",
+              "latitude": 76.56666666666666,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.772405048211416
+            },
+            {
+              "eta": "2026-02-16T22:40:24.509435Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.839739461077585
+            },
+            {
+              "eta": "2026-02-17T00:59:31.276227Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:19:34.923481Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.851646931966147
+            },
+            {
+              "eta": "2026-02-17T05:39:34.806211Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        },
+        "recommended": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": true,
+          "focus_end_time": "2026-02-17T05:24:20.091024Z",
+          "focus_start_time": "2026-02-16T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.10565119019764452,
+            "compute_ms": 55647.77136200428,
+            "distance_km": 921.3795600787913,
+            "eta_hours": 53.40558083988698,
+            "expanded_nodes": 18346,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 5.642363178930579,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 63.108946791531665,
+            "turn_count": 8
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "recommended",
+          "plan_id": "route-v3-sha256-0a75ac47c25329b1fa3bc318d7163a8b6a0c206549f24fd7f88d9c13f9177627",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "main_corridor_24_72h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1",
+            "risk-sha256-53ad69590bd5c57920dec7732ef2bed72abd771b6d2c4ac5a028c5f1d262e983",
+            "risk-sha256-5b160737030e3ef1ce788e62b791eb7a733e81b9823fa12fd5ca1224c7baf47c",
+            "risk-sha256-9df21b14564a105b54389d6c60ab244f06bc05a334f777af2097b7a15ef4d7df",
+            "risk-sha256-229b7cabe5c391c136c24795bae15352d4ec1c0fcf49af8cd4d78750b8b7a5a9",
+            "risk-sha256-c3de50c7b88fdaf57ec22b1e7a8ab9e3d97c298e26ecd221ed37519d5c31bf0f",
+            "risk-sha256-f8379081d922035c66fb7c04f9952db5abfa876f5b19de60168f050889cede92",
+            "risk-sha256-c866896f0fbdafb814b3dd25860f2d8404b4a0dff9ceb2b4bb614330dcbfebf4",
+            "risk-sha256-ec550b023302d306070eb3905656c59db8ef6d7e0ec3b7f6d2e8a0a84a7cf579",
+            "risk-sha256-82cb80a6b21850a32720688d6abaa79865888822a9203a6a16c35b9ea0d95633",
+            "risk-sha256-7265da091cfebf38f59648c15cdbbb4f82a9d7b7b408389f4d12520471c7c56d",
+            "risk-sha256-7a2b6f7de23c6b10cf7a4caed20aebf4404ee47ae838e003590ee7dede58d4c0",
+            "risk-sha256-452e87fa49497883587d40d4eb16d43aca35e1035076d21f67217c598dee689b",
+            "risk-sha256-1ae628e065921393f3512e25383bb9898f2234b1df66a33f8f3663afd5462594",
+            "risk-sha256-7d04a363beba82a575de049f4832e09e2822ddd4ae585196d339e7f3f56b4bf9",
+            "risk-sha256-9c6e33d9778b9b6440adcc251a04a29b0bcb81d936eb30d7f9862d363807c8f0",
+            "risk-sha256-ea298badaf295de3eb02b589121fa615e3dfec82f30b4d13551cbd341aaafd6f",
+            "risk-sha256-42ddb6d79ded4e25a033ed7fc66f61515f6c43122bff892f84fab1b0cfba2a87",
+            "risk-sha256-82616dea45959ebc7965f4375eefc54c43393bff329b1335dc1b83645073ee1f",
+            "risk-sha256-d48dbf7624f4b03a0502102ddadf4363896ae3f62d31cb1d7fb860812baa3394",
+            "risk-sha256-76037b0817ff01619602020887a0fe626dfa68667424f88413325cfb9692573a",
+            "risk-sha256-47f6e4280a87da62d310bb467dca27fef3e9f3fcc7db065a985b7d80998ab3bf",
+            "risk-sha256-41e93ee44e97d76aef1c1e61894773f9487c532eb6d891833adfb59e5ce18459",
+            "risk-sha256-a12819fa4d707b852456ca1a789de12bca780d33bd7f39a83b3daaf048175080",
+            "risk-sha256-aaab2cc8da45d5e76891cc63b2709349e46a3a51de3fb3e9ecaea0084da3c956",
+            "risk-sha256-9cc29137534d0a000cc63ee303c8fa7aaae30a91107f333fb94bb3344343e599",
+            "risk-sha256-e63bc5609aeb4c583379dd894ffebe5dd1a8b2758ef923329f1166b1fccb9581",
+            "risk-sha256-84e223dd4800903021a0ad68701a0e424c1fb9001f501b575f66e23bfbfe7932",
+            "risk-sha256-06403ff591286af419c859856b1bbbbf0119b9c39d90b5c3e4f8c001595ecae0",
+            "risk-sha256-60ed0828a816a149c92db1d137137b7f445b864144ee32d3486d7b0e4b93eacd",
+            "risk-sha256-bacc5a3efbea0175e507bd833e577af3112fb6d179588722bdf0e8d1cb74e197"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            },
+            {
+              "eta": "2026-02-16T01:17:52.397464Z",
+              "latitude": 74.0,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.849159220192168
+            },
+            {
+              "eta": "2026-02-16T03:46:20.055927Z",
+              "latitude": 74.36666666666666,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.577132092581855
+            },
+            {
+              "eta": "2026-02-16T06:08:35.750628Z",
+              "latitude": 74.73333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.7765918122397535
+            },
+            {
+              "eta": "2026-02-16T09:16:16.831669Z",
+              "latitude": 75.1,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.7554540812969215
+            },
+            {
+              "eta": "2026-02-16T11:38:16.029464Z",
+              "latitude": 75.46666666666667,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.785841390159395
+            },
+            {
+              "eta": "2026-02-16T14:00:18.035398Z",
+              "latitude": 75.83333333333333,
+              "longitude": 14.8,
+              "recommended_speed_mps": 4.78426437775294
+            },
+            {
+              "eta": "2026-02-16T17:03:26.021773Z",
+              "latitude": 76.2,
+              "longitude": 13.6,
+              "recommended_speed_mps": 4.730441738499536
+            },
+            {
+              "eta": "2026-02-16T20:04:36.859060Z",
+              "latitude": 76.56666666666666,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.734478252463871
+            },
+            {
+              "eta": "2026-02-16T22:25:01.182259Z",
+              "latitude": 76.93333333333334,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.839739461077585
+            },
+            {
+              "eta": "2026-02-17T00:44:07.949051Z",
+              "latitude": 77.3,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.884709305233426
+            },
+            {
+              "eta": "2026-02-17T03:04:20.208294Z",
+              "latitude": 77.66666666666667,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.846680094136133
+            },
+            {
+              "eta": "2026-02-17T05:24:20.091024Z",
+              "latitude": 78.03333333333333,
+              "longitude": 12.4,
+              "recommended_speed_mps": 4.853821265035206
+            }
+          ]
+        }
+      }
+    },
+    {
+      "planning_layer": "rolling_0_24h",
+      "plans": {
+        "fastest": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-16T00:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.09648169651762155,
+            "compute_ms": 2132.113682004274,
+            "distance_km": 397.43846941983907,
+            "eta_hours": 22.962344160220844,
+            "expanded_nodes": 670,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 2.215445920599607,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 25.58445426006743,
+            "turn_count": 2
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "fastest",
+          "plan_id": "route-v3-sha256-ec8aefc8aecd43766eca3d6d2fffc454e7cd054afa0f3c1d04f65fc9f00954df",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "rolling_0_24h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            }
+          ]
+        },
+        "low_risk": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-16T00:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.09077203863766846,
+            "compute_ms": 5951.056347003032,
+            "distance_km": 402.0551582983317,
+            "eta_hours": 23.182875969919806,
+            "expanded_nodes": 1977,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 2.1043569132738362,
+            "max_risk": 0.14302011910089427,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 22.42688856450551,
+            "turn_count": 3
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "low_risk",
+          "plan_id": "route-v3-sha256-5579b8a52c29b438b5af3f7c30182563938530095ccf4e29989c3162effac9dd",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "rolling_0_24h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f",
+            "risk-sha256-6e0da7d8bee2e082cb7d7c9afabd2faba482e4444bff9c630a11cfcd445857b1"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T03:39:38.856789Z",
+              "latitude": 70.7,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T06:03:19.331455Z",
+              "latitude": 71.06666666666666,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T08:26:59.806121Z",
+              "latitude": 71.43333333333334,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.729615363147524
+            },
+            {
+              "eta": "2026-02-15T10:47:50.102056Z",
+              "latitude": 71.8,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.824864091475805
+            },
+            {
+              "eta": "2026-02-15T13:08:01.276253Z",
+              "latitude": 72.16666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.847305318382052
+            },
+            {
+              "eta": "2026-02-15T15:26:09.757346Z",
+              "latitude": 72.53333333333333,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.919059229559369
+            },
+            {
+              "eta": "2026-02-15T17:43:33.676970Z",
+              "latitude": 72.9,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.94564858476321
+            },
+            {
+              "eta": "2026-02-15T20:53:42.116102Z",
+              "latitude": 73.26666666666667,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.934880561298795
+            },
+            {
+              "eta": "2026-02-15T23:10:58.353492Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.950261568360859
+            }
+          ]
+        },
+        "recommended": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-16T00:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.09648169651762155,
+            "compute_ms": 3006.315522005025,
+            "distance_km": 397.43846941983907,
+            "eta_hours": 22.962344160220844,
+            "expanded_nodes": 980,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 2.215445920599607,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 26.855876849683654,
+            "turn_count": 2
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "recommended",
+          "plan_id": "route-v3-sha256-8b1377f2f687ec8a82f6a5a5c78d2cd9152df0cbff5590f2eecf1b07c27c7222",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "rolling_0_24h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3",
+            "risk-sha256-7689822af84fd0c1ba73301168a2b549a6d258f201b135691df155d845ff3201",
+            "risk-sha256-e712d68665741b705683ec33cbc3a2e73589207d2650601918a9ff794e5b674d",
+            "risk-sha256-79f095fdcf940752e8e6653419177b2fddaed9efd2629610ef4e0f103105a34d",
+            "risk-sha256-f040a5882284bdfbced4884242d47ac8bdf092005ecd41b35dd1d49cb273b7b3",
+            "risk-sha256-9acb3091a5158c418c602a8cfc0bd7022b2274abab8eb65fc5783c3badc65ae9",
+            "risk-sha256-08a999550b718cb70e98d0de328aecd419b98c1f81cdebce9ec698772cf3c6d6",
+            "risk-sha256-1cf474ffa05ec389e09a13a8e1f26e08dd30db7e17849ae79bcec9117abdfcd0",
+            "risk-sha256-d56c1853d4b074377dbfcd2ea10eff2861d5f85f94d30de25a8051faddc86027",
+            "risk-sha256-367276a9eb30cd6bae8000c7aa501d071320c21ceb707b9a6f1507a94cf32edd",
+            "risk-sha256-f56a34f5bd8cdebcffb131da96b0f09d42b3f00b125c4e692a061600e69fcbef",
+            "risk-sha256-56655c6b165bae5afd00c6bebcd9c3f5f753247c2c26a01355dc40fbbde2dcde",
+            "risk-sha256-86271ddceb277fa43106e5a34b951c9528090cf0babbaf81650dab0187aa0237",
+            "risk-sha256-3e0afb292ac2048e81e17dc51d42c021ec7c8fb809b0ac8d9e34e1ce93843053",
+            "risk-sha256-8642cd4cf9eec232c1e88565c7878f1cd7fb6a53a36947f0f598c56cf93d59e9",
+            "risk-sha256-871061ab0ed300d420567fd17f04863332ef64a2ddd52368c62a162aa00039ba",
+            "risk-sha256-361ab80cffa3e409dc9ccd09939754eefd5435eed2185fbe9d1ceb113051a370",
+            "risk-sha256-db93055e1655e0b67f6db664f30223ba93fa33d84dbbf7d94a431ddd198dff93",
+            "risk-sha256-9eecb4e6acee67892a674dd0c95de87317c300d4b020b55305b035d9a478101f"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            },
+            {
+              "eta": "2026-02-15T07:15:55.268484Z",
+              "latitude": 71.43333333333334,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.858998759587606
+            },
+            {
+              "eta": "2026-02-15T09:41:17.499743Z",
+              "latitude": 71.8,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.674438020255831
+            },
+            {
+              "eta": "2026-02-15T12:01:32.458180Z",
+              "latitude": 72.16666666666667,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.8451254659228855
+            },
+            {
+              "eta": "2026-02-15T14:20:26.778029Z",
+              "latitude": 72.53333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.892004405789906
+            },
+            {
+              "eta": "2026-02-15T16:38:17.985272Z",
+              "latitude": 72.9,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.929332347710928
+            },
+            {
+              "eta": "2026-02-15T19:49:12.447860Z",
+              "latitude": 73.26666666666667,
+              "longitude": 17.2,
+              "recommended_speed_mps": 4.91505245897505
+            },
+            {
+              "eta": "2026-02-15T22:57:44.438977Z",
+              "latitude": 73.63333333333333,
+              "longitude": 16.0,
+              "recommended_speed_mps": 4.927380016777251
+            }
+          ]
+        }
+      }
+    },
+    {
+      "planning_layer": "executable_0_6h",
+      "plans": {
+        "fastest": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-15T06:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.14377245598917027,
+            "compute_ms": 5.947056997683831,
+            "distance_km": 81.54305883792517,
+            "eta_hours": 4.934537841364519,
+            "expanded_nodes": 3,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 0.7094506246244756,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 5.5373949823474184,
+            "turn_count": 0
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "fastest",
+          "plan_id": "route-v3-sha256-6838f02529acdcfd112159abda7325b745d949143e81236d35d2ba94da81c942",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "executable_0_6h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            }
+          ]
+        },
+        "low_risk": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-15T06:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.14377245598917027,
+            "compute_ms": 17.498378998425324,
+            "distance_km": 81.54305883792517,
+            "eta_hours": 4.934537841364519,
+            "expanded_nodes": 7,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 0.7094506246244756,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 5.417370450004743,
+            "turn_count": 0
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "low_risk",
+          "plan_id": "route-v3-sha256-af1106b02523e09bf7808590c34ca2a6666ce9e3bdd8fb1130e8bd5de89196f6",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "executable_0_6h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            }
+          ]
+        },
+        "recommended": {
+          "as_of_time": "2026-08-22T12:00:00Z",
+          "config_digest": "0af276205eb8f22c0727a29dedefae18d72f8ccda4e816ced9142f851e463842",
+          "corridor_id": "tromso_to_isfjorden_outer",
+          "destination_reached": false,
+          "focus_end_time": "2026-02-15T06:00:00Z",
+          "focus_start_time": "2026-02-15T00:00:00Z",
+          "generated_at": "2026-09-02T03:04:46.079240Z",
+          "generation_id": 0,
+          "input_revision": 0,
+          "layer_goal_reached": true,
+          "layer_set_id": "layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404",
+          "metrics": {
+            "avg_risk": 0.14377245598917027,
+            "compute_ms": 5.4306490055751055,
+            "distance_km": 81.54305883792517,
+            "eta_hours": 4.934537841364519,
+            "expanded_nodes": 3,
+            "hard_constraint_violations": 0,
+            "integrated_risk_hours": 0.7094506246244756,
+            "max_risk": 0.18936896757480193,
+            "minimum_confidence": 0.675000011920929,
+            "objective_cost": 6.062674419014961,
+            "turn_count": 0
+          },
+          "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+          "objective_mode": "recommended",
+          "plan_id": "route-v3-sha256-1e8f71ea5867f9b216e3aca53d70b723a3cc2a5d369b01b295bac1ca198e8699",
+          "plan_kind": "initial",
+          "plan_version": "time-dependent-a-star.v1:v3:0",
+          "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+          "planner_version": "time-dependent-a-star.v1",
+          "planning_layer": "executable_0_6h",
+          "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+          "provenance": "formal",
+          "reference_plan_id": "route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53",
+          "replan_reasons": [],
+          "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+          "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+          "schema_version": "cd.route-plan.v3",
+          "source_risk_ids": [
+            "risk-sha256-efe0a1ba6e4f44c1cdaaeebc4945bf94708b38a742f1fbe20fe45dd287bdf619",
+            "risk-sha256-f745508e88b0c4360a5a39665c7cda2ea1297e5dc8c98ce72652c778876b0d8c",
+            "risk-sha256-850ab8006237367224f61260ba8979d3c48c9b463cdc083d4eb76bcd2b09a6dd",
+            "risk-sha256-33e7f47216cfbb0d3e948179b8a2a88086ec4d644de5340ea9a0b2f62f1b3b10",
+            "risk-sha256-7da419700ee84679ada06a0c7961decf534e82003a74ed0eed63d4a69c56e3ea",
+            "risk-sha256-50b9b6d231da7f5263e9484dac9cac5d919e77c4dc081ea2c7327e1f1da40da3"
+          ],
+          "start_time": "2026-02-15T00:00:00Z",
+          "vessel_profile_id": "nordic_odyssey_reference_v1",
+          "waypoints": [
+            {
+              "eta": "2026-02-15T00:00:00Z",
+              "latitude": 70.33333333333333,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T02:28:22.670084Z",
+              "latitude": 70.7,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.579696769184537
+            },
+            {
+              "eta": "2026-02-15T04:56:04.336229Z",
+              "latitude": 71.06666666666666,
+              "longitude": 18.4,
+              "recommended_speed_mps": 4.600887547598945
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "model_config_digest": "0e317a76a8d902beded2694be75b34d01390f1d460b41d7b775fe57716a8b5ce",
+  "plan_kind": "initial",
+  "planner_config_digest": "f0e1eed85204edca0f829262a0e86221b9af5a455e5c65f965123b0279cd90a2",
+  "planning_request_id": "fb0da2ce18304d439248f5fbfb4024cb",
+  "provenance": "formal",
+  "replan_reasons": [],
+  "run_id": "run-441b03c8-d45b-5414-b0e8-b7fd0d990c22",
+  "scenario_id": "tromso_isfjorden_february_2026_research_v1",
+  "schema_version": "cd.four-layer-route-plan-set.v3",
+  "start_time": "2026-02-15T00:00:00Z",
+  "vessel_profile_id": "nordic_odyssey_reference_v1"
+}

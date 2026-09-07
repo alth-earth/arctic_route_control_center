@@ -24,7 +24,8 @@ AppImage/EXE 启动器（保留命令台）
 
 ## 发行内容
 
-包含六个正式 Python 包、控制中心、正式配置、D 普通网页资源，以及当前 `work_package_d/viewer/checksums.json` 明确列出的冻结 Viewer 制品。不包含 A 的 23GB 数据目录、历史备份、自包含重复 HTML、RC1/RC2/demo-engineering 分支内容、legacy CNN、Torch/safetensors、校准/网格实验、synthetic/legacy CLI 或凭据。
+包含六个正式 Python 包、控制中心、正式配置、D 普通网页资源，以及由
+`packaging/viewer-root/checksums.json` 明确列出的冻结 Viewer 制品。不包含 A 的 23GB 数据目录、历史备份、自包含重复 HTML、RC1/RC2/demo-engineering 分支内容、legacy CNN、Torch/safetensors、校准/网格实验、synthetic/legacy CLI 或凭据。
 
 外部目录固定为：
 

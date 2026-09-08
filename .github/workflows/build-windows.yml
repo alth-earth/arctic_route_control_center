@@ -118,27 +118,16 @@ jobs:
           Write-Host "=== eccodes dlls ==="
           Get-ChildItem -LiteralPath "$prefix\Library\bin" -Filter "*eccodes*.dll" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name
 
-      - name: Fetch v4 ready Viewer package
-        shell: pwsh
-        run: |
-          $ready = "$env:RUNNER_TEMP\winter-rebuilt-20260215-viewer-package-v4"
-          if (-not (Test-Path "$ready\bundle.json")) {
-            $zip = "$env:RUNNER_TEMP\winter-v4.zip"
-            Invoke-WebRequest -Uri "https://github.com/alth-earth/arctic_route_control_center/releases/download/viewer-winter-v4/winter-v4.zip" -OutFile $zip
-            Expand-Archive -LiteralPath $zip -DestinationPath $ready
-          }
-          Write-Host "ready 目录：$ready"
-          Get-ChildItem -LiteralPath $ready | Select-Object -First 4 -ExpandProperty Name
-
       - name: Build Windows onedir EXE
         shell: pwsh
         env:
           ARCTIC_ROUTE_ECCODES_PREFIX: ${{ runner.temp }}\arctic-native
         run: |
           $ws = (Resolve-Path ws).Path
-          $ready = "$env:RUNNER_TEMP\winter-rebuilt-20260215-viewer-package-v4"
           Set-Location ws\arctic_route_control_center
-          .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean -ReadyPackage $ready
+          # Viewer 数据制品为可选输入：不传 -ViewerRootPackage / -ReadyPackage，
+          # 产物只含 UI 静态文件，Viewer 数据在运行时从数据根目录加载。
+          .\packaging\windows\build-windows.ps1 -WorkspaceRoot $ws -Clean
 
       - name: Upload handoff artifact
         if: success()

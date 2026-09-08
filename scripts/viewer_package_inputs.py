@@ -243,7 +243,9 @@ def stage_viewer_packages(
                 "package_dir": package.name,
                 "location": location,
                 "bundle_path": bundle_path,
-                "source": str(package.source),
+                # Never record the build-machine path of the input: the release
+                # tree must stay portable and absolute-path free.
+                "source": "external build input",
                 "scenario_id": package.scenario_id,
                 "assembly_id": package.assembly_id,
                 "status": package.status,

@@ -181,14 +181,22 @@ try {
     }
     $viewerIndex = Invoke-RestMethod "$base/viewer/packages.json" -TimeoutSec 10
     $viewerPackages = @($viewerIndex.packages)
-    if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -eq 0) {
-        throw "Viewer 制品索引未保留 root 记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
-    }
-    $rootEntry = @($viewerPackages | Where-Object {
-        $_.package_dir -eq "viewer-root"
-    })
-    if ($rootEntry.Count -ne 1) {
-        throw "Viewer 索引缺少 viewer-root 条目：$($viewerPackages | ConvertTo-Json -Depth 4)"
+    $hasEmbeddedRoot = Test-Path (Join-Path $ArtifactPath "_internal\viewer\bundle.json")
+    if ($hasEmbeddedRoot) {
+        if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -eq 0) {
+            throw "Viewer 制品索引未保留 root 记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
+        }
+        $rootEntry = @($viewerPackages | Where-Object {
+            $_.package_dir -eq "viewer-root"
+        })
+        if ($rootEntry.Count -ne 1) {
+            throw "Viewer 索引缺少 viewer-root 条目：$($viewerPackages | ConvertTo-Json -Depth 4)"
+        }
+    } else {
+        Write-Host "产物未内嵌根 Viewer 数据；校验索引可解析且不声明 viewer-root。"
+        if ($viewerIndex.default_package -eq "viewer-root") {
+            throw "未内嵌 Viewer 数据时索引不应声明 viewer-root 为默认包：$($viewerIndex | ConvertTo-Json -Depth 4)"
+        }
     }
     $jobRequest = @{
         operation = "a_bundle"

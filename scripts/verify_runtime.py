@@ -103,7 +103,9 @@ def _check_packaging_dependencies(executable: Path) -> None:
         raise RuntimeError(f"frozen CARRA dependency self-test returned failure: {document}")
 
 
-def _find_embedded_ready_package(artifact_root: Path) -> Path:
+def _find_embedded_ready_package(artifact_root: Path) -> Path | None:
+    """Return the embedded audited Viewer package, or None when none is embedded."""
+
     matches = sorted(
         candidate
         for candidate in artifact_root.rglob(_EMBEDDED_READY_NAME)
@@ -112,9 +114,11 @@ def _find_embedded_ready_package(artifact_root: Path) -> Path:
         and (candidate / "bundle.json").is_file()
         and (candidate / "checksums.json").is_file()
     )
+    if not matches:
+        return None
     if len(matches) != 1:
         raise RuntimeError(
-            "expected exactly one embedded audited Viewer package, "
+            "expected at most one embedded audited Viewer package, "
             f"found {len(matches)}"
         )
     import hashlib
@@ -127,15 +131,24 @@ def _find_embedded_ready_package(artifact_root: Path) -> Path:
 
 def _check_viewer_package_index(base: str, data_root: Path, artifact_root: Path) -> None:
     embedded = _find_embedded_ready_package(artifact_root)
-    ready = data_root / "artifacts" / "ready" / embedded.name
-    ready.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(embedded, ready)
+    if embedded is not None:
+        ready = data_root / "artifacts" / "ready" / embedded.name
+        ready.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(embedded, ready)
     status, body = _get(base + "/viewer/packages.json")
     if status != 200:
         raise RuntimeError(f"Viewer package index failed: {status}")
     index = json.loads(body)
     packages = index.get("packages", [])
-    if index.get("default_package") != "viewer-root" or len(packages) != 3:
+    if embedded is None:
+        # Viewer data packages are optional build inputs; without an embedded
+        # package the index must simply be parseable and must not claim a root.
+        if index.get("default_package") == "viewer-root":
+            raise RuntimeError(
+                "Viewer package index claims viewer-root without embedded Viewer data"
+            )
+        return
+    if index.get("default_package") != "viewer-root" or len(packages) < 2:
         raise RuntimeError(
             "Viewer package index did not retain root + embedded ready + external ready"
         )

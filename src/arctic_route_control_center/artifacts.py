@@ -150,20 +150,26 @@ def package_index(
     embedded_only: bool = False,
 ) -> dict[str, Any]:
     packages: list[dict[str, Any]] = []
-    default = inspect_viewer_package(
-        paths.viewer_static,
-        max_json_bytes=max_json_bytes,
-        verify_checksums=True,
-    )
-    default.update(
-        {
-            "package_dir": "viewer-root",
-            "display_name": f"{default.get('display_name', '当前制品')}（打包默认）",
-            "bundle_path": "bundle.json",
-            "location": "embedded",
-        }
-    )
-    packages.append(default)
+    # Viewer data packages are optional runtime inputs.  A build that carries no
+    # embedded root Viewer must still expose a usable index; the default falls
+    # back to the first ready external package when nothing is embedded.
+    default_package = ""
+    if (paths.viewer_static / "bundle.json").is_file():
+        default = inspect_viewer_package(
+            paths.viewer_static,
+            max_json_bytes=max_json_bytes,
+            verify_checksums=True,
+        )
+        default.update(
+            {
+                "package_dir": "viewer-root",
+                "display_name": f"{default.get('display_name', '当前制品')}（打包默认）",
+                "bundle_path": "bundle.json",
+                "location": "embedded",
+            }
+        )
+        packages.append(default)
+        default_package = "viewer-root"
     embedded_root = paths.viewer_static / "packages"
     for child in _package_dirs(embedded_root):
         item = inspect_viewer_package(child, max_json_bytes=max_json_bytes)
@@ -180,10 +186,15 @@ def package_index(
             item["location"] = "inbox"
             item["bundle_path"] = ""
             packages.append(item)
+    if not default_package:
+        for item in packages:
+            if item.get("status") == "ready":
+                default_package = str(item.get("package_dir") or "")
+                break
     return {
         "schema_version": "d.viewer-package-index.v1",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "default_package": "viewer-root",
+        "default_package": default_package,
         "packages": packages,
     }
 

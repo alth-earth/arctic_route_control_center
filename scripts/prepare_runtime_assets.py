@@ -321,20 +321,20 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--ready-package",
-        type=Path,
-        default=Path(os.environ.get("ARCTIC_ROUTE_READY_PACKAGE", DEFAULT_EMBEDDED_READY_PACKAGE)),
-        help="audited ready-store package to embed alongside the original dynamic package",
+        default=os.environ.get("ARCTIC_ROUTE_READY_PACKAGE", ""),
+        help=(
+            "optional audited ready-store package to embed; when unset or absent "
+            "the build simply embeds no ready package (Viewer data stays external)"
+        ),
     )
     parser.add_argument(
         "--viewer-root",
-        type=Path,
-        default=Path(
-            os.environ.get(
-                "ARCTIC_ROUTE_VIEWER_ROOT",
-                Path(__file__).resolve().parents[1] / "packaging" / "viewer-root",
-            )
+        default=os.environ.get("ARCTIC_ROUTE_VIEWER_ROOT", ""),
+        help=(
+            "optional immutable root Viewer data package; when unset or absent the "
+            "build embeds no root Viewer data and the Viewer loads packages from "
+            "the runtime data root instead"
         ),
-        help="immutable root Viewer data package (defaults to tracked packaging/viewer-root)",
     )
     args = parser.parse_args()
     root = args.workspace_root.resolve()
@@ -346,46 +346,69 @@ def main() -> int:
     output.mkdir(parents=True)
 
     viewer_source = root / "work_package_d" / "viewer"
-    viewer_root = args.viewer_root.expanduser().resolve()
-    checksums = json.loads((viewer_root / "checksums.json").read_text(encoding="utf-8"))
-    files = checksums.get("files")
-    if not isinstance(files, dict) or "bundle.json" not in files:
-        raise ValueError("current Viewer checksums.json is malformed")
-    checksum_paths = tuple(files)
-    if set(checksum_paths) != set(VIEWER_CHECKSUM_ALLOWLIST):
-        unexpected = sorted(set(checksum_paths) - set(VIEWER_CHECKSUM_ALLOWLIST))
-        missing = sorted(set(VIEWER_CHECKSUM_ALLOWLIST) - set(checksum_paths))
-        raise ValueError(
-            "current Viewer checksum allowlist drift: "
-            f"unexpected={unexpected}, missing={missing}"
-        )
-    root_names = {
-        path.relative_to(viewer_root).as_posix()
-        for path in viewer_root.rglob("*")
-        if path.is_file()
-    }
-    if root_names != set(VIEWER_ROOT_DATA_ALLOWLIST):
-        raise ValueError(
-            "tracked root Viewer file set changed: "
-            f"unexpected={sorted(root_names - set(VIEWER_ROOT_DATA_ALLOWLIST))}, "
-            f"missing={sorted(set(VIEWER_ROOT_DATA_ALLOWLIST) - root_names)}"
-        )
-    for relative in VIEWER_CHECKSUM_ALLOWLIST:
-        expected = files[relative]
-        if not isinstance(expected, str) or len(expected) != 64:
-            raise ValueError(f"current Viewer checksum is malformed: {relative}")
-        relative_path = Path(relative)
-        if relative_path.name != relative or relative_path.is_absolute():
-            raise ValueError(f"Viewer resource path is not a flat allowlisted file: {relative}")
-        source = viewer_root / relative
-        if sha256(source) != expected:
-            raise ValueError(f"root Viewer checksum mismatch: {relative}")
+    viewer_root_value = str(args.viewer_root or "").strip()
+    viewer_root = (
+        Path(viewer_root_value).expanduser().resolve() if viewer_root_value else None
+    )
+    root_viewer: dict[str, object] | None = None
+    if viewer_root is None:
+        print("跳过内嵌根 Viewer 制品：未提供 --viewer-root。")
+    elif not viewer_root.is_dir():
+        raise ValueError(f"viewer-root Viewer package is missing: {viewer_root}")
+    if viewer_root is not None:
+        checksums = json.loads((viewer_root / "checksums.json").read_text(encoding="utf-8"))
+        files = checksums.get("files")
+        if not isinstance(files, dict) or "bundle.json" not in files:
+            raise ValueError("current Viewer checksums.json is malformed")
+        checksum_paths = tuple(files)
+        if set(checksum_paths) != set(VIEWER_CHECKSUM_ALLOWLIST):
+            unexpected = sorted(set(checksum_paths) - set(VIEWER_CHECKSUM_ALLOWLIST))
+            missing = sorted(set(VIEWER_CHECKSUM_ALLOWLIST) - set(checksum_paths))
+            raise ValueError(
+                "current Viewer checksum allowlist drift: "
+                f"unexpected={unexpected}, missing={missing}"
+            )
+        root_names = {
+            path.relative_to(viewer_root).as_posix()
+            for path in viewer_root.rglob("*")
+            if path.is_file()
+        }
+        if root_names != set(VIEWER_ROOT_DATA_ALLOWLIST):
+            raise ValueError(
+                "tracked root Viewer file set changed: "
+                f"unexpected={sorted(root_names - set(VIEWER_ROOT_DATA_ALLOWLIST))}, "
+                f"missing={sorted(set(VIEWER_ROOT_DATA_ALLOWLIST) - root_names)}"
+            )
+        for relative in VIEWER_CHECKSUM_ALLOWLIST:
+            expected = files[relative]
+            if not isinstance(expected, str) or len(expected) != 64:
+                raise ValueError(f"current Viewer checksum is malformed: {relative}")
+            relative_path = Path(relative)
+            if relative_path.name != relative or relative_path.is_absolute():
+                raise ValueError(
+                    f"Viewer resource path is not a flat allowlisted file: {relative}"
+                )
+            source = viewer_root / relative
+            if sha256(source) != expected:
+                raise ValueError(f"root Viewer checksum mismatch: {relative}")
+        root_viewer = {
+            "package_dir": "viewer-root",
+            "checksums_sha256": sha256(viewer_root / "checksums.json"),
+        }
     for relative in VIEWER_STATIC_ALLOWLIST:
         copy_file(viewer_source / relative, output / "viewer" / relative)
-    for relative in VIEWER_ROOT_DATA_ALLOWLIST:
-        copy_file(viewer_root / relative, output / "viewer" / relative)
-    embedded_ready = copy_embedded_ready_package(
-        args.ready_package.expanduser().resolve(), output
+    if viewer_root is not None:
+        for relative in VIEWER_ROOT_DATA_ALLOWLIST:
+            copy_file(viewer_root / relative, output / "viewer" / relative)
+    ready_value = str(args.ready_package or "").strip()
+    ready_package = Path(ready_value).expanduser().resolve() if ready_value else None
+    if ready_package is not None and not ready_package.is_dir():
+        print(f"跳过内嵌 ready 制品：未找到 {ready_package}")
+        ready_package = None
+    embedded_ready = (
+        copy_embedded_ready_package(ready_package, output)
+        if ready_package is not None
+        else None
     )
     viewer_static_hashes = {
         relative: sha256(viewer_source / relative) for relative in VIEWER_STATIC_ALLOWLIST
@@ -467,13 +490,20 @@ def main() -> int:
             for name, inputs in source_inputs.items()
         },
         "viewer_source": (
-            "work_package_d/viewer static allowlist + tracked packaging/viewer-root data"
+            "work_package_d/viewer static allowlist"
+            + (" + supplied root Viewer data" if viewer_root is not None else "")
         ),
-        "viewer_files": list(VIEWER_FILE_ALLOWLIST),
+        "viewer_files": list(VIEWER_STATIC_ALLOWLIST)
+        + (list(VIEWER_ROOT_DATA_ALLOWLIST) if viewer_root is not None else []),
         "viewer_static_files": viewer_static_hashes,
         "viewer_checksum_allowlist": list(VIEWER_CHECKSUM_ALLOWLIST),
-        "viewer_root_data_source": "arctic_route_control_center/packaging/viewer-root",
-        "viewer_embedded_packages": [embedded_ready],
+        "viewer_root_data_source": (
+            str(viewer_root) if viewer_root is not None else "none (optional input omitted)"
+        ),
+        "viewer_root_package": root_viewer,
+        "viewer_embedded_packages": (
+            [embedded_ready] if embedded_ready is not None else []
+        ),
         "contract_scenario_allowlist": list(RELEASE_SCENARIO_ALLOWLIST),
         "contract_corridor_allowlist": list(RELEASE_CORRIDOR_ALLOWLIST),
         "contract_vessel_allowlist": list(RELEASE_VESSEL_ALLOWLIST),

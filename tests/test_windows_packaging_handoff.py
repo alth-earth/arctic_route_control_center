@@ -10,11 +10,13 @@ def test_windows_build_accepts_both_viewer_package_paths() -> None:
 
     assert '[string]$ViewerRootPackage = ""' in script
     assert "$env:ARCTIC_ROUTE_VIEWER_ROOT" in script
-    assert 'Join-Path $ProjectRoot "packaging\\viewer-root"' in script
     assert '"--viewer-root", $ViewerRootPackage' in script
     assert '[string]$ReadyPackage = ""' in script
     assert "$env:ARCTIC_ROUTE_READY_PACKAGE" in script
     assert "该制品不随 Git 仓库提供" in script
+    # Viewer 数据制品是可选输入：缺省时构建跳过内嵌，而不是失败。
+    assert "跳过内嵌根 Viewer 制品" in script
+    assert "跳过内嵌 ready Viewer 制品" in script
 
 
 def test_windows_ai_prompt_requests_missing_artifacts_without_fixed_team_path() -> None:

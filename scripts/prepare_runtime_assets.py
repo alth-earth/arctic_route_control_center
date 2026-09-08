@@ -352,7 +352,7 @@ def main() -> int:
     )
     root_viewer: dict[str, object] | None = None
     if viewer_root is None:
-        print("跳过内嵌根 Viewer 制品：未提供 --viewer-root。")
+        print("skip embedded root Viewer: no --viewer-root supplied")
     elif not viewer_root.is_dir():
         raise ValueError(f"viewer-root Viewer package is missing: {viewer_root}")
     if viewer_root is not None:
@@ -403,7 +403,7 @@ def main() -> int:
     ready_value = str(args.ready_package or "").strip()
     ready_package = Path(ready_value).expanduser().resolve() if ready_value else None
     if ready_package is not None and not ready_package.is_dir():
-        print(f"跳过内嵌 ready 制品：未找到 {ready_package}")
+        print(f"skip embedded ready package: not found at {ready_package}")
         ready_package = None
     embedded_ready = (
         copy_embedded_ready_package(ready_package, output)

@@ -2,8 +2,8 @@
 param(
     [string]$WorkspaceRoot = "",
     [string]$PythonVersion = "3.13",
-    [string]$ViewerRootPackage = "",
-    [string]$ReadyPackage = "",
+    [string[]]$ViewerPackage = @(),
+    [string]$ViewerManifest = "",
     [switch]$Clean,
     [switch]$SkipTests
 )
@@ -86,7 +86,6 @@ $WorkRoot = Join-Path $BuildRoot "pyinstaller-work"
 $ExeDir = Join-Path $DistRoot "arctic-route-control-center"
 $NativeRoot = Join-Path $ProjectRoot "build\windows-native"
 $NativeEnvironment = Join-Path $ProjectRoot "packaging\windows\environment.yml"
-$EmbeddedReadyPackageName = "winter-rebuilt-20260215-viewer-package-v4"
 
 if ($Clean) {
     # Keep the separately audited native Mamba prefix: recreating it is not
@@ -97,31 +96,9 @@ if ($Clean) {
 }
 New-Item -ItemType Directory -Path $BuildRoot -Force | Out-Null
 
-# Viewer 数据制品为可选输入：未提供时产物不内嵌任何 Viewer 数据，Viewer 改为
-# 在运行时从数据根目录（artifacts/ready 等）加载。
-if ([string]::IsNullOrWhiteSpace($ViewerRootPackage)) {
-    $ViewerRootPackage = $env:ARCTIC_ROUTE_VIEWER_ROOT
-}
-if ([string]::IsNullOrWhiteSpace($ViewerRootPackage)) {
-    Write-Host "未提供 -ViewerRootPackage / ARCTIC_ROUTE_VIEWER_ROOT；跳过内嵌根 Viewer 制品。"
-    $ViewerRootPackage = ""
-} elseif (-not (Test-Path -LiteralPath $ViewerRootPackage -PathType Container)) {
-    throw "指定的根 Viewer 制品目录不存在：$ViewerRootPackage；请用 -ViewerRootPackage <目录> 或 ARCTIC_ROUTE_VIEWER_ROOT 指定有效目录，或留空以跳过内嵌。"
-} else {
-    $ViewerRootPackage = (Resolve-Path -LiteralPath $ViewerRootPackage).Path
-}
-
-if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
-    $ReadyPackage = $env:ARCTIC_ROUTE_READY_PACKAGE
-}
-if ([string]::IsNullOrWhiteSpace($ReadyPackage)) {
-    Write-Host "未提供 -ReadyPackage / ARCTIC_ROUTE_READY_PACKAGE；跳过内嵌 ready Viewer 制品。"
-    $ReadyPackage = ""
-} elseif (-not (Test-Path -LiteralPath $ReadyPackage -PathType Container)) {
-    throw "指定的 ready Viewer 制品目录不存在：$ReadyPackage；该制品不随 Git 仓库提供。请向制品提供者索取完整 $EmbeddedReadyPackageName 目录（至少包含 bundle.json、checksums.json 及清单列出的文件），再用 -ReadyPackage <目录> 或 ARCTIC_ROUTE_READY_PACKAGE 指定，或留空以跳过内嵌。不要猜测路径、改名或换用其他版本。"
-} else {
-    $ReadyPackage = (Resolve-Path -LiteralPath $ReadyPackage).Path
-}
+# Viewer 数据制品由调用方显式声明（-ViewerPackage <目录> 可重复、-ViewerManifest
+# <清单>，或环境变量 ARCTIC_ROUTE_VIEWER_PACKAGES）。本脚本不做默认路径或制品
+# 名校验，全部交给 scripts/prepare_runtime_assets.py；不传就不内嵌任何制品。
 
 $EcCodesPrefix = $env:ARCTIC_ROUTE_ECCODES_PREFIX
 if ([string]::IsNullOrWhiteSpace($EcCodesPrefix)) {
@@ -180,11 +157,13 @@ $prepareArgs = @(
     (Join-Path $ProjectRoot "scripts\prepare_runtime_assets.py"),
     "--workspace-root", $WorkspaceRoot, "--output", $Assets
 )
-if (-not [string]::IsNullOrWhiteSpace($ViewerRootPackage)) {
-    $prepareArgs += @("--viewer-root", $ViewerRootPackage)
+foreach ($package in $ViewerPackage) {
+    if (-not [string]::IsNullOrWhiteSpace($package)) {
+        $prepareArgs += @("--viewer-package", $package)
+    }
 }
-if (-not [string]::IsNullOrWhiteSpace($ReadyPackage)) {
-    $prepareArgs += @("--ready-package", $ReadyPackage)
+if (-not [string]::IsNullOrWhiteSpace($ViewerManifest)) {
+    $prepareArgs += @("--viewer-manifest", $ViewerManifest)
 }
 Invoke-Checked $BuildPython $prepareArgs
 Invoke-Checked $BuildPython @(

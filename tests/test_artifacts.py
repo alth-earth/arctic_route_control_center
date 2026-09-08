@@ -77,12 +77,12 @@ def test_embedded_viewer_packages_are_preferred_and_can_be_isolated(tmp_path: Pa
     _write_valid_package(paths.artifacts_ready / "v4", "external-v4")
 
     embedded = package_index(paths, max_json_bytes=1024 * 1024, embedded_only=True)
-    assert [item["package_dir"] for item in embedded["packages"]] == ["viewer-root", "v2"]
+    assert [item["package_dir"] for item in embedded["packages"]] == ["embedded", "v2"]
     assert all(item["location"] == "embedded" for item in embedded["packages"])
 
     full = package_index(paths, max_json_bytes=1024 * 1024)
     assert [item["package_dir"] for item in full["packages"]] == [
-        "viewer-root",
+        "embedded",
         "v2",
         "v2",
         "v4",

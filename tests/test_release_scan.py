@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 _SCRIPTS_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 
 
 def _load_script(name: str):
+    scripts_dir = str(_SCRIPTS_ROOT)
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
     spec = importlib.util.spec_from_file_location(name, _SCRIPTS_ROOT / f"{name}.py")
     if spec is None or spec.loader is None:
         raise AssertionError(f"cannot load script: {name}")

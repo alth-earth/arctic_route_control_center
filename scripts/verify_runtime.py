@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
 import subprocess
 import tempfile
 import time
@@ -15,11 +14,6 @@ import urllib.request
 from pathlib import Path
 
 from scan_release import scan_release
-
-_EMBEDDED_READY_NAME = "winter-rebuilt-20260215-viewer-package-v4"
-_EMBEDDED_READY_BUNDLE_SHA256 = (
-    "f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a"
-)
 
 
 def _get(url: str) -> tuple[int, bytes]:
@@ -103,74 +97,33 @@ def _check_packaging_dependencies(executable: Path) -> None:
         raise RuntimeError(f"frozen CARRA dependency self-test returned failure: {document}")
 
 
-def _find_embedded_ready_package(artifact_root: Path) -> Path | None:
-    """Return the embedded audited Viewer package, or None when none is embedded."""
-
-    matches = sorted(
-        candidate
-        for candidate in artifact_root.rglob(_EMBEDDED_READY_NAME)
-        if candidate.is_dir()
-        and candidate.parent.name == "packages"
-        and (candidate / "bundle.json").is_file()
-        and (candidate / "checksums.json").is_file()
-    )
-    if not matches:
-        return None
-    if len(matches) != 1:
-        raise RuntimeError(
-            "expected at most one embedded audited Viewer package, "
-            f"found {len(matches)}"
-        )
-    import hashlib
-
-    digest = hashlib.sha256((matches[0] / "bundle.json").read_bytes()).hexdigest()
-    if digest != _EMBEDDED_READY_BUNDLE_SHA256:
-        raise RuntimeError("embedded v4 bundle.json SHA256 does not match the audited artifact")
-    return matches[0]
-
-
 def _check_viewer_package_index(base: str, data_root: Path, artifact_root: Path) -> None:
-    embedded = _find_embedded_ready_package(artifact_root)
-    if embedded is not None:
-        ready = data_root / "artifacts" / "ready" / embedded.name
-        ready.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(embedded, ready)
+    """Accept any Viewer layout: no embedded package, or the build-declared one."""
+
+    del data_root  # external ready packages are not staged during verification
+    embedded_indexes = sorted(artifact_root.rglob("viewer/embedded-packages.json"))
+    declared_default = ""
+    if embedded_indexes:
+        try:
+            document = json.loads(embedded_indexes[0].read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"embedded Viewer index is not readable JSON: {exc}") from exc
+        declared_default = str(document.get("default_package") or "")
     status, body = _get(base + "/viewer/packages.json")
     if status != 200:
         raise RuntimeError(f"Viewer package index failed: {status}")
     index = json.loads(body)
     packages = index.get("packages", [])
-    if embedded is None:
-        # Viewer data packages are optional build inputs; without an embedded
-        # package the index must simply be parseable and must not claim a root.
-        if index.get("default_package") == "viewer-root":
-            raise RuntimeError(
-                "Viewer package index claims viewer-root without embedded Viewer data"
-            )
+    if not declared_default:
+        # Viewer data packages are optional build inputs; without any embedded
+        # package the index simply has to be parseable.
         return
-    if index.get("default_package") != "viewer-root" or len(packages) < 2:
+    if index.get("default_package") != declared_default:
         raise RuntimeError(
-            "Viewer package index did not retain root + embedded ready + external ready"
+            "Viewer package index default does not match the embedded build declaration"
         )
-    embedded_entries = [
-        item
-        for item in packages
-        if item.get("location") == "embedded" and item.get("package_dir") == embedded.name
-    ]
-    ready_entries = [
-        item
-        for item in packages
-        if item.get("location") == "ready" and item.get("package_dir") == embedded.name
-    ]
-    if len(embedded_entries) != 1 or len(ready_entries) != 1:
-        raise RuntimeError("Viewer package index lost same-name source identity")
-    from urllib.parse import quote
-
-    encoded = quote(embedded.name, safe="")
-    for source in ("packages", "ready-packages"):
-        status, payload = _get(f"{base}/viewer/{source}/{encoded}/checksums.json")
-        if status != 200 or not json.loads(payload).get("files"):
-            raise RuntimeError(f"Viewer {source} source-specific package URL failed")
+    if not any(item.get("package_dir") == declared_default for item in packages):
+        raise RuntimeError("Viewer package index is missing the declared default package")
 
 
 def main() -> int:

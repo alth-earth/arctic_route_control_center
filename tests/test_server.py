@@ -89,7 +89,7 @@ def test_viewer_index_keeps_embedded_defaults_and_live_ready_packages(tmp_path: 
         with urllib.request.urlopen(base + "/viewer/packages.json") as response:
             index = json.load(response)
         assert [item["package_dir"] for item in index["packages"]] == [
-            "viewer-root",
+            "embedded",
             "ready-v2",
             "external-v4",
             "ready-v2",

@@ -40,6 +40,6 @@ release/Arctic_Route_Control_Center-x86_64.AppImage.sha256
 
 默认数据目录是 `~/.local/share/arctic-route-control-center`；可用 `--data-root /绝对路径` 或 `ARCTIC_ROUTE_DATA_ROOT` 覆盖。Copernicus Marine `.env.copernicus` 与 CDS/CARRA `.cdsapirc` 必须位于程序、仓库、数据和制品目录之外，POSIX 权限应为 `0600`；界面分别保存两个绝对路径，不复制、读取或回显凭据内容。
 
-构建脚本会验证仓库内 `packaging/viewer-root` 的 checksums、D 分支静态 Viewer、v4 ready 输入、控制中心测试、冻结程序自检、实际冻结任务子进程、编排器内部入口、HTTP 端点和路径穿越拒绝，再生成 SHA256。脚本内置本次已审查 appimagetool 与 type-2 runtime 的 SHA256；在线文件若变化会安全失败。正式长期发布仍应把这两个工具固定到内部制品库。
+要内嵌哪几个 Viewer 数据制品由构建者按次显式声明：可重复 `--viewer-package <目录>`（第一个为默认包，落在 `viewer/` 根；其余落在 `viewer/packages/<名>/`），或用 `--viewer-manifest <清单>`（条目含 `path`，可选 `name`/`default`），或环境变量 `ARCTIC_ROUTE_VIEWER_PACKAGES`（POSIX 用 `:` 分隔）；未声明则不内嵌任何制品，产物只含 Viewer UI。每个制品必须自带 `bundle.json` 与 `checksums.json` 且自描述校验通过。构建脚本随后验证 D 分支静态 Viewer UI、本次声明的制品、控制中心测试、冻结程序自检、实际冻结任务子进程、编排器内部入口、HTTP 端点和路径穿越拒绝，再生成 SHA256。脚本内置本次已审查 appimagetool 与 type-2 runtime 的 SHA256；在线文件若变化会安全失败。正式长期发布仍应把这两个工具固定到内部制品库。
 
 2026-09-03 本机构建的验收结果、成品摘要、真实 CARRA 最小下载和浏览器回归证据见 `RELEASE_VERIFICATION.zh-CN.md`。

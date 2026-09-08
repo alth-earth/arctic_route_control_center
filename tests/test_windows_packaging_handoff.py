@@ -5,31 +5,34 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_windows_build_accepts_both_viewer_package_paths() -> None:
+def test_windows_build_exposes_explicit_viewer_package_inputs() -> None:
     script = (ROOT / "packaging/windows/build-windows.ps1").read_text(encoding="utf-8")
 
-    assert '[string]$ViewerRootPackage = ""' in script
-    assert "$env:ARCTIC_ROUTE_VIEWER_ROOT" in script
-    assert '"--viewer-root", $ViewerRootPackage' in script
-    assert '[string]$ReadyPackage = ""' in script
-    assert "$env:ARCTIC_ROUTE_READY_PACKAGE" in script
-    assert "该制品不随 Git 仓库提供" in script
-    # Viewer 数据制品是可选输入：缺省时构建跳过内嵌，而不是失败。
-    assert "跳过内嵌根 Viewer 制品" in script
-    assert "跳过内嵌 ready Viewer 制品" in script
+    assert '[string[]]$ViewerPackage = @()' in script
+    assert '[string]$ViewerManifest = ""' in script
+    assert '"--viewer-package", $package' in script
+    assert '"--viewer-manifest", $ViewerManifest' in script
+    # No package name, no fixed artifact slot, no appdata default and no legacy
+    # environment variables are allowed to leak back into the build script.
+    assert "winter-rebuilt-20260215-viewer-package-v4" not in script
+    assert "$EmbeddedReadyPackageName" not in script
+    assert "ARCTIC_ROUTE_VIEWER_ROOT" not in script
+    assert "ARCTIC_ROUTE_READY_PACKAGE" not in script
 
 
-def test_windows_ai_prompt_requests_missing_artifacts_without_fixed_team_path() -> None:
+def test_windows_ai_prompt_documents_explicit_viewer_inputs() -> None:
     prompt = (ROOT / "docs/WINDOWS_AI_PROMPT.zh-CN.md").read_text(encoding="utf-8")
 
     for text in (
-        "远端 `main` 跟踪",
-        "v4：`winter-rebuilt-20260215-viewer-package-v4` 不在 Git 远端",
-        "缺失制品的完整目录或压缩包",
-        "-ViewerRootPackage",
-        "-ReadyPackage",
-        "不要降级到 v2",
+        "-ViewerPackage",
+        "-ViewerManifest",
+        "ARCTIC_ROUTE_VIEWER_PACKAGES",
+        "内嵌 Viewer 数据制品",
     ):
         assert text in prompt
+    # The prompt must not reintroduce a specific package name or legacy flags.
+    assert "winter-rebuilt-20260215-viewer-package-v4" not in prompt
+    assert "-ViewerRootPackage" not in prompt
+    assert "-ReadyPackage" not in prompt
     assert "/root/" not in prompt
     assert "C:\\Users\\" not in prompt

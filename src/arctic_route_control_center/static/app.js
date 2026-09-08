@@ -148,9 +148,10 @@ async function loadArtifacts() {
     const badge = element("span", item.status, `badge ${item.status}`); title.append(" ", badge);
     content.append(title, element("p", `${item.scenario_id || "未知场景"} · routes=${item.route_count || 0} · ${item.reason || "校验通过"}`));
     const actions = element("div", undefined, "list-actions");
-    if (item.package_dir === "viewer-root" || (item.status === "ready" && item.location !== "inbox")) {
+    const isRootPackage = item.bundle_path === "bundle.json";
+    if (isRootPackage || (item.status === "ready" && item.location !== "inbox")) {
       const link = element("a", "在 Viewer 打开", "button");
-      if (item.package_dir === "viewer-root") {
+      if (isRootPackage) {
         link.href = "/viewer/";
       } else {
         const params = new URLSearchParams({ package: item.package_dir });

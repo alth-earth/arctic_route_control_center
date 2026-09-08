@@ -15,15 +15,29 @@ APPIMAGETOOL_SHA256=${APPIMAGETOOL_SHA256:-a6d71e2b6cd66f8e8d16c37ad164658985e0c
 APPIMAGE_RUNTIME_PATH=${APPIMAGE_RUNTIME:-"$BUILD_ROOT/tools/runtime-x86_64"}
 APPIMAGE_RUNTIME_SHA256=${APPIMAGE_RUNTIME_SHA256:-1cc49bcf1e2ccd593c379adb17c9f85a36d619088296504de95b1d06215aebbf}
 ECCODES_PREFIX=${ARCTIC_ROUTE_ECCODES_PREFIX:-"$WORKSPACE_ROOT/work_package_a/.mamba-env"}
-READY_PACKAGE=${ARCTIC_ROUTE_READY_PACKAGE:-"${XDG_DATA_HOME:-$HOME/.local/share}/arctic-route-control-center/artifacts/ready/winter-rebuilt-20260215-viewer-package-v4"}
 DOWNLOAD_TOOL=0
 SKIP_TESTS=0
+# Viewer 数据制品由调用方显式声明（可重复 --viewer-package <目录>，或用
+# --viewer-manifest <清单> / 环境变量 ARCTIC_ROUTE_VIEWER_PACKAGES）。不传则不
+# 内嵌任何 Viewer 数据。
+VIEWER_MANIFEST=${ARCTIC_ROUTE_VIEWER_MANIFEST:-}
+VIEWER_PACKAGES=()
 
-for argument in "$@"; do
-  case "$argument" in
-    --download-appimagetool) DOWNLOAD_TOOL=1 ;;
-    --skip-tests) SKIP_TESTS=1 ;;
-    *) echo "unknown argument: $argument" >&2; exit 2 ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --download-appimagetool) DOWNLOAD_TOOL=1; shift ;;
+    --skip-tests) SKIP_TESTS=1; shift ;;
+    --viewer-manifest)
+      shift
+      if [ $# -eq 0 ]; then echo "--viewer-manifest requires a file" >&2; exit 2; fi
+      VIEWER_MANIFEST=$1; shift
+      ;;
+    --viewer-package)
+      shift
+      if [ $# -eq 0 ]; then echo "--viewer-package requires a directory" >&2; exit 2; fi
+      VIEWER_PACKAGES+=("$1"); shift
+      ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
 done
 
@@ -77,9 +91,15 @@ export ARCTIC_ROUTE_PRODUCTION_PACKAGE=1
 export ARCTIC_ROUTE_ECCODES_PREFIX="$ECCODES_PREFIX"
 export LD_LIBRARY_PATH="$ECCODES_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export ECCODES_DEFINITION_PATH="$ECCODES_PREFIX/share/eccodes/definitions"
+viewer_args=(--workspace-root "$WORKSPACE_ROOT" --output "$ASSETS_ROOT")
+if [ -n "$VIEWER_MANIFEST" ]; then
+  viewer_args+=(--viewer-manifest "$VIEWER_MANIFEST")
+fi
+for package in "${VIEWER_PACKAGES[@]}"; do
+  viewer_args+=(--viewer-package "$package")
+done
 "$VENV_ROOT/bin/python" "$PROJECT_ROOT/scripts/prepare_runtime_assets.py" \
-  --workspace-root "$WORKSPACE_ROOT" --output "$ASSETS_ROOT" \
-  --ready-package "$READY_PACKAGE"
+  "${viewer_args[@]}"
 "$VENV_ROOT/bin/python" "$PROJECT_ROOT/scripts/scan_release.py" \
   --root "$ASSETS_ROOT" --workspace-root "$WORKSPACE_ROOT"
 if test "$SKIP_TESTS" -eq 0; then

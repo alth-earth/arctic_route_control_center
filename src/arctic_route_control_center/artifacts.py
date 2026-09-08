@@ -143,6 +143,19 @@ def _package_dirs(root: Path) -> list[Path]:
     ]
 
 
+def _read_embedded_index(viewer_static: Path) -> dict[str, Any]:
+    """Read the build-time index written by prepare_runtime_assets, if any."""
+
+    index_path = viewer_static / "embedded-packages.json"
+    if not index_path.is_file():
+        return {}
+    try:
+        document = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return document if isinstance(document, dict) else {}
+
+
 def package_index(
     paths: AppPaths,
     *,
@@ -150,9 +163,13 @@ def package_index(
     embedded_only: bool = False,
 ) -> dict[str, Any]:
     packages: list[dict[str, Any]] = []
-    # Viewer data packages are optional runtime inputs.  A build that carries no
-    # embedded root Viewer must still expose a usable index; the default falls
-    # back to the first ready external package when nothing is embedded.
+    # Viewer data packages are optional build inputs.  The build-time index
+    # (viewer/embedded-packages.json) records the package name that was placed
+    # at the viewer root; with no embedded package the default falls back to the
+    # first ready external package.
+    embedded_index = _read_embedded_index(paths.viewer_static)
+    declared_default = str(embedded_index.get("default_package") or "")
+    root_name = declared_default or "embedded"
     default_package = ""
     if (paths.viewer_static / "bundle.json").is_file():
         default = inspect_viewer_package(
@@ -162,14 +179,14 @@ def package_index(
         )
         default.update(
             {
-                "package_dir": "viewer-root",
+                "package_dir": root_name,
                 "display_name": f"{default.get('display_name', '当前制品')}（打包默认）",
                 "bundle_path": "bundle.json",
                 "location": "embedded",
             }
         )
         packages.append(default)
-        default_package = "viewer-root"
+        default_package = root_name
     embedded_root = paths.viewer_static / "packages"
     for child in _package_dirs(embedded_root):
         item = inspect_viewer_package(child, max_json_bytes=max_json_bytes)
@@ -186,6 +203,11 @@ def package_index(
             item["location"] = "inbox"
             item["bundle_path"] = ""
             packages.append(item)
+    if not default_package and declared_default:
+        for item in packages:
+            if item.get("package_dir") == declared_default:
+                default_package = declared_default
+                break
     if not default_package:
         for item in packages:
             if item.get("status") == "ready":

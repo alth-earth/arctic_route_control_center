@@ -237,7 +237,7 @@
               <tr><td><code>LOCALAPPDATA</code></td><td>Windows 默认数据根的父目录；未设置时使用当前用户的 <code>AppData\Local</code>。</td><td>Windows；运行时</td></tr>
               <tr><td><code>ARCTIC_ROUTE_ROOT</code></td><td>开发/集成时定位六个兄弟仓库和本控制中心的工作区根；发行版通常不需要设置。</td><td>开发与构建</td></tr>
               <tr><td><code>ARCTIC_ROUTE_ECCODES_PREFIX</code></td><td>指定 ecCodes 原生库和 definitions 的前缀；仅在 A 数据或构建环境需要时设置。</td><td>Linux、Windows；高级配置</td></tr>
-              <tr><td><code>ARCTIC_ROUTE_READY_PACKAGE</code></td><td>指定构建时嵌入的、已审计 ready Viewer 制品目录；不改变运行时外部 ready 接收路径。</td><td>Linux、Windows；构建时</td></tr>
+              <tr><td><code>ARCTIC_ROUTE_VIEWER_PACKAGES</code></td><td>构建时显式声明的 Viewer 数据制品目录列表（Windows 以 <code>;</code>、POSIX 以 <code>:</code> 分隔）；不改变运行时外部 ready 接收路径。</td><td>Linux、Windows；构建时</td></tr>
               <tr><td><code>ECCODES_DEFINITION_PATH</code></td><td>ecCodes definitions 搜索路径；AppImage 启动器通常会自动配置。</td><td>Linux；高级配置</td></tr>
               <tr><td><code>LD_LIBRARY_PATH</code></td><td>Linux 原生库搜索路径；AppImage 启动器通常会自动配置，通常不需要手动覆盖。</td><td>Linux；高级配置</td></tr>
             </tbody>

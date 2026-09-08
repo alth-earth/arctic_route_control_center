@@ -27,7 +27,7 @@ def test_help_entry_documents_both_platforms_and_runtime_layout() -> None:
         "logs/",
         "cache/",
         "ARCTIC_ROUTE_DATA_ROOT",
-        "ARCTIC_ROUTE_READY_PACKAGE",
+        "ARCTIC_ROUTE_VIEWER_PACKAGES",
         ".env.copernicus",
         ".cdsapirc",
     ):

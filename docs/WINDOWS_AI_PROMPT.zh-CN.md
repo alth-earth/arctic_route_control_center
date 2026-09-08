@@ -8,7 +8,7 @@
 目标：
 1. 当前目录就是已检出的 `arctic_route_control_center` 仓库根目录；不要假设盘符、用户名或固定工作区路径。脚本默认从该仓库父目录推导兄弟仓库，也可传入实际的 `-WorkspaceRoot`。
 2. 六个正式仓库必须是该工作区的兄弟目录：arctic_route_contracts、arctic_route_orchestrator、work_package_a、work_package_b、work_package_c、work_package_d；Control Center 使用 `main`，D 使用 `research-validation-system`，所有发布输入工作区必须干净。
-3. 只打包正式生产链和当前 work_package_d\viewer 的显式 allowlist + checksum 校验通过资源，并嵌入两个 Viewer 制品：初始动态 `viewer-root` 与经审计的 `winter-rebuilt-20260215-viewer-package-v4`。不要加入 RC1、RC2、demo-engineering、历史备份、实验/研究构件、model-cpu/legacy CNN、torch/safetensors、原始数据、缓存、credentials、`.env*`、`.cdsapirc`、`direct_url.json` 或 `uv_cache.json`。
+3. 只打包正式生产链和当前 work_package_d\viewer 的显式 UI allowlist + checksum 校验通过资源。要内嵌哪些 Viewer 数据制品完全由本次构建显式声明（不传就不内嵌任何制品）：可用 `-ViewerPackage <目录>` 重复声明多个制品，或用 `-ViewerManifest <清单>` 指向 JSON 清单，或设置环境变量 `ARCTIC_ROUTE_VIEWER_PACKAGES`。不要加入 RC1、RC2、demo-engineering、历史备份、实验/研究构件、model-cpu/legacy CNN、torch/safetensors、原始数据、缓存、credentials、`.env*`、`.cdsapirc`、`direct_url.json` 或 `uv_cache.json`。
 4. 入口必须是 console=True：启动后保留命令台、loopback 启动后端，并自动打开浏览器；关闭命令台停止后端。
 5. 运行时数据必须在 %LOCALAPPDATA%\ArcticRouteControlCenter 或 --data-root 指定目录；凭据只能是两个外部文件路径，不能写入代码或产物：Copernicus Marine 的 `.env.copernicus`，以及 C3S/ECMWF CARRA 的 `.cdsapirc`。二者不可混用。独立 `a_carra_acquire` 只能使用已登记 East domain 走廊、UTC ISO-8601 的 3 小时边界窗口（最长 216 小时）和 `wind_field`/`temperature`/`visibility` 三类。
 
@@ -16,35 +16,37 @@
 - 确认 $env:OS == Windows_NT、操作系统和 Python 都是 x64，Python 版本为 3.13；如果在 WSL、Linux、32 位 Python，立即停止。不要尝试交叉编译 Windows EXE。
 - 确认 uv、git 和 mamba 在 PATH；阅读 arctic_route_control_center\docs\BUILD_WINDOWS.zh-CN.md 和 README.md。
 - 确认六个仓库存在且不把任何用户未提交修改清理掉。
-- 逐一预检两个构建时 Viewer 制品输入，不能因为名称相同或目录中存在其他包就自动替代：
-  1. 初始动态 `viewer-root`：正常应存在于远端 `main` 跟踪的 `packaging\viewer-root`，并包含 `bundle.json`、`checksums.json` 及 checksum 清单中的全部文件。
-  2. 经审计 v4：`winter-rebuilt-20260215-viewer-package-v4` 不在 Git 远端，必须由用户/制品提供者另行提供完整制品目录或压缩包及其本机路径。
-  若任一输入缺失、不完整或 checksum/assembly 校验失败，立即停止并明确询问用户提供“缺失制品的完整目录或压缩包”和“其本机路径”；不要搜索并猜用其他 `ready` 包，不要从截图重建，不要降级到 v2。若用户给的是压缩包，只能解压到仓库外的临时/交接目录，保持内部文件字节不变，然后把解压后的制品目录传给构建脚本。
+- 向构建者确认“本次要内嵌哪几个 Viewer 数据制品”并提供其本机完整目录（或压缩包解压到仓库外后的目录）。内嵌 Viewer 数据制品是可选构建输入：每个制品必须自带 `bundle.json` 与 `checksums.json` 且校验通过，制品名取目录名（JSON 清单可用 `name` 覆盖）。若构建者决定本次不内嵌任何制品，产物将只含 Viewer UI，运行时从数据根目录的 `artifacts\ready` 加载数据。
+- 制品缺省规则：重复的 `-ViewerPackage` 中第一个为默认包（落在 `viewer\` 根），其余落在 `viewer\packages\<名>\`；若用清单，则以 `default: true` 显式声明默认包。未提供制品时脚本不内嵌、也不报错。
 - 先检查双凭据边界：`.env.copernicus` 只供 Copernicus Marine；`.cdsapirc` 只供 CARRA 的风场、温度、能见度再分析。两个文件必须在仓库、构建目录、EXE 目录和 ZIP 之外，不能读取、打印、复制或上传其内容；设置页应分别保存两个外部绝对路径。
 
-只执行这个入口（脚本默认使用随仓库跟踪的 `packaging\viewer-root`，并从 `%LOCALAPPDATA%\ArcticRouteControlCenter\artifacts\ready\winter-rebuilt-20260215-viewer-package-v4` 读取构建时 v4；路径不同则分别显式传入 `-ViewerRootPackage` / `-ReadyPackage`，不要复制或改名制品目录）：
+只执行这个入口（本仓库不预设任何制品默认路径）：
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
   .\packaging\windows\build-windows.ps1 -Clean
 
-团队成员把两个制品放在任意仓库外目录时，使用实际路径，不得照抄示例盘符或用户名：
-  .\packaging\windows\build-windows.ps1 -Clean -ViewerRootPackage <初始动态 viewer-root 目录> -ReadyPackage <v4 制品目录>
+需要内嵌制品时显式声明（路径使用实际值，不得照抄示例）：
+  .\packaging\windows\build-windows.ps1 -Clean `
+    -ViewerPackage D:\path\to\package-a -ViewerPackage D:\path\to\package-b
+或使用 JSON 清单（条目含 path，可选 name/default）：
+  .\packaging\windows\build-windows.ps1 -Clean -ViewerManifest D:\path\to\inputs.json
+或在脚本前设置 `$env:ARCTIC_ROUTE_VIEWER_PACKAGES = 'D:\pkg-a;D:\pkg-b'`。
 
 如果当前是 cmd.exe，可以使用等价包装：
   .\packaging\windows\build-windows.bat -Clean
 
-脚本已经负责：按 packaging\windows\environment.yml 创建/补全独立 Mamba ecCodes 原生前缀，使用 `uv sync --locked` 同步 Python 3.13 环境，校验并准备显式 allowlist runtime-assets（含初始动态 Viewer + v4 内嵌包），执行发布扫描、Ruff 和测试，按 packaging\arctic_route_control_center.spec 构建 onedir（包含动态 `cdsapi`/ECMWF Datastores），运行 verify-windows.ps1，并写出 EXE/ZIP 的 SHA256 文件。运行时仍从外部 `data_root\artifacts\inbox` 接收并校验制品，提升后从 `data_root\artifacts\ready` 读取；同名内嵌/ready 制品允许同时显示，不互相覆盖。
+脚本已经负责：按 packaging\windows\environment.yml 创建/补全独立 Mamba ecCodes 原生前缀，使用 `uv sync --locked` 同步 Python 3.13 环境，按本次声明的 Viewer 数据制品生成 runtime-assets（执行自描述校验、按 default 落位并写 viewer\embedded-packages.json），执行发布扫描、Ruff 和测试，按 packaging\arctic_route_control_center.spec 构建 onedir（包含动态 `cdsapi`/ECMWF Datastores），运行 verify-windows.ps1，并写出 EXE/ZIP 的 SHA256 文件。运行时仍从外部 `data_root\artifacts\inbox` 接收并校验制品，提升后从 `data_root\artifacts\ready` 读取；内嵌制品与外部 ready 制品来源不同、可同时显示，不互相覆盖。
 
 验收要求：
 - build 脚本退出码为 0。
 - dist\arctic-route-control-center\arctic-route-control-center.exe 存在。
 - release\Arctic_Route_Control_Center-Windows-x86_64.zip、对应 `.zip.sha256` 和 `arctic-route-control-center.exe.sha256` 存在；交接整个 onedir/ZIP，不能只交付单个 EXE。
-- --self-test --data-root <临时目录> 返回 JSON ok=true 且 Viewer status=ready。
+- --self-test --data-root <临时目录> 返回 JSON ok=true。
 - `--packaging-self-test` 返回 JSON `ok=true`、`cdsapi` 可用且 `ecmwf_datastores=true`；该检查不联网、不读取凭据内容。
 - 在没有 Python/仓库/开发环境的干净 Windows x64 机器上启动 EXE，访问 http://127.0.0.1:8130/ 成功。
 - /api/health、/api/catalog、/api/settings、/api/artifacts 均返回 ok=true。
-- 使用干净临时 `--data-root`，将内嵌 v4 的同名副本放入 `artifacts\ready` 后，`/viewer/packages.json` 应返回 3 条：`viewer-root`、内嵌 v4、外部 ready/v4；两个 v4 条目都可打开，且来源路径不同。新 ready 制品不需要重新打包即可被扫描和展示。
+- /viewer/packages.json 返回 200：若产物带 `viewer\embedded-packages.json`，其 `default_package` 必须与构建期声明一致且存在于包列表；若本次未内嵌制品，索引仍须可解析。
 - 验收脚本创建的空数据 A Bundle 任务应进入真实冻结 worker 后安全失败，日志不得出现 ModuleNotFoundError 或内置配置缺失；编排器 stage worker 和 Viewer exporter 内部入口均须通过。
-- Viewer 当前两个内嵌制品可打开；外部 `ready` 制品也可按来源路径打开；inbox 中不合格包不会被服务为 Viewer，必须通过 UI promotion 校验。
+- 本次内嵌的 Viewer 制品可打开；外部 `ready` 制品也可按来源路径打开；inbox 中不合格包不会被服务为 Viewer，必须通过 UI promotion 校验。
 - 设置页能同时保存 `.env.copernicus` 和 `.cdsapirc` 两个互不覆盖的外部绝对路径；`a_carra_acquire` 拒绝非 UTC、非 3 小时边界、空窗口、超过 216 小时、非法类别和未登记/域外走廊，并且只发布 A manifest，不创建 Contracts 场景。
 - 检查 EXE 目录中 ecCodes Python 模块、原生 DLL、definitions/data 都存在或可由打包运行时正常加载。不能依赖开发机 PATH 上的 DLL。
 - 检查产物不含 credentials、`.env*`、`.cdsapirc`、`direct_url.json`、`uv_cache.json`、RC1/RC2、demo-engineering、torch、safetensors、实验依赖、凭据形态值或构建机绝对路径；Python 发布扫描器是构建期权威检查，PowerShell 扫描是无 Python 干净机的补充检查，并使用实际 `-WorkspaceRoot` 扫描自定义工作区路径。
@@ -56,11 +58,12 @@
 报告格式：
 1. Windows 版本、Python 完整版本、Python architecture、uv/PyInstaller 版本。
 2. 实际执行的命令和每一步 PASS/FAIL。
-3. EXE 目录、大小、SHA256。
-4. self-test、干净机启动、四个 API、Viewer、ecCodes、禁止文件扫描结果。
-5. 任何未完成项或不能声称的能力（例如没有真实下载、真实船舶导航资格）必须明确写出。
+3. 本次声明内嵌的 Viewer 制品清单（目录、默认包、校验结果；无内嵌则如实说明）。
+4. EXE 目录、大小、SHA256。
+5. self-test、干净机启动、四个 API、Viewer、ecCodes、禁止文件扫描结果。
+6. 任何未完成项或不能声称的能力（例如没有真实下载、真实船舶导航资格）必须明确写出。
 
-禁止：上传任何文件或凭据；修改六个正式仓库；删除用户改动；把研究 sidecar 当生产输入；把 Viewer 展示结果描述为导航级资格；使用假数据伪造 PASS；把两个凭据文件复制进 EXE/ZIP；修改或清空 `data_root\artifacts\inbox`、`ready`、`invalid` 来规避验证；用管理员权限或关闭杀毒/安全校验绕过失败。
+禁止：上传任何文件或凭据；修改六个正式仓库；删除用户改动；把研究 sidecar 当生产输入；把 Viewer 展示结果描述为导航级资格；使用假数据伪造 PASS；把两个凭据文件复制进 EXE/ZIP；修改或清空 `data_root\artifacts\inbox`、`ready`、`invalid` 来规避验证；用管理员权限或关闭杀毒/安全校验绕过失败；在代码或文档中硬编码任何具体制品名、期望 SHA 或制品目录路径。
 ```
 
 提示词只授权 Windows 产物构建和验收，不授权合并、提交、推送或修改六个正式仓库。

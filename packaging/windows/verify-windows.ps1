@@ -15,9 +15,9 @@ if ($env:OS -ne "Windows_NT" -or -not [Environment]::Is64BitOperatingSystem) {
 $ArtifactPath = (Resolve-Path $ArtifactPath).Path
 $Exe = Join-Path $ArtifactPath "arctic-route-control-center.exe"
 if (-not (Test-Path $Exe)) { throw "找不到 onedir EXE：$Exe" }
-# 说明（2026-09-08 移除）：此前误加"必须内嵌且仅内嵌一个 ready 制品（winter v4）"
-# 的强约束。v4 是外部可加载 ready 制品，构建产物只内嵌 viewer-root 根 Viewer；
-# 该约束不成立，已删除。内嵌包（viewer/packages）存在与否不再作为验收条件。
+# Viewer 数据制品由构建时显式声明（见 scripts/viewer_package_inputs.py）。产物若
+# 内嵌了制品会带有 viewer/embedded-packages.json；未内嵌任何制品时产物只含
+# Viewer UI，数据在运行时从数据根目录加载，这里只校验索引可解析。
 
 $workspaceVariants = @()
 if (-not [string]::IsNullOrWhiteSpace($WorkspaceRoot)) {
@@ -117,8 +117,8 @@ $proc = $null
 $originalPath = $env:PATH
 $environmentNames = @(
     "ARCTIC_ROUTE_ROOT", "ARCTIC_ROUTE_PRODUCTION_PACKAGE", "ARCTIC_ROUTE_ECCODES_PREFIX",
-    "ECCODES_DEFINITION_PATH", "ARCTIC_ROUTE_DATA_ROOT", "ARCTIC_ROUTE_READY_PACKAGE",
-    "ARCTIC_ROUTE_VIEWER_ROOT", "ARCTIC_ROUTE_BUILD_ASSETS", "PYTHONPATH", "LD_LIBRARY_PATH"
+    "ECCODES_DEFINITION_PATH", "ARCTIC_ROUTE_DATA_ROOT", "ARCTIC_ROUTE_VIEWER_PACKAGES",
+    "ARCTIC_ROUTE_BUILD_ASSETS", "PYTHONPATH", "LD_LIBRARY_PATH"
 )
 $originalEnvironment = @{}
 foreach ($name in $environmentNames) {
@@ -155,8 +155,8 @@ try {
         throw "Viewer exporter 内部入口验收失败：$exportOutput"
     }
 
-    # （2026-09-08 移除）："内嵌 v4 ready" 属误加约束。不再将内嵌包复制到
-    # 外部 ready 目录制造同名场景；外部 ready 由用户运行时放置。
+    # Viewer 制品均为可选的构建输入；这里不复制任何内嵌包到外部 ready 目录。
+    # 外部 ready 由用户运行时放置，Viewer 索引会将其与内嵌制品区分展示。
 
     $port = 18730 + (Get-Random -Minimum 0 -Maximum 1000)
     $stdout = Join-Path $temp "server.stdout.log"
@@ -181,22 +181,22 @@ try {
     }
     $viewerIndex = Invoke-RestMethod "$base/viewer/packages.json" -TimeoutSec 10
     $viewerPackages = @($viewerIndex.packages)
-    $hasEmbeddedRoot = Test-Path (Join-Path $ArtifactPath "_internal\viewer\bundle.json")
-    if ($hasEmbeddedRoot) {
-        if ($viewerIndex.default_package -ne "viewer-root" -or $viewerPackages.Count -eq 0) {
-            throw "Viewer 制品索引未保留 root 记录：$($viewerIndex | ConvertTo-Json -Depth 4)"
-        }
-        $rootEntry = @($viewerPackages | Where-Object {
-            $_.package_dir -eq "viewer-root"
+    $embeddedIndexPath = Join-Path $ArtifactPath "_internal\viewer\embedded-packages.json"
+    if (Test-Path $embeddedIndexPath) {
+        $embeddedDocument = Get-Content -LiteralPath $embeddedIndexPath -Raw | ConvertFrom-Json
+        $expectedDefault = [string]$embeddedDocument.default_package
+        $declaredEntry = @($viewerPackages | Where-Object {
+            $_.package_dir -eq $expectedDefault
         })
-        if ($rootEntry.Count -ne 1) {
-            throw "Viewer 索引缺少 viewer-root 条目：$($viewerPackages | ConvertTo-Json -Depth 4)"
+        if ([string]::IsNullOrWhiteSpace($expectedDefault) -or $declaredEntry.Count -lt 1) {
+            throw "Viewer 索引未包含构建期声明的默认包 '$expectedDefault'：$($viewerIndex | ConvertTo-Json -Depth 4)"
         }
+        if ([string]$viewerIndex.default_package -ne $expectedDefault) {
+            throw "Viewer 运行时默认包与构建期声明不一致：$($viewerIndex | ConvertTo-Json -Depth 4)"
+        }
+        Write-Host "内嵌 Viewer 默认包验收通过：$expectedDefault"
     } else {
-        Write-Host "产物未内嵌根 Viewer 数据；校验索引可解析且不声明 viewer-root。"
-        if ($viewerIndex.default_package -eq "viewer-root") {
-            throw "未内嵌 Viewer 数据时索引不应声明 viewer-root 为默认包：$($viewerIndex | ConvertTo-Json -Depth 4)"
-        }
+        Write-Host "产物未内嵌 Viewer 数据包（无 embedded-packages.json）；仅校验索引可解析。"
     }
     $jobRequest = @{
         operation = "a_bundle"

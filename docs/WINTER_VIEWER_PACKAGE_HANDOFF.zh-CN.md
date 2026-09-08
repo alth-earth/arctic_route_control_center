@@ -2,9 +2,10 @@
 
 ## 当前默认：Winter v4（2026-09-04 22:17 +08:00）
 
-当前应导入并运行不可变制品 `winter-rebuilt-20260215-viewer-package-v4`。Linux AppImage 和
-Windows onedir 会各自嵌入一份经校验的 v4，同时保留外部运行时目录作为持续接收新制品的来源；v4
-目录本身不包含 HTML/CSS/JS、原始 GRIB/NC、凭据或缓存。
+当前应导入并运行不可变制品 `winter-rebuilt-20260215-viewer-package-v4`。它作为运行时 `ready`
+制品从数据根目录（`artifacts/ready`）加载；如需随发行物内嵌，应在构建时按 `--viewer-package`
+显式声明（发行默认不再自动内嵌任何 Viewer 制品）。v4 目录本身不包含 HTML/CSS/JS、原始 GRIB/NC、
+凭据或缓存。
 
 Linux 默认数据根为：
 

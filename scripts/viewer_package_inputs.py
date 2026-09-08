@@ -220,6 +220,12 @@ def stage_viewer_packages(
     if not packages:
         return None
 
+    names = [package.name for package in packages]
+    if len(set(names)) != len(names):
+        duplicates = sorted({name for name in names if names.count(name) > 1})
+        raise ViewerInputError(
+            f"duplicate viewer package name(s): {', '.join(duplicates)}"
+        )
     defaults = [item for item in packages if item.default]
     if len(defaults) != 1:
         raise ViewerInputError("exactly one viewer package must be the default")

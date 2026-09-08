@@ -123,3 +123,44 @@ def test_environment_variable_is_parsed(tmp_path: Path) -> None:
     validated = validate_viewer_package(inputs[0])
     assert validated.name == "env-pkg"
     assert validated.default
+
+
+def test_duplicate_package_name_is_rejected(tmp_path: Path) -> None:
+    pkg_a = tmp_path / "dir" / "dup"
+    pkg_b = tmp_path / "other" / "dup"
+    _write_package(pkg_a, "a")
+    _write_package(pkg_b, "b")
+    inputs = load_viewer_inputs([str(pkg_a), str(pkg_b)], None, "", base_dir=tmp_path)
+    validated = [validate_viewer_package(item) for item in inputs]
+    try:
+        stage_viewer_packages(validated, tmp_path / "out")
+    except ViewerInputError as exc:
+        assert "duplicate viewer package name" in str(exc)
+    else:
+        raise AssertionError("expected ViewerInputError")
+
+
+def test_manifest_with_two_defaults_is_rejected(tmp_path: Path) -> None:
+    pkg_a = tmp_path / "alpha"
+    pkg_b = tmp_path / "beta"
+    _write_package(pkg_a, "a")
+    _write_package(pkg_b, "b")
+    manifest = tmp_path / "inputs.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "arctic-route-control-center.viewer-inputs.v1",
+                "packages": [
+                    {"path": str(pkg_a), "default": True},
+                    {"path": str(pkg_b), "default": True},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    try:
+        load_viewer_inputs([], manifest, "", base_dir=tmp_path)
+    except ViewerInputError as exc:
+        assert "more than one default" in str(exc)
+    else:
+        raise AssertionError("expected ViewerInputError")
